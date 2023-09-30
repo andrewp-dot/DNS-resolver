@@ -25,10 +25,9 @@
 InputParser::InputParser(int &argc, char ** argv) {
     this->argc = argc;
     this->argv= argv;
-    this->query.type = A;
 }
 
-bool InputParser::verifyPort(char * port) {
+bool InputParser::isGoodPortFormat(char * port) {
 
     for(unsigned long i = 0; i < strlen(port); i++) {
         if(!isalnum(port[i])) return false;
@@ -47,52 +46,53 @@ bool InputParser::verifyPort(char * port) {
  * Iterates through every character of every argument. If it finds '-' searches for option and validates option argument if necessary.
  *  
  */
-void InputParser::parseArgs() {
+void InputParser::parseArgs(Query &query) {
 
     if(this->argc <= 1){
         std::cerr << "Wrong number of arguments" << std::endl; 
         return;
     }
 
-    for(int i = 0; i < this->argc; i++)
+    // new function
+
+    /**
+     * TODO:
+     * 1) add support for addres parsing -it has to be last arg
+     * @param i 
+     */
+    for(int i = 0; i < this->argc-1; i++)
     {
-        int charIndex = 0;
-        while (argv[charIndex] != '\0')
+        if(argv[i][0] == '-')
         {
-            if(argv[i][charIndex] == '-')
-            {
-                charIndex += 1;
-                switch (argv[i][charIndex])
-                {
-                case 'r':
-                    this->query.recursionDesired = true;
-                    break;
-                case 'x':
-                    this->query.reversed = true;
-                    break;
-                case '6':
-                    this->query.type = AAAA;
-                    break;
-
-                //needs to be verified options
-                case 's':
-                    // verify address
-                    break;
-                case 'p':
-                    //i += 1;
-                    //bool isGoodPortFormat = verifyPort(argv[i]);
-                    // if(isGoodPortFormat) { this->port = atoi(argv[i]); };
-                    break;
-                
-                default:
-                    std::cerr << "Undefined option." << std::endl;
-                    break;
-                }
-            }
+            switch (argv[i][1]) {
+            case 'r':
+                query.setRecursionDesired(true);
+                break;
+            case 'x':
+                query.setReversed(true);
+                break;
+            case '6':
+                query.setType(AAAA);
+                break;
+            //needs to be verified options
+            case 's':
+                i += 1;
+                query.setAddress(argv[i]);
+                break;
+            case 'p':
+                i += 1;
+                if(isGoodPortFormat(argv[i])) { 
+                    query.setPort(atoi(argv[i])); 
+                } else query.setIsOk(false);
+                break;
             
-            charIndex += 1;
-        }
+            default:
+                std::cerr << "Undefined option." << std::endl;
+                return;
+            }
+        }   
     }
-}
 
+    //getAddr();
+}
 

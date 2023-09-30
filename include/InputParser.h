@@ -18,31 +18,18 @@
 
 #ifndef INPUT_PARSER_H
 #define INPUT_PARSER_H
-
-enum queryType {
-    A, AAAA
-};
-
-typedef struct query {
-    bool recursionDesired;
-    bool reversed;
-    queryType type;
-    char * server;
-    unsigned int port;
-    char * address;
-} query_t;
+#include "Query.h"
 
 class InputParser {
     public:
         InputParser(int &argc, char ** argv);
+        void parseArgs(Query &query);
 
     private:
         int argc;
         char ** argv;
-        query_t query;
 
-    bool verifyPort(char * port);
-    void parseArgs();
+    bool isGoodPortFormat(char * port);
 };  
 
 #endif

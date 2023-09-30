@@ -39,3 +39,4 @@
 
 .vscode
 *.txt
+*.dSYM

@@ -23,10 +23,16 @@
 
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
+/**
+ * TODO: 
+ * 1) add error module
+ */
+
 int main(int argc, char ** argv ) {   
     InputParser parser(argc, argv);
-    
-    printf("Successfuly compiled.");
+    Query query;
+    parser.parseArgs(query);
+    query.printQueryOptions();
     
     return EXIT_SUCCESS;
 }
