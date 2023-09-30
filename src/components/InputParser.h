@@ -1,0 +1,47 @@
+/**
+ * @brief  Dns resolver for course ISA on VUT BUT Brno. It resolves address of specified server.
+ * Copyright (C) 2023  xponec01@stud.fit.vutbr.cz
+
+    This program is free software: you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with this program.  If not, see <https://www.gnu.org/licenses/>.
+ */
+
+#ifndef INPUT_PARSER_H
+#define INPUT_PARSER_H
+
+enum queryType {
+    A, AAAA
+};
+
+typedef struct query_settings {
+    bool recursionDesired;
+    bool queryReversed;
+    queryType type;
+    char * server;
+    unsigned int port;
+    char * address;
+} query_settings_t;
+
+class InputParser {
+    public:
+        InputParser(int &argc, char ** argv);
+
+    private:
+        int argc;
+        char ** argv;
+        query_settings_t querySettings;
+
+    void parseArgs();
+};
+
+#endif
