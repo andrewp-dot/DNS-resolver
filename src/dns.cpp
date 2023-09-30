@@ -19,12 +19,14 @@
 
 #include <iostream>
 #include <stdio.h>
-#include "components/InputParser.h"
+#include "InputParser.h"
 
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
 int main(int argc, char ** argv ) {   
     InputParser parser(argc, argv);
+    
+    printf("Successfuly compiled.");
     
     return EXIT_SUCCESS;
 }

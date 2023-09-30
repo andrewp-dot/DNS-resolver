@@ -5,6 +5,7 @@ CFLAGS := -Wall -Werror -Wextra -pedantic
 # directories
 SRC := src
 OBJ := obj
+INCLUDE := include
 SRC_FILES := $(wildcard **/*.cpp) $(wildcard $(SRC)/components/*.cpp)
 
 #program settings
@@ -15,7 +16,7 @@ PROG := dns
 
 #rules
 $(PROG): $(SRC_FILES)
-	$(CC) $(CFLAGS) $^ -o $@
+	$(CC) $(CFLAGS) -I$(INCLUDE) $^ -o $@
 
 clean: 
 	rm $(PROG)

@@ -23,14 +23,14 @@ enum queryType {
     A, AAAA
 };
 
-typedef struct query_settings {
+typedef struct query {
     bool recursionDesired;
-    bool queryReversed;
+    bool reversed;
     queryType type;
     char * server;
     unsigned int port;
     char * address;
-} query_settings_t;
+} query_t;
 
 class InputParser {
     public:
@@ -39,9 +39,10 @@ class InputParser {
     private:
         int argc;
         char ** argv;
-        query_settings_t querySettings;
+        query_t query;
 
+    bool verifyPort(char * port);
     void parseArgs();
-};
+};  
 
 #endif

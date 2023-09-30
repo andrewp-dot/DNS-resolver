@@ -17,12 +17,29 @@
  */
 
 #include <iostream>
+#include <string.h>
+#include <ctype.h>
 #include "InputParser.h"
+#include "constants.h"
 
 InputParser::InputParser(int &argc, char ** argv) {
     this->argc = argc;
     this->argv= argv;
+    this->query.type = A;
 }
+
+bool InputParser::verifyPort(char * port) {
+
+    for(unsigned long i = 0; i < strlen(port); i++) {
+        if(!isalnum(port[i])) return false;
+    }
+
+    unsigned long portNum = strtoul(port, NULL,10);
+    if( portNum < 0 || portNum > MAX_PORT_NUMBER) return false;
+
+    return true;
+}
+
 
 /**
  * @brief Parses arguments and set program settings
@@ -48,13 +65,13 @@ void InputParser::parseArgs() {
                 switch (argv[i][charIndex])
                 {
                 case 'r':
-                    this->querySettings.recursionDesired = true;
+                    this->query.recursionDesired = true;
                     break;
                 case 'x':
-                    this->querySettings.queryReversed = true;
+                    this->query.reversed = true;
                     break;
                 case '6':
-                    this->querySettings.queryType = AAAA;
+                    this->query.type = AAAA;
                     break;
 
                 //needs to be verified options
