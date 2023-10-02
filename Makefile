@@ -27,5 +27,6 @@ clean:
 argtest: $(ARG_TEST)
 	$(CC) $(CFLAGS) $^ -o $@
 
-test: argtest
-	./argtest
+test: $(SRC_FILES)
+	$(CC) $(CFLAGS) -DTEST -I$(INCLUDE) $^ -o $@
+	./$@
