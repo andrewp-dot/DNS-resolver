@@ -3,7 +3,7 @@
 
 int main(void)
 {
-    TEST_ASSERT(2 == 2, "1 != 2 you dumb ass bitch");
-    std::cout << "No error has occured." << std::endl;
+    TEST_ASSERT(2 == 2, "Test failed.");
+    std::cout << "All test passed." << std::endl;
     return EXIT_SUCCESS;
 }

@@ -32,6 +32,7 @@ public:
     std::string getAddress();
     bool getIsOk();
 
+    std::string boolToString(bool expr);
     void printQueryOptions();
 
 private:

@@ -160,7 +160,8 @@ void InputParser::parseArgs(Query &query)
 
     if (this->argc <= 1)
     {
-        std::cerr << "Wrong number of arguments" << std::endl;
+        std::cerr << "Wrong number of arguments." << std::endl;
+        query.setIsOk(false);
         return;
     }
     setOptions(query);

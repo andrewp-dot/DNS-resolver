@@ -4,12 +4,15 @@
 #define COLOR_RED "\033[0;31m"
 #define COLOR_DEFAULT "\033[0m"
 
-#define TEST_ASSERT(cond, msg)                                       \
-    if (!(cond))                                                     \
-    {                                                                \
-        std::cerr << COLOR_RED << msg << COLOR_DEFAULT << std::endl; \
-        return EXIT_FAILURE;                                         \
-    }
+#define TEST_ASSERT(cond, msg)                                                                    \
+    do                                                                                            \
+    {                                                                                             \
+        if (!(cond))                                                                              \
+        {                                                                                         \
+            std::cerr << COLOR_RED << "[Assertion error]: " << COLOR_DEFAULT << msg << std::endl; \
+            return EXIT_FAILURE;                                                                  \
+        }                                                                                         \
+    } while (0)
 
 /**
  * Test cases

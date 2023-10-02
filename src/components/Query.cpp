@@ -6,7 +6,7 @@ Query::Query()
     this->recursionDesired = false;
     this->reversed = false;
     this->type = A;
-    this->port = -1;
+    this->port = 53;
     this->server = "";
     this->server = "";
     this->isOk = true;
@@ -84,12 +84,18 @@ bool Query::getIsOk()
     return this->isOk;
 }
 
+std::string Query::boolToString(bool expr)
+{
+    if (expr)
+        return "Yes";
+    return "No";
+}
+
 void Query::printQueryOptions()
 {
-    printf("recursionDesired:   %d\n", this->recursionDesired);
-    printf("reversed:           %d\n", this->reversed);
-    printf("type:               %d\n", this->type);
-    printf("port:               %d\n", this->port);
-    printf("server:             %s\n", this->server.c_str());
-    printf("address:            %s\n", this->address.c_str());
+    std::cout << "Authoritative: " << boolToString(this->type == AAAA) << ", ";
+    std::cout << "Recursive: " << boolToString(this->recursionDesired) << ", ";
+    std::cout << "Truncated: " << boolToString(this->reversed) << std::endl;
+    std::cout << "Server: " << this->server << std::endl;
+    std::cout << "Address: " << this->address << std::endl;
 }
