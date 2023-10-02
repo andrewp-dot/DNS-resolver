@@ -22,49 +22,69 @@
 #include "InputParser.h"
 #include "constants.h"
 
-InputParser::InputParser(int &argc, char ** argv) {
-    this->argc = argc;
-    this->argv= argv;
+/**
+ * @brief checks if next program argument is a flag
+ *
+ * @return true
+ * @return false
+ */
+bool isFlag(const char *arg)
+{
+
+    return arg[0] == '-';
 }
 
-bool InputParser::isGoodPortFormat(char * port) {
+/**
+ * @brief Construct a new Input Parser:: Input Parser object
+ *
+ * @param argc - number of program arguments
+ * @param argv - program arguments array
+ */
 
-    for(unsigned long i = 0; i < strlen(port); i++) {
-        if(!isalnum(port[i])) return false;
+InputParser::InputParser(int &argc, char **argv)
+{
+    this->argc = argc;
+    this->argv = argv;
+}
+
+/**
+ * @brief Checks string port format
+ *
+ * @param port - port to be verified
+ * @return true
+ * @return false
+ */
+
+bool InputParser::isGoodPortFormat(const char *port)
+{
+
+    for (unsigned long i = 0; i < strlen(port); i++)
+    {
+        if (!isdigit(port[i]))
+            return false;
     }
 
-    unsigned long portNum = strtoul(port, NULL,10);
-    if( portNum < 0 || portNum > MAX_PORT_NUMBER) return false;
+    unsigned long portNum = strtoul(port, NULL, 10);
+    if (portNum < 0 || portNum > MAX_PORT_NUMBER)
+        return false;
 
     return true;
 }
 
-
-/**
- * @brief Parses arguments and set program settings
- * 
- * Iterates through every character of every argument. If it finds '-' searches for option and validates option argument if necessary.
- *  
- */
-void InputParser::parseArgs(Query &query) {
-
-    if(this->argc <= 1){
-        std::cerr << "Wrong number of arguments" << std::endl; 
-        return;
-    }
-
-    // new function
-
-    /**
-     * TODO:
-     * 1) add support for addres parsing -it has to be last arg
-     * @param i 
-     */
-    for(int i = 0; i < this->argc-1; i++)
+void InputParser::setOptions(Query &query)
+{
+    for (int i = 1; i < argc; i++)
     {
-        if(argv[i][0] == '-')
+        if (isFlag(argv[i]))
         {
-            switch (argv[i][1]) {
+            if (strlen(argv[i]) != FLAG_LENGTH)
+            {
+                std::cerr << "Unknown flag: " << argv[i] << std::endl;
+                query.setIsOk(false);
+                continue;
+            }
+            switch (argv[i][1])
+            {
             case 'r':
                 query.setRecursionDesired(true);
                 break;
@@ -74,25 +94,74 @@ void InputParser::parseArgs(Query &query) {
             case '6':
                 query.setType(AAAA);
                 break;
-            //needs to be verified options
             case 's':
                 i += 1;
-                query.setAddress(argv[i]);
+                if (i >= argc)
+                {
+                    std::cerr << "Missing server." << std::endl;
+                    query.setIsOk(false);
+                    break;
+                }
+                if (isFlag(argv[i]))
+                {
+                    std::cerr << "Missing server." << std::endl;
+                    query.setIsOk(false);
+                    break;
+                }
+                else
+                {
+                    query.setServer(argv[i]);
+                }
                 break;
             case 'p':
                 i += 1;
-                if(isGoodPortFormat(argv[i])) { 
-                    query.setPort(atoi(argv[i])); 
-                } else query.setIsOk(false);
+                if (i >= argc)
+                {
+                    std::cerr << "Undefined option: " << argv[i] << "" << std::endl;
+                    query.setIsOk(false);
+                    break;
+                }
+                if (isFlag(argv[i]))
+                {
+                    std::cerr << "Missing port." << std::endl;
+                    query.setIsOk(false);
+                    break;
+                }
+                if (isGoodPortFormat(argv[i]))
+                {
+                    query.setPort(atoi(argv[i]));
+                }
+                else
+                {
+                    query.setIsOk(false);
+                }
                 break;
-            
+
             default:
-                std::cerr << "Undefined option." << std::endl;
+                std::cerr << "Undefined option: " << argv[i] << "" << std::endl;
                 return;
             }
-        }   
+        }
+        else
+        {
+            query.setAddress(argv[i]);
+        }
     }
-
-    //getAddr();
 }
 
+/**
+ * @brief Parses arguments and set program settings
+ *
+ * Iterates through every character of every argument. If it finds '-' searches for option and validates option argument if necessary.
+ *
+ */
+void InputParser::parseArgs(Query &query)
+{
+
+    if (this->argc <= 1)
+    {
+        std::cerr << "Wrong number of arguments" << std::endl;
+        return;
+    }
+    setOptions(query);
+}

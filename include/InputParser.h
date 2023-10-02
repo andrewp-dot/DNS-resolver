@@ -20,16 +20,20 @@
 #define INPUT_PARSER_H
 #include "Query.h"
 
-class InputParser {
-    public:
-        InputParser(int &argc, char ** argv);
-        void parseArgs(Query &query);
+#define FLAG_LENGTH 2
 
-    private:
-        int argc;
-        char ** argv;
+class InputParser
+{
+public:
+    InputParser(int &argc, char **argv);
+    void parseArgs(Query &query);
 
-    bool isGoodPortFormat(char * port);
-};  
+private:
+    int argc;
+    char **argv;
+
+    bool isGoodPortFormat(const char *port);
+    void setOptions(Query &query);
+};
 
 #endif

@@ -12,70 +12,84 @@ Query::Query()
     this->isOk = true;
 }
 
-void Query::setRecursionDesired(bool value) {
+void Query::setRecursionDesired(bool value)
+{
     this->recursionDesired = value;
 }
 
-void Query::setReversed(bool value) {
+void Query::setReversed(bool value)
+{
     this->reversed = value;
 }
 
-void Query::setType(queryType type) {
+void Query::setType(queryType type)
+{
     this->type = type;
 }
 
-void Query::setPort(port_t port) {
+void Query::setPort(port_t port)
+{
     this->port = port;
 }
 
-void Query::setServer(std::string server) {
+void Query::setServer(std::string server)
+{
     // strcpy(this->address, server);
     this->server = server;
 }
 
-void Query::setAddress(std::string address) {
-    // strcpy(this->address, address);
+void Query::setAddress(std::string address)
+{
     this->address = address;
 }
 
-void Query::setIsOk(bool value) {
+void Query::setIsOk(bool value)
+{
     this->isOk = value;
 }
 
 // getters
-bool Query::getRecursionDesired() {
+bool Query::getRecursionDesired()
+{
     return this->recursionDesired;
 }
 
-bool Query::getReversed() {
+bool Query::getReversed()
+{
     return this->reversed;
 }
 
-queryType Query::getType() {
+queryType Query::getType()
+{
     return this->type;
 }
 
-port_t Query::getPort() {
+port_t Query::getPort()
+{
     return this->port;
 }
 
-std::string Query::getServer() {
+std::string Query::getServer()
+{
     return this->server;
 }
 
-std::string Query::getAddress() {
+std::string Query::getAddress()
+{
     return this->address;
 }
 
-bool Query::getIsOk() {
+bool Query::getIsOk()
+{
     return this->isOk;
 }
 
-void Query::printQueryOptions(){
-    printf("recursionDesired:   %d\n",this->recursionDesired);
-    printf("reversed:           %d\n",this->reversed);
-    printf("type:               %d\n",this->type);
-    printf("port:               %d\n",this->port);
-    printf("server:             %s\n",this->server.c_str());
-    printf("address:            %s\n",this->address.c_str());
+void Query::printQueryOptions()
+{
+    printf("recursionDesired:   %d\n", this->recursionDesired);
+    printf("reversed:           %d\n", this->reversed);
+    printf("type:               %d\n", this->type);
+    printf("port:               %d\n", this->port);
+    printf("server:             %s\n", this->server.c_str());
+    printf("address:            %s\n", this->address.c_str());
 }

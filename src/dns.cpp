@@ -15,7 +15,6 @@
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-    
 
 #include <iostream>
 #include <stdio.h>
@@ -24,15 +23,19 @@
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
 /**
- * TODO: 
+ * TODO:
  * 1) add error module
  */
 
-int main(int argc, char ** argv ) {   
+int main(int argc, char **argv)
+{
     InputParser parser(argc, argv);
     Query query;
     parser.parseArgs(query);
-    query.printQueryOptions();
-    
+    if (query.getIsOk())
+    {
+        query.printQueryOptions();
+    }
+
     return EXIT_SUCCESS;
 }
