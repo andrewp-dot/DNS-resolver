@@ -17,5 +17,6 @@
 /**
  * Test cases
  */
+bool argTest1();
 
 #endif

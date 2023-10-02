@@ -1,4 +1,7 @@
 #include <iostream>
 #include "arg-test.h"
 
-void argTest1();
+bool argTest1()
+{
+    return true;
+}

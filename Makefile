@@ -6,7 +6,7 @@ CFLAGS := -Wall -Werror -Wextra -pedantic
 SRC := src
 OBJ := obj
 INCLUDE := include
-SRC_FILES := $(wildcard **/*.cpp) $(wildcard $(SRC)/components/*.cpp)
+SRC_FILES := $(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/components/*.cpp)
 
 #program settings
 PROG := dns
@@ -14,6 +14,7 @@ PROG := dns
 # test modules
 TESTS := tests
 ARG_TEST := $(TESTS)/argument-tests/arg-test.cpp
+TEST_SRC_FILES := $(wildcard tests/**/*.cpp) $(wildcard tests/*.cpp)
 
 .PHONY: clean argtest test
 
@@ -22,11 +23,11 @@ $(PROG): $(SRC_FILES)
 	$(CC) $(CFLAGS) -I$(INCLUDE) $^ -o $@
 
 clean: 
-	rm -f $(PROG) argtest
+	rm -f $(PROG) argtest test
 
 argtest: $(ARG_TEST)
 	$(CC) $(CFLAGS) $^ -o $@
 
-test: $(SRC_FILES)
+test: $(SRC_FILES) $(TEST_SRC_FILES) $(SRC)/$(PROG).cpp
 	$(CC) $(CFLAGS) -DTEST -I$(INCLUDE) $^ -o $@
 	./$@

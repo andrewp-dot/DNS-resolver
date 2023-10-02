@@ -19,17 +19,17 @@
 #include <iostream>
 #include <stdio.h>
 #include "InputParser.h"
-#include "../tests/test.h"
 
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
-int main(int argc, char **argv)
-{
-
 #ifdef TEST
-    return allTests();
+#define MAIN test_main
+#else
+#define MAIN main
 #endif
 
+int MAIN(int argc, char **argv)
+{
     InputParser parser(argc, argv);
     Query query;
     parser.parseArgs(query);
