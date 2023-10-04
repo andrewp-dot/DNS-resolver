@@ -34,6 +34,7 @@ private:
 
     bool isGoodPortFormat(const char *port);
     void setOptions(Query &query);
+    int checkAddressType(Query &query);
 };
 
 #endif

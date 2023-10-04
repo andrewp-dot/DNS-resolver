@@ -93,9 +93,9 @@ std::string Query::boolToString(bool expr)
 
 void Query::printQueryOptions()
 {
-    std::cout << "Authoritative: " << boolToString(this->type == AAAA) << ", ";
+    std::cout << "Query type: " << (this->type == AAAA ? "AAAA" : "A") << ", ";
     std::cout << "Recursive: " << boolToString(this->recursionDesired) << ", ";
-    std::cout << "Truncated: " << boolToString(this->reversed) << std::endl;
+    std::cout << "Reversed query: " << boolToString(this->reversed) << std::endl;
     std::cout << "Server: " << this->server << std::endl;
     std::cout << "Address: " << this->address << std::endl;
 }

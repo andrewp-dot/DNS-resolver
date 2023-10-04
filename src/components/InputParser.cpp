@@ -149,6 +149,17 @@ void InputParser::setOptions(Query &query)
     }
 }
 
+int InputParser::checkAddressType(Query &query)
+{
+    if (query.getReversed())
+    {
+        // return checkIp address
+        return EXIT_SUCCESS;
+    }
+    else // return checkAddress or just success
+        return EXIT_SUCCESS;
+}
+
 /**
  * @brief Parses arguments and set program settings
  *
@@ -157,7 +168,6 @@ void InputParser::setOptions(Query &query)
  */
 void InputParser::parseArgs(Query &query)
 {
-
     if (this->argc <= 1)
     {
         std::cerr << "Wrong number of arguments." << std::endl;
@@ -165,4 +175,5 @@ void InputParser::parseArgs(Query &query)
         return;
     }
     setOptions(query);
+    // checkAddressType(query);
 }
