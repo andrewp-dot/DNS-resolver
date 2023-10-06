@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <stdio.h>
+#include "Error.h"
 #include "InputParser.h"
 
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
@@ -33,10 +34,10 @@ int MAIN(int argc, char **argv)
     InputParser parser(argc, argv);
     Query query;
     parser.parseArgs(query);
-    if (query.getIsOk())
+    if (Error::getErrorCode() == SUCCESS)
     {
         query.printQueryOptions();
     }
 
-    return EXIT_SUCCESS;
+    return Error::getErrorCode();
 }

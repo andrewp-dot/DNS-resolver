@@ -139,7 +139,7 @@ void InputParser::setOptions(Query &query)
                 break;
 
             default:
-                std::cerr << "Undefined option: " << argv[i] << "" << std::endl;
+                Error::printError(WRONG_ARGUMENTS, "Undefined option: %s\n", argv[i]);
                 return;
             }
         }
@@ -171,8 +171,7 @@ void InputParser::parseArgs(Query &query)
 {
     if (this->argc <= 1)
     {
-        Error::printError();
-        std::cerr << "Wrong number of arguments." << std::endl;
+        Error::printError(WRONG_ARGUMENTS, "Wrong number of arguments.\n");
         query.setIsOk(false);
         return;
     }
