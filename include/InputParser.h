@@ -24,10 +24,6 @@
 
 class InputParser
 {
-public:
-    InputParser(int &argc, char **argv);
-    void parseArgs(Query &query);
-
 private:
     int argc;
     char **argv;
@@ -35,6 +31,10 @@ private:
     bool isGoodPortFormat(const char *port);
     void setOptions(Query &query);
     int checkAddressType(Query &query);
+
+public:
+    InputParser(int &argc, char **argv);
+    void parseArgs(Query &query);
 };
 
 #endif

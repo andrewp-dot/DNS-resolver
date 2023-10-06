@@ -24,7 +24,7 @@ void argTests()
 {
 #ifdef TEST
     // no arguments test
-    TEST_ASSERT(ERR_WRONG_ARGUMENTS == test_main(1, NULL), "No arguments test.");
+    TEST_ASSERT(WRONG_ARGUMENTS == test_main(1, NULL), "No arguments test.");
 
     // good arguments tests
 

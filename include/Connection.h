@@ -13,8 +13,4 @@ Connection::Connection(/* args */)
 {
 }
 
-Connection::~Connection()
-{
-}
-
 #endif

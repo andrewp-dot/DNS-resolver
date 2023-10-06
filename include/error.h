@@ -22,14 +22,14 @@ enum ErrorCode
 
 class Error
 {
+private:
+    static ErrorCode errorCode;
+
 public:
     static void
     printError(ErrorCode err, const char *format, ...);
     static ErrorCode getErrorCode();
     static void setErrorCode(ErrorCode err);
-
-private:
-    static ErrorCode errorCode;
 };
 
 #endif
