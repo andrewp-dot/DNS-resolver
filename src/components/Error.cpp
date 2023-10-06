@@ -1,6 +1,6 @@
 #include <iostream>
 #include <fstream>
-#include "error.h"
+#include "Error.h"
 
 void printToDebugFile()
 {
@@ -10,7 +10,10 @@ void printToDebugFile()
     debugFile.close();
 }
 
-void printError()
+void Error::printError()
 {
+#ifndef TEST
     std::cerr << "Error occured." << std::endl;
+#endif
+    return;
 }

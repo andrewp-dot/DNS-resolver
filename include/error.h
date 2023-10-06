@@ -17,14 +17,13 @@
 #define ERR_WRONG_ARGUMENTS 3
 #define ERR_INTERNAL 99
 
-enum Error
+class Error
 {
-    NAME_NOT_FOUND = 1,
-    TYPE_NOT_FOUND = 2,
-    INTERNAL = 99
-};
+public:
+    static void printError();
 
-void printToDebugFile();
-void printError();
+    // private:
+    //     int errorCode;
+};
 
 #endif

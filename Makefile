@@ -16,7 +16,7 @@ TESTS := tests
 ARG_TEST := $(TESTS)/argument-tests/arg-test.cpp
 TEST_SRC_FILES := $(wildcard tests/**/*.cpp) $(wildcard tests/*.cpp)
 
-.PHONY: clean argtest test
+.PHONY: clean test
 
 #rules
 $(PROG): $(SRC_FILES)
@@ -24,9 +24,6 @@ $(PROG): $(SRC_FILES)
 
 clean: 
 	rm -f $(PROG) argtest test
-
-argtest: $(ARG_TEST)
-	$(CC) $(CFLAGS) $^ -o $@
 
 test: $(SRC_FILES) $(TEST_SRC_FILES) $(SRC)/$(PROG).cpp
 	$(CC) $(CFLAGS) -DTEST -I$(INCLUDE) $^ -o $@

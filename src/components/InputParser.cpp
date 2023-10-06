@@ -20,6 +20,7 @@
 #include <string.h>
 #include <ctype.h>
 #include "InputParser.h"
+#include "Error.h"
 #include "constants.h"
 
 /**
@@ -170,6 +171,7 @@ void InputParser::parseArgs(Query &query)
 {
     if (this->argc <= 1)
     {
+        Error::printError();
         std::cerr << "Wrong number of arguments." << std::endl;
         query.setIsOk(false);
         return;

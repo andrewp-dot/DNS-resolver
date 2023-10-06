@@ -2,7 +2,7 @@
 // #include "./argument-tests/arg-test.h"
 #include "../src/dns.h"
 #include "test.h"
-#include "error.h"
+#include "Error.h"
 
 int failedTests = 0;
 int passedTests = 0;
