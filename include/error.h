@@ -4,6 +4,7 @@
 enum ErrorCode
 {
     SUCCESS = 0,
+    CONNECTION_FAILED,
     /**
      * This happens when the referenced name does not exist.  For
      * example, a user may have mistyped a host name.

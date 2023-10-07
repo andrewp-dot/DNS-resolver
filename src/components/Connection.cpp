@@ -1,5 +1,11 @@
 #include <iostream>
+#include <cstring>
+#include <unistd.h>
+#include <arpa/inet.h>
+#include <sys/socket.h>
+#include "constants.h"
 #include "Connection.h"
+#include "Error.h"
 
 /**
  * @brief
@@ -31,3 +37,45 @@
  * DNS server:
  * kazi.fit.vutbr.cz
  */
+
+void Connection::sendUdpQuery()
+{
+    std::cout << "TODO: create udp connection " << std::endl;
+    int sock;
+
+    if ((sock = socket(AF_INET, SOCK_DGRAM, 0) == -1))
+    {
+        Error::printError(CONNECTION_FAILED, "socket() failed\n");
+        return;
+    }
+
+    struct sockaddr_in server, from; // adresova struktura serveru a klienta
+
+    server.sin_addr.s_addr = inet_addr("IP_ADDR");
+    server.sin_family = AF_INET;
+    server.sin_port = DNS_PORT; // get port - returns query port, or if it is unset, returns DNS_PORT
+
+    if (connect(sock, (struct sockaddr *)&server, sizeof(server)) == -1)
+    {
+        Error::printError(CONNECTION_FAILED, "connect() failed\n");
+        return;
+    } // nastaveni spojovane UDP schranky
+
+    // if (send(sock, buffer, n, 0) != n)
+    // {
+    //     Error::printError(CONNECTION_FAILED, "send() failed\n");
+    // }
+
+    // if (recv(sock, buffer, BUFFER, 0) > 0)
+    // {                                                   // ˇcten´ı dat od serveru
+    //     getpeername(sock, (struct sockaddr *)&from, &fromlen)); // IP adresa a port serveru
+    //     printf("data received from %s, port %d\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port));
+    // }
+    // ukonˇcen´ı ˇcten
+    close(sock);
+}
+
+void Connection::createTcpConnection()
+{
+    std::cout << "TODO: create tcp connection " << std::endl;
+}

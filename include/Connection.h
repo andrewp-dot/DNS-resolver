@@ -1,16 +1,30 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 
+#include "Message.h"
+
+enum connectionType
+{
+    UDP,
+    TCP
+};
+
 class Connection
 {
 private:
-    /* data */
-public:
-    Connection(/* args */);
-};
+    connectionType type;
+    int sock;
+    Message *msg;
 
-Connection::Connection(/* args */)
-{
-}
+public:
+    Connection(connectionType type = UDP)
+    {
+        this->type = type;
+        this->msg = NULL;
+    };
+    // Message getMessage(Message &msg);
+    void sendUdpQuery();
+    void createTcpConnection();
+};
 
 #endif
