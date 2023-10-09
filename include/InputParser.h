@@ -19,6 +19,7 @@
 #ifndef INPUT_PARSER_H
 #define INPUT_PARSER_H
 #include "Query.h"
+#include <string>
 
 #define FLAG_LENGTH 2
 
@@ -30,6 +31,8 @@ private:
 
     bool isGoodPortFormat(const char *port);
     void setOptions(Query &query);
+    int checkIPv4AddressType(std::string addres);
+    int checkIPv6AddressType(std::string addres);
     int checkAddressType(Query &query);
 
 public:

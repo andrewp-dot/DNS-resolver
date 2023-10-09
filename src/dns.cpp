@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include "Error.h"
 #include "InputParser.h"
+#include "Message.h"
 
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
@@ -39,5 +40,8 @@ int MAIN(int argc, char **argv)
         query.printQueryOptions();
     }
 
+    Message test = Message(query);
+    char buffer[512];
+    test.convertMsgToBuffer(buffer);
     return Error::getErrorCode();
 }

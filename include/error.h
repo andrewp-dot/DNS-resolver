@@ -18,6 +18,8 @@ enum ErrorCode
      */
     NOT_FOUND,
     WRONG_ARGUMENTS,
+    IPV4_WRONG_FORMAT,
+    IPV6_WRONG_FORMAT,
     INTERNAL = 99
 };
 

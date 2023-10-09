@@ -17,7 +17,7 @@ private:
     Message *msg;
 
 public:
-    Connection(ConnectionType type = UDP, Message *msg)
+    Connection(ConnectionType type = UDP, Message *msg = NULL)
     {
         this->type = type;
         this->msg = msg;

@@ -51,6 +51,16 @@ RDATA           a variable length string of octets that describes the
     +---------------------+
 */
 
+#define QUERY 0
+#define RESPONSE 1
+
+enum QueryOpcode
+{
+    OPCODE_QUERY = 0,
+    OPCODE_IQUERY = 1,
+    OPCODE_SERVER_STATUS = 2
+};
+
 /*
                                 |1  1  1  1  1  1
     |0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
@@ -69,31 +79,28 @@ RDATA           a variable length string of octets that describes the
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 */
 
-enum QueryOpcode
-{
-    OPCODE_QUERY = 0,
-    OPCODE_IQUERY = 1,
-    OPCODE_SERVER_STATUS = 2
-};
-
 typedef struct DNSHeader
 {
-    unsigned short id;        // identification number
-    unsigned char qr : 1;     // query/response flag
-    unsigned char opcode : 4; // purpose of message
-    unsigned char aa : 1;     // authoritative answer
-    unsigned char tc : 1;     // truncated message
+    uint16_t id;              // identification number
     unsigned char rd : 1;     // recursion desired
-    unsigned char ra : 1;     // recursion available
-    unsigned char z : 1;      // its z! reserved
-    unsigned char ad : 1;     // authenticated data
-    unsigned char cd : 1;     // checking disabled
-    unsigned char rcode : 4;  // response code
-    unsigned short qdcount;   // number of question entries
-    unsigned short ancount;   // number of answer entries
-    unsigned short nscount;   // number of authority entries
-    unsigned short arcount;   // number of resource entries
+    unsigned char tc : 1;     // truncated message
+    unsigned char aa : 1;     // authoritative answer
+    unsigned char opcode : 4; // purpose of message
+    unsigned char qr : 1;     // query/response flagyy
+
+    unsigned char rcode : 4; // response code
+    unsigned char z : 3;     // its z! reserved
+    unsigned char ra : 1;    // recursion available
+    uint16_t qdcount;        // number of question entries
+    uint16_t ancount;        // number of answer entries
+    uint16_t nscount;        // number of authority entries
+    uint16_t arcount;        // number of resource entries
 } DNSHeader;
+
+typedef struct DNSQuestion
+{
+    unsigned char dummy;
+} DNSQuestion;
 
 class Message
 {
@@ -103,6 +110,7 @@ private:
     // question type
     QueryType msgFormat;
 
+    unsigned short generateQueryId();
     DNSHeader createHeader(const Query &query);
     void createQuestion();
 

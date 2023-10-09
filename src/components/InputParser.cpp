@@ -17,7 +17,7 @@
  */
 
 #include <iostream>
-#include <string.h>
+#include <string>
 #include <ctype.h>
 #include "InputParser.h"
 #include "Error.h"
@@ -150,15 +150,43 @@ void InputParser::setOptions(Query &query)
     }
 }
 
+int InputParser::checkIPv4AddressType(std::string address)
+{
+    if (address.length() > IPV4_MAX_LENGTH)
+    {
+        return IPV4_WRONG_FORMAT;
+    };
+    return EXIT_SUCCESS;
+}
+
+int InputParser::checkIPv6AddressType(std::string address)
+{
+    if (address.length() > IPV6_MAX_LENGTH)
+    {
+        return IPV4_WRONG_FORMAT;
+    };
+    if (!isdigit(address[0]) || !isdigit(address[address.length() - 1]))
+    {
+        return IPV4_WRONG_FORMAT;
+    }
+    return EXIT_SUCCESS;
+}
+
 int InputParser::checkAddressType(Query &query)
 {
     if (query.getReversed())
     {
-        // return checkIp address
+        if (query.getType() == A)
+        {
+            return checkIPv4AddressType(query.getAddress());
+        }
+        else if (query.getType() == AAAA)
+        {
+            return checkIPv6AddressType(query.getAddress());
+        }
         return EXIT_SUCCESS;
     }
-    else // return checkAddress or just success
-        return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }
 
 /**

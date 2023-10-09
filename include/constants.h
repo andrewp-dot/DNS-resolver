@@ -12,4 +12,7 @@
 #define MAX_PORT_NUMBER 65535
 #define DNS_PORT 53
 
+#define IPV4_MAX_LENGTH 15
+#define IPV6_MAX_LENGTH 39
+
 #endif
