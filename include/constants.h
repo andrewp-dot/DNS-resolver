@@ -8,6 +8,7 @@
  * TTL             positive values of a signed 32 bit number.
  * UDP messages    512 octets or less
  */
+#define UDP_DATAGRAM_LIMIT 512
 #define MAX_PORT_NUMBER 65535
 #define DNS_PORT 53
 

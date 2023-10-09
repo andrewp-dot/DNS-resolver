@@ -36,14 +36,12 @@
 /*
  * DNS server:
  * kazi.fit.vutbr.cz
+ * google : 8.8.8.8
  */
 
 void Connection::sendUdpQuery()
 {
-    std::cout << "TODO: create udp connection " << std::endl;
-    int sock;
-
-    if ((sock = socket(AF_INET, SOCK_DGRAM, 0) == -1))
+    if ((this->sock = socket(AF_INET, SOCK_DGRAM, 0) == -1))
     {
         Error::printError(CONNECTION_FAILED, "socket() failed\n");
         return;
@@ -51,30 +49,37 @@ void Connection::sendUdpQuery()
 
     struct sockaddr_in server, from; // adresova struktura serveru a klienta
 
-    server.sin_addr.s_addr = inet_addr("IP_ADDR");
+    server.sin_addr.s_addr = inet_addr("8.8.8.8");
     server.sin_family = AF_INET;
     server.sin_port = DNS_PORT; // get port - returns query port, or if it is unset, returns DNS_PORT
 
-    if (connect(sock, (struct sockaddr *)&server, sizeof(server)) == -1)
+    if (connect(this->sock, (struct sockaddr *)&server, sizeof(server)) == -1)
     {
         Error::printError(CONNECTION_FAILED, "connect() failed\n");
         return;
     } // nastaveni spojovane UDP schranky
 
-    // if (send(sock, buffer, n, 0) != n)
-    // {
-    //     Error::printError(CONNECTION_FAILED, "send() failed\n");
-    // }
+    char buffer[UDP_DATAGRAM_LIMIT] = {
+        0,
+    };
+    // int bufferLength = setupMessage(buffer);
+    int bufferLength = 10;
 
-    // if (recv(sock, buffer, BUFFER, 0) > 0)
-    // {                                                   // ˇcten´ı dat od serveru
-    //     getpeername(sock, (struct sockaddr *)&from, &fromlen)); // IP adresa a port serveru
-    //     printf("data received from %s, port %d\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port));
-    // }
-    // ukonˇcen´ı ˇcten
-    close(sock);
+    if (send(sock, buffer, bufferLength, 0) != bufferLength)
+    {
+        Error::printError(CONNECTION_FAILED, "send() failed\n");
+    }
+
+    socklen_t fromlen;
+    if (recv(sock, buffer, UDP_DATAGRAM_LIMIT, 0) > 0)
+    {                                                          // ˇcten´ı dat od serveru
+        getpeername(sock, (struct sockaddr *)&from, &fromlen); // IP adresa a port serveru
+        printf("data received from %s, port %d\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port));
+    }
+    close(this->sock);
 }
 
+// maybe
 void Connection::createTcpConnection()
 {
     std::cout << "TODO: create tcp connection " << std::endl;

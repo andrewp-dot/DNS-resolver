@@ -3,7 +3,7 @@
 
 #include "Message.h"
 
-enum connectionType
+enum ConnectionType
 {
     UDP,
     TCP
@@ -12,17 +12,16 @@ enum connectionType
 class Connection
 {
 private:
-    connectionType type;
+    ConnectionType type;
     int sock;
     Message *msg;
 
 public:
-    Connection(connectionType type = UDP)
+    Connection(ConnectionType type = UDP, Message *msg)
     {
         this->type = type;
-        this->msg = NULL;
+        this->msg = msg;
     };
-    // Message getMessage(Message &msg);
     void sendUdpQuery();
     void createTcpConnection();
 };
