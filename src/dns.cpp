@@ -40,8 +40,8 @@ int MAIN(int argc, char **argv)
         query.printQueryOptions();
     }
 
-    Message test = Message(query);
-    char buffer[512];
-    test.convertMsgToBuffer(buffer);
+    // Message test = Message(query);
+    // char buffer[512];
+    // test.convertMsgToBuffer(buffer);
     return Error::getErrorCode();
 }

@@ -37,5 +37,6 @@ void Error::printError(ErrorCode err, const char *format, ...)
 #endif
 
     va_end(args);
+    exit(Error::getErrorCode());
     return;
 }
