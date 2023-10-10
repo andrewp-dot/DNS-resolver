@@ -5,8 +5,7 @@
 enum QueryType
 {
     A,
-    AAAA,
-    IQUERY
+    AAAA = 28
 };
 
 typedef unsigned int port_t;

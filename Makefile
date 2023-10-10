@@ -26,7 +26,7 @@ run: $(PROG)
 	./$(PROG) $(ARGS)
 	
 clean: 
-	rm -f $(PROG) argtest test
+	rm -rf $(PROG) argtest test *.dSYM
 
 test: $(SRC_FILES) $(TEST_SRC_FILES) $(SRC)/$(PROG).cpp
 	$(CC) $(CFLAGS) -DTEST -I$(INCLUDE) $^ -o $@

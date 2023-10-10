@@ -21,6 +21,7 @@
 #include "Error.h"
 #include "InputParser.h"
 #include "Message.h"
+#include "Connection.h"
 
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
@@ -35,13 +36,21 @@ int MAIN(int argc, char **argv)
     InputParser parser(argc, argv);
     Query query;
     parser.parseArgs(query);
-    if (Error::getErrorCode() == SUCCESS)
-    {
-        query.printQueryOptions();
-    }
+    query.printQueryOptions();
 
-    // Message test = Message(query);
-    // char buffer[512];
-    // test.convertMsgToBuffer(buffer);
+    // setup message
+    /*
+    Message msg = Message(query);
+    */
+
+    // create connection
+    /*
+    Connection connection = Connection(UDP, &msg);
+    connection.sendUdpQuery();
+    */
+
+    // send question
+    // get response
+    // print data
     return Error::getErrorCode();
 }
