@@ -24,7 +24,7 @@ DNSHeader Message::createHeader(const Query &query)
     return header;
 }
 
-std::vector<uint8_t> convertAddressToLabels(const Query &query)
+std::vector<uint8_t> Message::convertAddressToLabels(const Query &query)
 {
     std::vector<uint8_t> labels;
 
@@ -44,9 +44,9 @@ std::vector<uint8_t> convertAddressToLabels(const Query &query)
 
         // insert label
         labels.push_back(label.length());
-        for (char c : label)
+        for (size_t i = 0; i < label.length(); i++)
         {
-            labels.push_back(static_cast<uint8_t>(c));
+            labels.push_back(static_cast<uint8_t>(label[i]));
         }
         startPos = endPos + 1;
     }
@@ -76,11 +76,4 @@ void Message::convertMsgToBuffer(char *buffer)
 {
     std::memcpy(buffer, &this->header, sizeof(DNSHeader));
     std::memcpy(buffer + sizeof(DNSHeader), &this->question, sizeof(DNSQuestion));
-
-    // std::cout << (int)buffer[0] << " | " << (int)buffer[1] << std::endl;
-    // std::cout << (int)buffer[2] << " | " << (int)buffer[3] << std::endl;
-    // std::cout << (int)buffer[4] << " | " << (int)buffer[5] << std::endl;
-    // std::cout << (int)buffer[6] << " | " << (int)buffer[7] << std::endl;
-    // std::cout << (int)buffer[8] << " | " << (int)buffer[9] << std::endl;
-    // std::cout << (int)buffer[10] << " | " << (int)buffer[11] << std::endl;
 }

@@ -168,15 +168,35 @@ int InputParser::checkIPv4AddressType(std::string address)
     }
 
     // function to parse correct ipv4
+    size_t startPos = 0;
+    while (startPos < address.npos)
+    {
+        size_t endPos = address.find(".", startPos);
+        std::string ipPart = address.substr(startPos, endPos - startPos);
 
-    // char *garbage;
-    //     long tokenValue = strtol(token.c_str(), &garbage, 10);
+        char *garbage;
+        long tokenValue = strtol(ipPart.c_str(), &garbage, 10);
 
-    //     if (strlen(garbage) > 0)
-    //     {
-    //         Error::printError(IPV4_WRONG_FORMAT, "IPv4 cannot contain any characters.\n");
-    //         return IPV4_WRONG_FORMAT;
-    //     }
+        printf("%lu\n", tokenValue);
+        if (tokenValue > 255 || tokenValue < 0)
+        {
+            Error::printError(IPV4_WRONG_FORMAT, "Invalid value\n");
+            return IPV4_WRONG_FORMAT;
+        }
+
+        if (strlen(garbage) > 0)
+        {
+            Error::printError(IPV4_WRONG_FORMAT, "IPv4 cannot contain any characters.\n");
+            return IPV4_WRONG_FORMAT;
+        }
+
+        if (endPos == address.npos)
+        {
+            return EXIT_SUCCESS;
+        }
+
+        startPos = endPos + 1;
+    }
 
     return EXIT_SUCCESS;
 }
@@ -186,7 +206,7 @@ int InputParser::checkIPv6AddressType(std::string address)
     if (address.length() > IPV6_MAX_LENGTH)
     {
         return IPV6_WRONG_FORMAT;
-    };
+    }
 
     return EXIT_SUCCESS;
 }

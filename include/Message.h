@@ -141,7 +141,7 @@ private:
 
     unsigned short generateQueryId();
     DNSHeader createHeader(const Query &query);
-    std::vector<uint8_t> convertAddressToLabels(const Query &const);
+    std::vector<uint8_t> convertAddressToLabels(const Query &query);
     DNSQuestion createQuestion(const Query &query);
 
 public:
