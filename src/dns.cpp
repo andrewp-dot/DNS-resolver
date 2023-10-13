@@ -32,14 +32,9 @@ int main(int argc, char **argv)
     parser.parseArgs(query);
     // query.printQueryOptions();
 
-    // setup message
-    Message msg = Message(query);
+    Connection connection = Connection(UDP);
+    connection.sendUdpQuery(query);
 
-    // create connection
-    Connection connection = Connection(UDP, &msg);
-    connection.sendUdpQuery();
-
-    // send question
     // get response
     // print data
     return Error::getErrorCode();

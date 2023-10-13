@@ -1,7 +1,6 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
-
-#include "Message.h"
+#include "Query.h"
 
 enum ConnectionType
 {
@@ -13,18 +12,16 @@ class Connection
 {
 private:
     ConnectionType type;
-    int sock;
-    Message *msg;
+    int sockfd;
 
     void setIPv6Settings();
 
 public:
-    Connection(ConnectionType type = UDP, Message *msg = NULL)
+    Connection(ConnectionType type = UDP)
     {
         this->type = type;
-        this->msg = msg;
     };
-    void sendUdpQuery();
+    void sendUdpQuery(const Query &query);
     void createTcpConnection();
 };
 

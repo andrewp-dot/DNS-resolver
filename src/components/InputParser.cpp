@@ -225,6 +225,12 @@ int InputParser::checkIPv6AddressType(std::string address)
     return EXIT_SUCCESS;
 }
 
+/**
+ * @brief Choose address checking function based on type of query
+ *
+ * @param query
+ * @return int
+ */
 int InputParser::checkAddressType(Query &query)
 {
     if (query.getReversed())
