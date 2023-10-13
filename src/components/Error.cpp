@@ -20,7 +20,7 @@ ErrorCode Error::getErrorCode()
 
 void Error::setErrorCode(ErrorCode err)
 {
-    if (Error::errorCode == SUCCESS)
+    if (errorCode == SUCCESS)
     {
         Error::errorCode = err;
     }
@@ -32,11 +32,11 @@ void Error::printError(ErrorCode err, const char *format, ...)
     va_list args;
     va_start(args, format);
 
-#ifndef TEST
+    // #ifndef TEST
     vfprintf(stderr, format, args);
-#endif
+    // #endif
 
     va_end(args);
-    exit(Error::getErrorCode());
+    // exit(Error::getErrorCode());
     return;
 }

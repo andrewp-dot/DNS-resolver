@@ -33,21 +33,19 @@
 
 int MAIN(int argc, char **argv)
 {
+    // if (argc >= 3)
+    //     std::cout << argv[0] << " " << argv[1] << " " << argv[2] << " " << std::endl;
     InputParser parser(argc, argv);
     Query query;
     parser.parseArgs(query);
-    query.printQueryOptions();
+    // query.printQueryOptions();
 
     // setup message
-    /*
     Message msg = Message(query);
-    */
 
     // create connection
-    /*
     Connection connection = Connection(UDP, &msg);
     connection.sendUdpQuery();
-    */
 
     // send question
     // get response

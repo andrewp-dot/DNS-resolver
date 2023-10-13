@@ -23,10 +23,19 @@ void printResults()
 void argTests()
 {
 #ifdef TEST
+    // const char programName[] = "dns";
     // no arguments test
-    TEST_ASSERT(WRONG_ARGUMENTS == test_main(1, NULL), "No arguments test.");
+    UNIT_TEST(WRONG_ARGUMENTS, test_main(1, NULL), "No arguments test.");
+
+    // clean error code...
+    char *argv[] = {(char *)"dns", (char *)"-x", (char *)"0.0.0.0"};
 
     // good arguments tests
+    int result = test_main(3, argv);
+    UNIT_TEST(EXIT_SUCCESS, result, "reversed, 0.0.0.0");
+
+    argv = {(char *)"dns", (char *)"-x", (char *)"0.0.0.0"};
+    UNIT_TEST(EXIT_SUCCESS, result, "reversed, 0.0.0.0");
 
     // wrong arguments tests
 

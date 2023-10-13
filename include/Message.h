@@ -146,7 +146,7 @@ private:
 
 public:
     Message(const Query &query);
-    void convertMsgToBuffer(char *buffer);
+    size_t convertMsgToBuffer(char *buffer);
 };
 
 #endif

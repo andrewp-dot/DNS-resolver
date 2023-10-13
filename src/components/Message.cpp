@@ -35,12 +35,9 @@ std::vector<uint8_t> Message::convertAddressToLabels(const Query &query)
     while (startPos < addr.npos)
     {
         size_t endPos = addr.find(".", startPos);
-        if (endPos == addr.npos)
-        {
-            endPos = addr.length();
-        }
+
         // get substr from start to end
-        std::string label = addr.substr(startPos, endPos - startPos);
+        std::string label = addr.substr(startPos, endPos - startPos); // here is an error
 
         // insert label
         labels.push_back(label.length());
@@ -48,9 +45,13 @@ std::vector<uint8_t> Message::convertAddressToLabels(const Query &query)
         {
             labels.push_back(static_cast<uint8_t>(label[i]));
         }
+        if (endPos >= addr.npos)
+        {
+            labels.push_back(0);
+            break;
+        }
         startPos = endPos + 1;
     }
-    labels.push_back(0);
 
     return labels;
 }
@@ -72,8 +73,9 @@ Message::Message(const Query &query)
     this->question = createQuestion(query);
 }
 
-void Message::convertMsgToBuffer(char *buffer)
+size_t Message::convertMsgToBuffer(char *buffer)
 {
-    std::memcpy(buffer, &this->header, sizeof(DNSHeader));
+    std::memcpy(buffer, &this->header, sizeof(DNSHeader)); // 12 bytes
     std::memcpy(buffer + sizeof(DNSHeader), &this->question, sizeof(DNSQuestion));
+    return sizeof(DNSHeader) + sizeof(DNSQuestion);
 }

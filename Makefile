@@ -1,6 +1,6 @@
 #compiler settings
 CC := g++
-CFLAGS := -Wall -Werror -Wextra -pedantic
+CFLAGS := -Wall -Werror -Wextra -pedantic --std=c++17
 
 # directories
 SRC := src

@@ -3,9 +3,13 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+// #include <net/init.h>
 #include "constants.h"
 #include "Connection.h"
+#include "Message.h"
 #include "Error.h"
+
+#define UDP_LIMIT 255
 
 /**
  * @brief
@@ -41,41 +45,72 @@
 
 void Connection::sendUdpQuery()
 {
-    if ((this->sock = socket(AF_INET, SOCK_DGRAM, 0) == -1))
+    const char *googleDns = "8.8.8.8";
+
+    // setup socket
+    int sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0)
     {
         Error::printError(CONNECTION_FAILED, "socket() failed\n");
         return;
     }
 
-    struct sockaddr_in server, from; // adresova struktura serveru a klienta
+    // setup server address
+    struct sockaddr_in server;
+    memset(&server, 0, sizeof(sockaddr_in));
 
-    server.sin_addr.s_addr = inet_addr("8.8.8.8");
+    server.sin_addr.s_addr = inet_addr(googleDns);
+    server.sin_port = htons(53);
     server.sin_family = AF_INET;
-    server.sin_port = DNS_PORT; // get port - returns query port, or if it is unset, returns DNS_PORT
-
-    if (connect(this->sock, (struct sockaddr *)&server, sizeof(server)) == -1)
-    {
-        Error::printError(CONNECTION_FAILED, "connect() failed\n");
-        return;
-    } // nastaveni spojovane UDP schranky
 
     char buffer[UDP_DATAGRAM_LIMIT] = {
         0,
     };
-    // int bufferLength = setupMessage(buffer);
-    int bufferLength = 10;
 
-    if (send(sock, buffer, bufferLength, 0) != bufferLength)
+    int bufferLength = (this->msg)->convertMsgToBuffer(buffer);
+
+    int bytesTx = sendto(sockfd, (const char *)buffer, bufferLength, 0, (const sockaddr *)&server, sizeof(server));
+    if (bytesTx < 0)
     {
-        Error::printError(CONNECTION_FAILED, "send() failed\n");
+        Error::printError(CONNECTION_FAILED, "sendto() failed\n");
+        return;
     }
 
-    socklen_t fromlen;
-    if (recv(sock, buffer, UDP_DATAGRAM_LIMIT, 0) > 0)
-    {                                                          // ˇcten´ı dat od serveru
-        getpeername(sock, (struct sockaddr *)&from, &fromlen); // IP adresa a port serveru
-        printf("data received from %s, port %d\n", inet_ntoa(from.sin_addr), ntohs(from.sin_port));
-    }
+    close(sockfd);
+
+    // // struct sockaddr_in server_addr;
+    // struct sockaddr_in server_addr;
+
+    // if ((this->sock = socket(AF_INET, SOCK_DGRAM, 0)) < 0)
+    //     Error::printError(CONNECTION_FAILED, "socket() failed\n");
+    // // throw std::runtime_error("creating new socket failed" + std::string(strerror(errno)));
+
+    // server_addr.sin_family = AF_INET;
+    // server_addr.sin_port = htons(10000);
+
+    // if (inet_pton(AF_INET, googleDns, &server_addr.sin_addr) <= 0)
+    //     Error::printError(CONNECTION_FAILED, "inet_pton() failed\n");
+    // // throw std::runtime_error("converting to network fromat failed");
+
+    // char buffer[UDP_DATAGRAM_LIMIT] = {
+    //     0,
+    // };
+
+    // int bufferLength = (this->msg)->convertMsgToBuffer(buffer);
+
+    // int bytesTx = sendto(this->sock, buffer, bufferLength, 0, (struct sockaddr *)&server_addr, sizeof(server_addr));
+    // if (bytesTx < 0)
+    //     Error::printError(CONNECTION_FAILED, "sendto() failed\n");
+    // throw std::runtime_error("sending msg failed" + std::string(strerror(errno)));
+
+    // socklen_t len;
+    // char response[UDP_LIMIT];
+    // int bytesRead = recvfrom(this->sock, response, UDP_LIMIT, MSG_WAITALL, (struct sockaddr *)&server_addr, &len);
+
+    // if (bytesRead < 0)
+    //     Error::printError(CONNECTION_FAILED, "socket() failed\n");
+    // throw std::runtime_error("recv of response failed" + std::string(strerror(errno)));
+
     close(this->sock);
 }
 
