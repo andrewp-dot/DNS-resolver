@@ -1,12 +1,13 @@
 #include <iostream>
 #include "Query.h"
+#include "constants.h"
 
 Query::Query()
 {
     this->recursionDesired = false;
     this->reversed = false;
     this->type = A;
-    this->port = 53;
+    this->port = DNS_PORT;
     this->server = "";
     this->server = "";
     this->isOk = true;

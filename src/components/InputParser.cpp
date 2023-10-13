@@ -72,6 +72,11 @@ bool InputParser::isGoodPortFormat(const char *port)
     return true;
 }
 
+/**
+ * @brief Set options of given query based on given arguments
+ *
+ * @param query
+ */
 void InputParser::setOptions(Query &query)
 {
     for (int i = 1; i < argc; i++)
@@ -99,13 +104,11 @@ void InputParser::setOptions(Query &query)
                 i += 1;
                 if (i >= argc)
                 {
-                    std::cerr << "Missing server." << std::endl;
                     query.setIsOk(false);
                     break;
                 }
                 if (isFlag(argv[i]))
                 {
-                    std::cerr << "Missing server." << std::endl;
                     query.setIsOk(false);
                     break;
                 }
@@ -118,13 +121,14 @@ void InputParser::setOptions(Query &query)
                 i += 1;
                 if (i >= argc)
                 {
+                    // if port is wrong, set it to PORT 53
                     std::cerr << "Undefined option: " << argv[i] << "" << std::endl;
                     query.setIsOk(false);
                     break;
                 }
                 if (isFlag(argv[i]))
                 {
-                    std::cerr << "Missing port." << std::endl;
+                    Error::printError(WRONG_ARGUMENTS, "Missing port.\n");
                     query.setIsOk(false);
                     break;
                 }
@@ -134,6 +138,7 @@ void InputParser::setOptions(Query &query)
                 }
                 else
                 {
+                    Error::printError(WRONG_ARGUMENTS, "Invalid port. Port is set by default to %d.\n", DNS_PORT);
                     query.setIsOk(false);
                 }
                 break;
@@ -150,11 +155,14 @@ void InputParser::setOptions(Query &query)
     }
 }
 
+/**
+ * @brief checks IPv4 address format
+ *
+ * @param address
+ * @return int
+ */
 int InputParser::checkIPv4AddressType(std::string address)
 {
-    // x.x.x.x
-    // max length 255.255.255.255 –> 15 chars
-    // min length 0.0.0.0 –> 7 chars
     if (address.length() > IPV4_MAX_LENGTH || address.length() < IPV4_MIN_LENGTH)
     {
         const char *msgSpecification = address.length() > IPV4_MAX_LENGTH ? "long" : "short";
@@ -201,6 +209,12 @@ int InputParser::checkIPv4AddressType(std::string address)
     return EXIT_SUCCESS;
 }
 
+/**
+ * @brief checks IPv6 address format
+ *
+ * @param address
+ * @return int
+ */
 int InputParser::checkIPv6AddressType(std::string address)
 {
     if (address.length() > IPV6_MAX_LENGTH)
@@ -243,5 +257,13 @@ void InputParser::parseArgs(Query &query)
         return;
     }
     setOptions(query);
+    if (query.getServer() == "")
+    {
+        Error::printError(WRONG_ARGUMENTS, "Server has not been set.\n");
+    }
+    if (query.getAddress() == "")
+    {
+        Error::printError(WRONG_ARGUMENTS, "Address has not been set.\n");
+    }
     checkAddressType(query);
 }
