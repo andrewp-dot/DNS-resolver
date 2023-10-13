@@ -144,6 +144,10 @@ private:
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
     DNSQuestion createQuestion(const Query &query);
 
+    /* supportive functions */
+    size_t getQnameSize() { return this->question.qname.size(); };
+    size_t getDNSQuestionSize() { return getQnameSize() + 2 * sizeof(uint16_t); }
+
 public:
     Message(const Query &query);
     size_t convertMsgToBuffer(char *buffer);
