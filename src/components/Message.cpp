@@ -58,8 +58,8 @@ DNSQuestion Message::createQuestion(const Query &query)
 {
     DNSQuestion question;
 
-    question.qclass = QTYPE_IN;
-    question.qtype = query.getType();
+    question.qclass = htons(QCLASS_IN);
+    question.qtype = htons(query.getType());
     for (auto addr : query.getAddressVector())
     {
         this->convertAddressToLabels(addr, question.qname);

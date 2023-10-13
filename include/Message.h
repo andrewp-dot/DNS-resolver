@@ -69,7 +69,7 @@ enum QueryOpcode
 //     HS = 4,
 // };
 
-#define QTYPE_IN 1 // internet QTYPE
+#define QCLASS_IN 1 // internet QTYPE
 
 /*
                                 |1  1  1  1  1  1

@@ -4,7 +4,7 @@
 
 enum QueryType
 {
-    A,
+    A = 1,
     AAAA = 28
 };
 
