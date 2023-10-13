@@ -25,16 +25,8 @@
 
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
-#ifdef TEST
-#define MAIN test_main
-#else
-#define MAIN main
-#endif
-
-int MAIN(int argc, char **argv)
+int main(int argc, char **argv)
 {
-    // if (argc >= 3)
-    //     std::cout << argv[0] << " " << argv[1] << " " << argv[2] << " " << std::endl;
     InputParser parser(argc, argv);
     Query query;
     parser.parseArgs(query);

@@ -31,10 +31,7 @@ void Error::printError(ErrorCode err, const char *format, ...)
     Error::setErrorCode(err);
     va_list args;
     va_start(args, format);
-
-    // #ifndef TEST
     vfprintf(stderr, format, args);
-    // #endif
 
     va_end(args);
     // exit(Error::getErrorCode());

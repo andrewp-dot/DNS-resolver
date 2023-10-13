@@ -26,12 +26,15 @@ run: $(PROG)
 	./$(PROG) $(ARGS)
 	
 clean: 
-	rm -rf $(PROG) argtest test *.dSYM
+	rm -rf $(PROG) test *.dSYM
 
-test: $(SRC_FILES) $(TEST_SRC_FILES) $(SRC)/$(PROG).cpp
-	$(CC) $(CFLAGS) -DTEST -I$(INCLUDE) $^ -o $@
-	./$@
-	rm -f $@
+# test: $(SRC_FILES) $(TEST_SRC_FILES) $(SRC)/$(PROG).cpp
+# 	$(CC) $(CFLAGS) -DTEST -I$(INCLUDE) $^ -o $@
+# 	./$@
+# 	rm -f $@
+
+test:
+	./tests/test.sh
 
 log: 
 	git log --graph > dns_log.txt

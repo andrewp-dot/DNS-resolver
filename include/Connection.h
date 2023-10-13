@@ -16,6 +16,8 @@ private:
     int sock;
     Message *msg;
 
+    void setIPv6Settings();
+
 public:
     Connection(ConnectionType type = UDP, Message *msg = NULL)
     {
