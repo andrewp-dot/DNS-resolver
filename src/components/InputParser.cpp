@@ -150,7 +150,7 @@ void InputParser::setOptions(Query &query)
         }
         else
         {
-            query.setAddress(argv[i]);
+            query.pushAddress(argv[i]);
         }
     }
 }
@@ -161,18 +161,18 @@ void InputParser::setOptions(Query &query)
  * @param address
  * @return int
  */
-int InputParser::checkIPv4AddressType(std::string address)
+void InputParser::checkIPv4AddressType(std::string address)
 {
     if (address.length() > IPV4_MAX_LENGTH || address.length() < IPV4_MIN_LENGTH)
     {
         const char *msgSpecification = address.length() > IPV4_MAX_LENGTH ? "long" : "short";
         Error::printError(IPV4_WRONG_FORMAT, "IPv4 address is too %s.\n", msgSpecification);
-        return IPV4_WRONG_FORMAT;
+        return;
     };
     if (!isdigit(address[0]) || !isdigit(address[address.length() - 1]))
     {
         Error::printError(IPV4_WRONG_FORMAT, "IPv4 address wrong format. Enter value among 0.0.0.0 and 255.255.255.255\n");
-        return IPV4_WRONG_FORMAT;
+        return;
     }
 
     // function to parse correct ipv4
@@ -189,24 +189,24 @@ int InputParser::checkIPv4AddressType(std::string address)
         if (tokenValue > 255 || tokenValue < 0)
         {
             Error::printError(IPV4_WRONG_FORMAT, "Invalid value\n");
-            return IPV4_WRONG_FORMAT;
+            return;
         }
 
         if (strlen(garbage) > 0)
         {
             Error::printError(IPV4_WRONG_FORMAT, "IPv4 cannot contain any characters.\n");
-            return IPV4_WRONG_FORMAT;
+            return;
         }
 
         if (endPos == address.npos)
         {
-            return EXIT_SUCCESS;
+            return;
         }
 
         startPos = endPos + 1;
     }
 
-    return EXIT_SUCCESS;
+    return;
 }
 
 /**
@@ -215,14 +215,12 @@ int InputParser::checkIPv4AddressType(std::string address)
  * @param address
  * @return int
  */
-int InputParser::checkIPv6AddressType(std::string address)
+void InputParser::checkIPv6AddressType(std::string address)
 {
     if (address.length() > IPV6_MAX_LENGTH)
-    {
-        return IPV6_WRONG_FORMAT;
-    }
+        return;
 
-    return EXIT_SUCCESS;
+    return;
 }
 
 /**
@@ -231,21 +229,19 @@ int InputParser::checkIPv6AddressType(std::string address)
  * @param query
  * @return int
  */
-int InputParser::checkAddressType(Query &query)
+void InputParser::checkAddressType(Query &query)
 {
     if (query.getReversed())
     {
-        if (query.getType() == A)
+        QueryType qType = query.getType();
+        for (auto addr : query.getAddressVector())
         {
-            return checkIPv4AddressType(query.getAddress());
+            if (qType == A)
+                checkIPv4AddressType(addr);
+            else if (qType == AAAA)
+                checkIPv6AddressType(addr);
         }
-        else if (query.getType() == AAAA)
-        {
-            return checkIPv6AddressType(query.getAddress());
-        }
-        return EXIT_SUCCESS;
     }
-    return EXIT_SUCCESS;
 }
 
 /**
@@ -267,7 +263,7 @@ void InputParser::parseArgs(Query &query)
     {
         Error::printError(WRONG_ARGUMENTS, "Server has not been set.\n");
     }
-    if (query.getAddress() == "")
+    if (query.getAddressVector().empty())
     {
         Error::printError(WRONG_ARGUMENTS, "Address has not been set.\n");
     }

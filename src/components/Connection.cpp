@@ -42,7 +42,6 @@
 
 void Connection::sendUdpQuery(const Query &query)
 {
-    const char *googleDns = "8.8.8.8";
 
     // setup socket
     this->sockfd = socket(AF_INET, SOCK_DGRAM, 0);
@@ -56,8 +55,8 @@ void Connection::sendUdpQuery(const Query &query)
     struct sockaddr_in server;
     memset(&server, 0, sizeof(sockaddr_in));
 
-    server.sin_addr.s_addr = inet_addr(googleDns);
-    server.sin_port = htons(53);
+    server.sin_addr.s_addr = inet_addr(query.getServer().c_str());
+    server.sin_port = htons(query.getPort());
     server.sin_family = AF_INET;
 
     char buffer[UDP_DATAGRAM_LIMIT] = {

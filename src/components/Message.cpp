@@ -19,17 +19,14 @@ DNSHeader Message::createHeader(const Query &query)
     header.qr = QUERY;
     header.opcode = htons(OPCODE_QUERY);
     header.rd = query.getRecursionDesired();
-    header.qdcount = htons(1); // default 1 change it based on multiple querys
+    header.qdcount = htons(query.getAddressVector().size()); // default 1 change it based on multiple querys
 
     return header;
 }
 
-std::vector<uint8_t> Message::convertAddressToLabels(const Query &query)
+// here is fck up -> need to by pushed to q name
+void Message::convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels)
 {
-    std::vector<uint8_t> labels;
-
-    std::string addr = query.getAddress();
-
     size_t startPos = 0;
 
     while (startPos < addr.npos)
@@ -53,16 +50,28 @@ std::vector<uint8_t> Message::convertAddressToLabels(const Query &query)
         startPos = endPos + 1;
     }
 
-    return labels;
+    return;
 }
 
 DNSQuestion Message::createQuestion(const Query &query)
 {
     DNSQuestion question;
-    question.qname = convertAddressToLabels(query);
+
     question.qclass = QTYPE_IN;
     question.qtype = query.getType();
+    for (auto addr : query.getAddressVector())
+    {
+        this->convertAddressToLabels(addr, question.qname);
+    }
 
+    for (auto qname : question.qname)
+    {
+        if (qname == 0)
+            std::cout << " 0 ";
+        else
+            std::cout << (char)qname;
+    }
+    std::cout << std::endl;
     return question;
 }
 
@@ -77,5 +86,5 @@ size_t Message::convertMsgToBuffer(char *buffer)
 {
     std::memcpy(buffer, &this->header, sizeof(DNSHeader)); // 12 bytes
     std::memcpy(buffer + sizeof(DNSHeader), &this->question, sizeof(DNSQuestion));
-    return sizeof(DNSHeader) + sizeof(DNSQuestion);
+    return sizeof(DNSHeader) + 2 * sizeof(uint16_t) + this->question.qname.size();
 }

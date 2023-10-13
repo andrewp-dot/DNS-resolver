@@ -31,9 +31,9 @@ private:
 
     bool isGoodPortFormat(const char *port);
     void setOptions(Query &query);
-    int checkIPv4AddressType(std::string address);
-    int checkIPv6AddressType(std::string address);
-    int checkAddressType(Query &query);
+    void checkIPv4AddressType(std::string address);
+    void checkIPv6AddressType(std::string address);
+    void checkAddressType(Query &query);
 
 public:
     InputParser(int &argc, char **argv);

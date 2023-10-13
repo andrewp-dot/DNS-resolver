@@ -9,7 +9,6 @@ Query::Query()
     this->type = A;
     this->port = DNS_PORT;
     this->server = "";
-    this->server = "";
     this->isOk = true;
 }
 
@@ -26,5 +25,5 @@ void Query::printQueryOptions()
     std::cout << "Recursive: " << boolToString(this->recursionDesired) << ", ";
     std::cout << "Reversed query: " << boolToString(this->reversed) << std::endl;
     std::cout << "Server: " << this->server << std::endl;
-    std::cout << "Address: " << this->address << std::endl;
+    // std::cout << "Address: " << this->address << std::endl;
 }
