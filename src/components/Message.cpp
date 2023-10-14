@@ -2,8 +2,6 @@
 #include "Query.h"
 #include <iostream>
 
-#define TO_BITS 8
-
 unsigned short Message::generateQueryId()
 {
     // algorithm for generating query id
@@ -21,7 +19,7 @@ DNSHeader Message::createHeader(const Query &query)
     header.qr = QUERY;
     header.opcode = htons(OPCODE_QUERY);
     header.rd = query.getRecursionDesired();
-    header.qdcount = htons(query.getAddressVector().size()); // default 1 change it based on multiple querys
+    header.qdcount = htons(this->questionAmount);
 
     return header;
 }
@@ -54,33 +52,74 @@ void Message::convertAddressToLabels(std::string addr, std::vector<uint8_t> &lab
     return;
 }
 
-DNSQuestion Message::createQuestion(const Query &query)
+std::vector<DNSQuestion> Message::createQuestions(const Query &query)
 {
-    DNSQuestion question;
+    std::vector<DNSQuestion> questions; // undefined
+    questions.reserve(this->questionAmount);
 
-    question.qclass = htons(QCLASS_IN);
-    question.qtype = htons(query.getType());
+    int i = 0;
     for (auto addr : query.getAddressVector())
     {
-        this->convertAddressToLabels(addr, question.qname);
+        questions[i].qclass = htons(QCLASS_IN);
+        questions[i].qtype = htons(query.getType());
+        this->convertAddressToLabels(addr, questions[i].qname);
+        i += 1;
     }
 
-    for (auto qname : question.qname)
+    return questions;
+}
+
+void Message::convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question)
+{
+    std::cout << "Question" << std::endl;
+    for (size_t i = 0; i < question.qname.size(); i++)
     {
-        if (qname == 0)
-            std::cout << " 0 ";
-        else
-            std::cout << (char)qname;
+        std::memcpy(buffer, &question.qname[i], sizeof(uint8_t));
+        buffer += 1;
     }
-    std::cout << std::endl;
-    return question;
+    // qtype copy
+    memcpy(buffer, &question.qtype, sizeof(uint16_t));
+    buffer += sizeof(uint16_t);
+
+    // qclass copy
+    memcpy(buffer, &question.qclass, sizeof(uint16_t));
+    buffer += sizeof(uint16_t);
+}
+
+size_t Message::getDNSQuestionsSize()
+{
+    size_t questionsSize = 0;
+    for (int i = 0; i < this->questionAmount; i++)
+    {
+        questionsSize += getQuestionSize(i);
+    }
+    return questionsSize;
+}
+
+void Message::printMessageQnames()
+{
+    for (int i = 0; i < this->questionAmount; i++)
+    {
+        for (size_t j = 0; j < questions[i].qname.size(); j++)
+        {
+            if (this->questions[i].qname[j] < 32)
+            {
+                std::cout << " ";
+            }
+            else
+                std::cout << this->questions[i].qname[j];
+        }
+        std::cout << "|" << std::endl;
+    }
 }
 
 Message::Message(const Query &query)
 {
     this->msgFormat = query.getType();
+    this->questionAmount = query.getAddressVector().size();
     this->header = createHeader(query);
-    this->question = createQuestion(query);
+    this->questions = createQuestions(query);
+    // printMessageQnames();
 }
 
 size_t Message::convertMsgToBuffer(char *buffer)
@@ -88,16 +127,21 @@ size_t Message::convertMsgToBuffer(char *buffer)
     // header copy
     std::memcpy(buffer, &this->header, sizeof(DNSHeader));
 
+    // skip header
+    buffer += sizeof(DNSHeader);
+
     // qname(s) copy
-    for (size_t i = 0; i < this->question.qname.size() * TO_BITS; i++)
+    int questionNum = 0;
+    while (questionNum < this->questionAmount)
     {
-        std::memcpy(buffer + sizeof(DNSHeader) + i, &this->question.qname[i], sizeof(uint8_t));
+        convertSingleQuestionToBuffer(buffer, questions[questionNum]);
+        buffer += this->getQuestionSize(questionNum);
+        questionNum += 1;
     }
-    // qclass copy
-    memcpy(buffer + sizeof(DNSHeader) + this->getQnameSize() + sizeof(uint16_t), &this->question.qclass, sizeof(uint16_t));
 
-    // qtype copy
-    memcpy(buffer + sizeof(DNSHeader) + this->getQnameSize(), &this->question.qtype, sizeof(uint16_t));
-
-    return sizeof(DNSHeader) + this->getDNSQuestionSize();
+    return sizeof(DNSHeader) + this->getDNSQuestionsSize();
 }
+
+/*
+| HEADER | QUESTION1 | Q1TAIL | QUESTION2 | Q2TAIL | ... | QUESTIONX | QX TAIL |
+*/

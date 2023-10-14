@@ -136,17 +136,23 @@ class Message
 
 private:
     DNSHeader header;
-    DNSQuestion question;
+    std::vector<DNSQuestion> questions;
     QueryType msgFormat;
+    int questionAmount;
 
     unsigned short generateQueryId();
     DNSHeader createHeader(const Query &query);
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
-    DNSQuestion createQuestion(const Query &query);
+    std::vector<DNSQuestion> createQuestions(const Query &query);
 
     /* supportive functions */
-    size_t getQnameSize() { return this->question.qname.size(); };
-    size_t getDNSQuestionSize() { return getQnameSize() + 2 * sizeof(uint16_t); }
+    size_t qetQuestionTailSize() { return sizeof(this->questions[0].qclass) + sizeof(this->questions[0].qtype); }
+    size_t getQuestionSize(int index) { return this->questions[index].qname.size() + qetQuestionTailSize(); };
+    size_t getDNSQuestionsSize();
+    void convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question);
+
+    /* prints */
+    void printMessageQnames();
 
 public:
     Message(const Query &query);
