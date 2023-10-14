@@ -143,8 +143,8 @@ private:
     unsigned short generateQueryId();
 
     /* header */
-    DNSHeader createHeader(const Query &query);
     QueryOpcode getQueryOpcode(const Query &query);
+    DNSHeader createHeader(const Query &query);
 
     /* questions */
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
