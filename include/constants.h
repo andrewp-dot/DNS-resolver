@@ -15,6 +15,7 @@
 #define IPV4_MIN_LENGTH 7
 #define IPV4_MAX_LENGTH 15
 
+#define IPV6_MIN_LENGTH 3
 #define IPV6_MAX_LENGTH 39
 
 #endif

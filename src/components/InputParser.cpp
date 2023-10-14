@@ -209,6 +209,59 @@ void InputParser::checkIPv4AddressType(std::string address)
     return;
 }
 
+bool isIPv6Char(char c)
+{
+    if (!isdigit(c))
+    {
+        switch (c)
+        {
+        case 'a':
+        case 'b':
+        case 'c':
+        case 'd':
+        case 'e':
+        case 'f':
+            break;
+        default:
+            return false;
+        }
+    }
+    return true;
+}
+
+bool checkFullLengthIPv6(std::string address)
+{
+    // iterate through all address
+    size_t startPos = 0;
+    while (startPos < address.npos)
+    {
+        size_t endPos = address.find(":", startPos);
+
+        std::string ipv6Part = address.substr(startPos, endPos - startPos);
+        if (ipv6Part.length() > 4)
+        {
+            Error::printError(IPV6_WRONG_FORMAT, "IPv6 part \"%s\" is too long.\n", ipv6Part.c_str());
+            return false;
+        }
+        for (size_t i = 0; i < ipv6Part.length(); i++)
+        {
+            if (!isIPv6Char(ipv6Part[i]))
+            {
+                Error::printError(IPV6_WRONG_FORMAT, "Invlaid character \"%c\" in IPv6 address.\n", ipv6Part[i]);
+                return false;
+            }
+        }
+
+        startPos = endPos + 1;
+    }
+    return true;
+}
+
+bool checkShortenedLengthIPv6(std::string address)
+{
+    return true;
+}
+
 /**
  * @brief checks IPv6 address format
  *
@@ -217,8 +270,51 @@ void InputParser::checkIPv4AddressType(std::string address)
  */
 void InputParser::checkIPv6AddressType(std::string address)
 {
-    if (address.length() > IPV6_MAX_LENGTH)
+    // x:x:x:x:x:x:x:x
+    // 0000:0000:0000:0000:0000:0000:0000:0000
+    // ffff:ffff:ffff:ffff:ffff:ffff:ffff:ffff
+    // ::1
+    // 1234:0000:0000:0000:abcd::f
+    // 2001:0db8:85a3:0000:0000:8a2e:0370:7334
+    // 1234:0:0:abcd::f
+    // 1234::a:0:0:f
+
+    // cannot be 2 or more ::
+    // can shortcut only the most left and longest sequences of zeros
+    // length :: of sequence 8 quarters - actual quarters
+
+    // chceck max length
+    unsigned int addrLength = address.length();
+    if (addrLength > IPV6_MAX_LENGTH)
+    {
+        Error::printError(IPV6_WRONG_FORMAT, "IPv6 address is too long.\n");
         return;
+    }
+
+    if (addrLength < IPV6_MIN_LENGTH)
+    {
+        Error::printError(IPV6_WRONG_FORMAT, "IPv6 address is too short.\n");
+        return;
+    }
+
+    bool ipv6isOk = true;
+    if (addrLength == IPV6_MAX_LENGTH)
+    {
+        if (!this->checkFullLengthIPv6(address))
+            ipv6isOk = false;
+    }
+    else
+    {
+        if (!this->checkShortenedLengthIPv6(address))
+            ipv6isOk = false;
+    }
+
+    if (!ipv6isOk)
+    {
+        Error::printError(IPV6_WRONG_FORMAT, "IPv6 is in wrong format\n");
+    }
+
+    // check every part format
 
     return;
 }
