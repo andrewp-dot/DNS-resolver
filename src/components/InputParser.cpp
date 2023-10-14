@@ -209,7 +209,7 @@ void InputParser::checkIPv4AddressType(std::string address)
     return;
 }
 
-bool isIPv6Char(char c)
+bool InputParser::isIPv6Char(char c)
 {
     if (!isdigit(c))
     {
@@ -229,7 +229,7 @@ bool isIPv6Char(char c)
     return true;
 }
 
-bool checkFullLengthIPv6(std::string address)
+bool InputParser::checkFullLengthIPv6(std::string address)
 {
     // iterate through all address
     size_t startPos = 0;
@@ -257,8 +257,9 @@ bool checkFullLengthIPv6(std::string address)
     return true;
 }
 
-bool checkShortenedLengthIPv6(std::string address)
+bool InputParser::checkShortenedLengthIPv6(std::string address)
 {
+    (void)address;
     return true;
 }
 
@@ -297,24 +298,14 @@ void InputParser::checkIPv6AddressType(std::string address)
         return;
     }
 
-    bool ipv6isOk = true;
     if (addrLength == IPV6_MAX_LENGTH)
     {
-        if (!this->checkFullLengthIPv6(address))
-            ipv6isOk = false;
+        this->checkFullLengthIPv6(address);
     }
     else
     {
-        if (!this->checkShortenedLengthIPv6(address))
-            ipv6isOk = false;
+        this->checkShortenedLengthIPv6(address);
     }
-
-    if (!ipv6isOk)
-    {
-        Error::printError(IPV6_WRONG_FORMAT, "IPv6 is in wrong format\n");
-    }
-
-    // check every part format
 
     return;
 }

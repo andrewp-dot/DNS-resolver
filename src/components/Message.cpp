@@ -9,6 +9,15 @@ unsigned short Message::generateQueryId()
     return 12345;
 }
 
+QueryOpcode Message::getQueryOpcode(const Query &query)
+{
+    if (query.getReversed())
+    {
+        return OPCODE_IQUERY;
+    }
+    return OPCODE_QUERY;
+}
+
 DNSHeader Message::createHeader(const Query &query)
 {
     DNSHeader header;
@@ -17,7 +26,7 @@ DNSHeader Message::createHeader(const Query &query)
     // set flags
     header.id = htons(generateQueryId());
     header.qr = QUERY;
-    header.opcode = htons(OPCODE_QUERY);
+    header.opcode = htons(getQueryOpcode(query));
     header.rd = query.getRecursionDesired();
     header.qdcount = htons(this->questionAmount);
 
@@ -62,7 +71,15 @@ std::vector<DNSQuestion> Message::createQuestions(const Query &query)
     {
         questions[i].qclass = htons(QCLASS_IN);
         questions[i].qtype = htons(query.getType());
-        this->convertAddressToLabels(addr, questions[i].qname);
+
+        // based on query settings set up question
+        if (query.getType() == A)
+        {
+            this->convertAddressToLabels(addr, questions[i].qname);
+        }
+        else if (query.getType() == AAAA)
+        {
+        }
         i += 1;
     }
 
