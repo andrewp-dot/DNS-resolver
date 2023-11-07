@@ -5,7 +5,8 @@
 enum QueryType
 {
     A = 1,
-    AAAA = 28
+    PTR = 12,
+    AAAA = 28,
 };
 
 typedef unsigned int port_t;
@@ -16,6 +17,7 @@ class Query
 private:
     bool recursionDesired;
     bool reversed;
+    bool ipv6;
     QueryType type;
     port_t port;
     std::string server;
@@ -28,6 +30,7 @@ public:
     // setters
     void setRecursionDesired(bool value) { this->recursionDesired = value; };
     void setReversed(bool value) { this->reversed = value; };
+    void setIPv6(bool value) { this->ipv6 = value; };
     void setType(QueryType type) { this->type = type; };
     void setPort(port_t portNum) { this->port = portNum; };
     void setServer(std::string server) { this->server = server; };
@@ -38,6 +41,7 @@ public:
     // getters
     bool getRecursionDesired() const { return this->recursionDesired; };
     bool getReversed() const { return this->reversed; };
+    bool getIPv6() const { return this->ipv6; };
     QueryType getType() const { return this->type; };
     port_t getPort() const { return this->port; };
     std::string getServer() const { return this->server; };

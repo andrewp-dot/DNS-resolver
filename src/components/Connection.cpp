@@ -40,6 +40,16 @@
  * google : 8.8.8.8
  */
 
+/**
+ * TODO:
+ * 1) sendUdpQuery devide structure
+ * 2) suupport reverse queries
+ * 3) recieve message
+ * 4) recieve messages from multiple questions
+ * 5) write tests
+ * 6) documentation
+ */
+
 void Connection::sendUdpQuery(const Query &query)
 {
 
@@ -52,12 +62,20 @@ void Connection::sendUdpQuery(const Query &query)
     }
 
     // setup server address
-    struct sockaddr_in server;
+    struct sockaddr_in server, from;
     memset(&server, 0, sizeof(sockaddr_in));
+    memset(&from, 0, sizeof(sockaddr_in));
 
+    // TODO: here function to convert example kazi.fit
     server.sin_addr.s_addr = inet_addr(query.getServer().c_str());
     server.sin_port = htons(query.getPort());
     server.sin_family = AF_INET;
+
+    if (connect(this->sockfd, (struct sockaddr *)&server, sizeof(server)) < 0)
+    {
+        Error::printError(CONNECTION_FAILED, "connect() failed\n");
+        return;
+    }
 
     char buffer[UDP_DATAGRAM_LIMIT] = {
         0,
@@ -66,18 +84,20 @@ void Connection::sendUdpQuery(const Query &query)
     Message msg = Message(query);
     int bufferLength = msg.convertMsgToBuffer(buffer);
 
-    int bytesTx = sendto(this->sockfd, (const char *)buffer, bufferLength, 0, (const sockaddr *)&server, sizeof(server));
+    int bytesTx = send(this->sockfd, (const char *)buffer, bufferLength, 0);
     if (bytesTx < 0)
     {
         Error::printError(CONNECTION_FAILED, "sendto() failed\n");
         return;
     }
 
+    // recieve message
+
     close(this->sockfd);
 }
 
-// maybe
-void Connection::createTcpConnection()
-{
-    std::cout << "TODO: create tcp connection " << std::endl;
-}
+// // maybe
+// void Connection::createTcpConnection()
+// {
+//     std::cout << "TODO: create tcp connection " << std::endl;
+// }

@@ -147,6 +147,8 @@ private:
     DNSHeader createHeader(const Query &query);
 
     /* questions */
+    void convertIPv4ToLabels(std::string addr, std::vector<uint8_t> &labels);
+    void convertIPv6ToLabels(std::string addr, std::vector<uint8_t> &labels);
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
     std::vector<DNSQuestion> createQuestions(const Query &query);
 

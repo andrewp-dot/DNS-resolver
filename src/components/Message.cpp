@@ -33,6 +33,14 @@ DNSHeader Message::createHeader(const Query &query)
     return header;
 }
 
+// void convertIPv4ToLabels(std::string addr, std::vector<uint8_t> &labels)
+// {
+// }
+
+// void convertIPv6ToLabels(std::string addr, std::vector<uint8_t> &labels)
+// {
+// }
+
 void Message::convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels)
 {
     size_t startPos = 0;
@@ -73,12 +81,18 @@ std::vector<DNSQuestion> Message::createQuestions(const Query &query)
         questions[i].qtype = htons(query.getType());
 
         // based on query settings set up question
-        if (query.getType() == A)
+        if (query.getReversed())
+        {
+            printf("reversed\n");
+            if (query.getType() == A)
+            {
+                this->convertAddressToLabels(addr, questions[i].qname);
+            } // type A then convert IPv4 to labels
+            // else if type AAAA then convert IPv6 to labels
+        }
+        else
         {
             this->convertAddressToLabels(addr, questions[i].qname);
-        }
-        else if (query.getType() == AAAA)
-        {
         }
         i += 1;
     }

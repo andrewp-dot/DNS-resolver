@@ -29,23 +29,56 @@ private:
     int argc;
     char **argv;
 
+    /**
+     * @brief checks if next program argument is a flag
+     *
+     * @return true
+     * @return false
+     */
+    bool isFlag(const char *arg);
+
+    /**
+     * @brief Checks string port format
+     *
+     * @param port - port to be verified
+     * @return true
+     * @return false
+     */
     bool isGoodPortFormat(const char *port);
+
+    /**
+     * @brief Set the Query Type based on query settings
+     *
+     * @param query
+     */
+    void setQueryType(Query &query);
+
+    /**
+     * @brief Set options of given query based on given arguments
+     *
+     * @param query
+     */
     void setOptions(Query &query);
 
-    /* IPv4 checking functions */
-    void checkIPv4AddressType(std::string address);
-
-    /* IPv6 checking functions*/
-    bool isIPv6Char(char c);
-    bool checkFullLengthIPv6(std::string address);
-    bool checkShortenedLengthIPv6(std::string address);
-    void checkIPv6AddressType(std::string address);
-
-    /* other checks */
-    void checkAddressType(Query &query);
+    void reverseIPv4();
+    void reverseIPv6();
+    void reverseAddress(Query &query);
 
 public:
+    /**
+     * @brief Construct a new Input Parser:: Input Parser object
+     *
+     * @param argc - number of program arguments
+     * @param argv - program arguments array
+     */
     InputParser(int &argc, char **argv);
+
+    /**
+     * @brief Parses arguments and set program settings
+     *
+     * Iterates through every character of every argument. If it finds '-' searches for option and validates option argument if necessary.
+     *
+     */
     void parseArgs(Query &query);
 };
 
