@@ -54,15 +54,18 @@ private:
     void setQueryType(Query &query);
 
     /**
+     * @brief modifies query addresses based on query type
+     *
+     * @param query
+     */
+    void modifyAddress(Query &query);
+
+    /**
      * @brief Set options of given query based on given arguments
      *
      * @param query
      */
     void setOptions(Query &query);
-
-    void reverseIPv4();
-    void reverseIPv6();
-    void reverseAddress(Query &query);
 
 public:
     /**

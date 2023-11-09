@@ -17,5 +17,6 @@
 
 #define IPV6_MIN_LENGTH 3
 #define IPV6_MAX_LENGTH 39
+#define IPV6_PART_SIZE 4
 
 #endif

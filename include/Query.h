@@ -48,6 +48,11 @@ public:
     std::vector<std::string> getAddressVector() const { return this->addressVector; };
     bool getIsOk() const { return this->isOk; };
 
+    /* supportive functions */
+    void reverseStringVector(std::vector<std::string> &vec);
+    void reverseIPv4();
+    void reverseIPv6();
+
     std::string boolToString(bool expr);
     void printQueryOptions();
 };

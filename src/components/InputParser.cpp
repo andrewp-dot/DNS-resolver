@@ -54,14 +54,30 @@ void InputParser::setQueryType(Query &query)
 {
     if (query.getReversed())
     {
+        std::cout << "TRUE" << std::endl;
         query.setType(PTR);
-        return;
     }
     else
     {
         if (query.getIPv6())
         {
             query.setType(AAAA);
+        }
+    }
+}
+
+void InputParser::modifyAddress(Query &query)
+{
+
+    if (query.getType() == PTR)
+    {
+        if (query.getIPv6())
+        {
+            query.reverseIPv6();
+        }
+        else
+        {
+            query.reverseIPv4();
         }
     }
 }
@@ -147,6 +163,7 @@ void InputParser::setOptions(Query &query)
     }
 
     setQueryType(query);
+    modifyAddress(query);
 }
 
 void InputParser::parseArgs(Query &query)

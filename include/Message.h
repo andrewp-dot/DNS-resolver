@@ -146,9 +146,14 @@ private:
     QueryOpcode getQueryOpcode(const Query &query);
     DNSHeader createHeader(const Query &query);
 
+    /* ip formats manipulation */
+    // void reverseIPv4(Query &query);
+    // void reverseIPv6(Query &query);
+
     /* questions */
-    void convertIPv4ToLabels(std::string addr, std::vector<uint8_t> &labels);
-    void convertIPv6ToLabels(std::string addr, std::vector<uint8_t> &labels);
+    // void Message::convertIPv4ToLabels(Query &query, std::vector<uint8_t> &labels);
+    // void convertIPv6ToLabels(std::string addr, std::vector<uint8_t> &labels);
+
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
     std::vector<DNSQuestion> createQuestions(const Query &query);
 
