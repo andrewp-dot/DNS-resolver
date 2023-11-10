@@ -73,12 +73,14 @@ void InputParser::modifyAddress(Query &query)
         if (query.getIPv6())
         {
             query.reverseIPv6();
-            // query.getAddressVector().at(0).append("TEST");
-            // std::cout << query.getAddressVector().at(0) << std::endl;
+            query.setAddress(query.getAddress().append("ip6.arpa"));
+            std::cout << query.getAddress() << std::endl;
         }
         else
         {
             query.reverseIPv4();
+            query.setAddress(query.getAddress().append("IN-ADDR.ARPA."));
+            std::cout << query.getAddress() << std::endl;
         }
     }
 }

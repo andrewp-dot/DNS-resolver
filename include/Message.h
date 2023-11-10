@@ -101,7 +101,6 @@ class Message
 
 private:
     DNSHeader header;
-    // std::vector<DNSQuestion> questions;
     DNSQuestion question;
     QueryType msgFormat;
     int questionAmount;
@@ -115,21 +114,12 @@ private:
     /* questions */
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
     DNSQuestion createQuestion(const Query &query);
-    // std::vector<DNSQuestion> createQuestions(const Query &query);
 
     /* supportive functions */
-    // size_t qetQuestionTailSize() { return sizeof(this->questions[0].qclass) + sizeof(this->questions[0].qtype); }
-    // size_t getQuestionSize(int index) { return this->questions[index].qname.size() + qetQuestionTailSize(); };
-    size_t getQuestionTailSize()
-    {
-        return sizeof(this->question.qclass) + sizeof(this->question.qtype);
-    };
+    inline size_t getQuestionTailSize() { return sizeof(this->question.qclass) + sizeof(this->question.qtype); };
     size_t getQuestionSize() { return this->question.qname.size() + getQuestionTailSize(); }
     size_t getDNSQuestionsSize();
     void convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question);
-
-    /* prints */
-    void printMessageQnames();
 
 public:
     Message(const Query &query);

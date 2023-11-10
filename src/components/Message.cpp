@@ -13,7 +13,8 @@ QueryOpcode Message::getQueryOpcode(const Query &query)
 {
     if (query.getReversed())
     {
-        return OPCODE_IQUERY;
+        // return OPCODE_IQUERY;
+        return OPCODE_QUERY;
     }
     return OPCODE_QUERY;
 }
@@ -61,33 +62,6 @@ void Message::convertAddressToLabels(std::string addr, std::vector<uint8_t> &lab
     return;
 }
 
-// std::vector<DNSQuestion> Message::createQuestions(const Query &query)
-// {
-//     std::vector<DNSQuestion> questions; // undefined
-//     questions.reserve(this->questionAmount);
-
-//     int i = 0;
-//     for (auto addr : query.getAddressVector())
-//     {
-//         questions[i].qclass = htons(QCLASS_IN);
-//         questions[i].qtype = htons(query.getType());
-
-//         // based on query settings set up question
-//         // if (query.getReversed())
-//         // {
-//         //     printf("reversed\n");
-//         // }
-//         // else
-//         // {
-//         //     this->convertAddressToLabels(addr, questions[i].qname);
-//         // }
-//         this->convertAddressToLabels(addr, questions[i].qname);
-//         i += 1;
-//     }
-
-//     return questions;
-// }
-
 DNSQuestion Message::createQuestion(const Query &query)
 {
     DNSQuestion newQuestion;
@@ -111,46 +85,20 @@ void Message::convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question)
 
     // qclass copy
     memcpy(buffer, &question.qclass, sizeof(uint16_t));
-    buffer += sizeof(uint16_t);
+    // buffer += sizeof(uint16_t);
 }
 
 size_t Message::getDNSQuestionsSize()
 {
-    // size_t questionsSize = 0;
-    // for (int i = 0; i < this->questionAmount; i++)
-    // {
-    //     questionsSize += getQuestionSize(i);
-    // }
-    // return questionsSize;
     return getQuestionSize();
 }
-
-// void Message::printMessageQnames()
-// {
-//     for (int i = 0; i < this->questionAmount; i++)
-//     {
-//         for (size_t j = 0; j < questions[i].qname.size(); j++)
-//         {
-//             if (this->questions[i].qname[j] < 32)
-//             {
-//                 std::cout << " ";
-//             }
-//             else
-//                 std::cout << this->questions[i].qname[j];
-//         }
-//         std::cout << "|" << std::endl;
-//     }
-// }
 
 Message::Message(const Query &query)
 {
     this->msgFormat = query.getType();
-    // this->questionAmount = query.getAddressVector().size();
     this->questionAmount = 1;
     this->header = createHeader(query);
     this->question = createQuestion(query);
-    // this->questions = createQuestions(query);
-    // printMessageQnames();
 }
 
 size_t Message::convertMsgToBuffer(char *buffer)
@@ -160,22 +108,7 @@ size_t Message::convertMsgToBuffer(char *buffer)
 
     // skip header
     buffer += sizeof(DNSHeader);
-
-    // qname(s) copy
-
-    // multiquestion solution
-    // int questionNum = 0;
-    // while (questionNum < this->questionAmount)
-    // {
-    //     convertSingleQuestionToBuffer(buffer, questions[questionNum]);
-    //     buffer += this->getQuestionSize(questionNum);
-    //     questionNum += 1;
-    // }
     convertSingleQuestionToBuffer(buffer, question);
 
     return sizeof(DNSHeader) + this->getDNSQuestionsSize();
 }
-
-/*
-| HEADER | QUESTION1 | Q1TAIL | QUESTION2 | Q2TAIL | ... | QUESTIONX | QX TAIL |
-*/

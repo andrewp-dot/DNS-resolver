@@ -66,7 +66,6 @@ void Query::reverseIPv4()
         parsedAddressString.append(parsedAddress.at(i));
     }
 
-    std::cout << parsedAddressString << std::endl;
     this->setAddress(parsedAddressString);
 }
 
@@ -106,10 +105,6 @@ void Query::reverseIPv6()
             parsedAddress.append(".");
         }
     }
-
-    // std::cout << parsedAddress << std::endl;
-    // push it to query address
-    // this->getAddressVector().at(0) = parsedAddress;
     this->setAddress(parsedAddress);
 }
 
