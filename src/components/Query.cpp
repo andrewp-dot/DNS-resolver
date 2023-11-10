@@ -34,7 +34,8 @@ void Query::reverseIPv4()
     size_t startPos = 0;
 
     std::vector<std::string> parsedAddress;
-    std::string address = this->getAddressVector().at(0);
+    // std::string address = this->getAddressVector().at(0);
+    std::string address = this->getAddress();
     while (startPos < address.npos)
     {
         // here is a mistake -> still finds same dot
@@ -56,20 +57,24 @@ void Query::reverseIPv4()
 
     // reverse parsedAddress
     reverseStringVector(parsedAddress);
+    parsedAddress.push_back(".");
 
-    // print parsed ipv4
+    // convert vector to string
+    std::string parsedAddressString;
     for (size_t i = 0; i < parsedAddress.size(); i++)
     {
-        std::cout << parsedAddress.at(i);
+        parsedAddressString.append(parsedAddress.at(i));
     }
 
-    std::cout << std::endl;
+    std::cout << parsedAddressString << std::endl;
+    this->setAddress(parsedAddressString);
 }
 
 void Query::reverseIPv6()
 {
     std::string parsedAddress;
-    std::string address = this->getAddressVector().at(0);
+    // std::string address = this->getAddressVector().at(0);
+    std::string address = this->getAddress();
     // count all 4 chars ->  translate this 4321:0:1:2:3:4:567:89ab
     // int this -> b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4
     // int this -> b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.
@@ -77,13 +82,11 @@ void Query::reverseIPv6()
     // idea -> going from behind -> place every 4 chars and again until end // MAX_CHARS
     for (size_t i = 0; i < address.size(); i++)
     {
-        // push part
         // get part
         char part[IPV6_PART_SIZE] = {'0', '0', '0', '0'};
         for (size_t j = 0; j < IPV6_PART_SIZE; j++)
         {
             char currentChar = address[address.size() - i - j - 1];
-            // if(isIPv6char(currentChar))
             if (currentChar == ':')
             {
                 i += j;
@@ -96,21 +99,18 @@ void Query::reverseIPv6()
                 break;
             }
         }
-        // if (address[address.size() - i - 1] == ':')
-        // {
-        //     i += 1;
-        // }
+        // push part
         for (size_t j = 0; j < IPV6_PART_SIZE; j++)
         {
             parsedAddress.push_back(part[j]);
             parsedAddress.append(".");
         }
-        // parsedAddress.push_back(currentChar);
-        // parsedAddress.append(".");
     }
 
-    std::cout << parsedAddress << std::endl;
-    // std::cout << address.size() << std::endl;
+    // std::cout << parsedAddress << std::endl;
+    // push it to query address
+    // this->getAddressVector().at(0) = parsedAddress;
+    this->setAddress(parsedAddress);
 }
 
 std::string Query::boolToString(bool expr)

@@ -2,41 +2,6 @@
 #define MESSAGE_H
 #include "Query.h"
 
-/**
- * @brief RR top level structure
- * NAME
- * TYPE
- * CLASS
- * TTL
- * RDLENGTH
- * RDATA
- */
-
-/*
-NAME            an owner name, i.e., the name of the node to which this
-                resource record pertains.
-
-TYPE            two octets containing one of the RR TYPE codes. (A, AAAA, PTR, ... )
-
-CLASS           two octets containing one of the RR CLASS codes. (IN)
-
-TTL             a 32 bit signed integer that specifies the time interval
-                that the resource record may be cached before the source
-                of the information should again be consulted.  Zero
-                values are interpreted to mean that the RR can only be
-                used for the transaction in progress, and should not be
-                cached.  For example, SOA records are always distributed
-                with a zero TTL to prohibit caching.  Zero values can
-                also be used for extremely volatile data.
-
-RDLENGTH        an unsigned 16 bit integer that specifies the length in
-                octets of the RDATA field.
-
-RDATA           a variable length string of octets that describes the
-                resource.  The format of this information varies
-                according to the TYPE and CLASS of the resource record.
-*/
-
 /* Messages:
     +---------------------+
     |        Header       |
@@ -136,7 +101,8 @@ class Message
 
 private:
     DNSHeader header;
-    std::vector<DNSQuestion> questions;
+    // std::vector<DNSQuestion> questions;
+    DNSQuestion question;
     QueryType msgFormat;
     int questionAmount;
 
@@ -146,20 +112,19 @@ private:
     QueryOpcode getQueryOpcode(const Query &query);
     DNSHeader createHeader(const Query &query);
 
-    /* ip formats manipulation */
-    // void reverseIPv4(Query &query);
-    // void reverseIPv6(Query &query);
-
     /* questions */
-    // void Message::convertIPv4ToLabels(Query &query, std::vector<uint8_t> &labels);
-    // void convertIPv6ToLabels(std::string addr, std::vector<uint8_t> &labels);
-
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
-    std::vector<DNSQuestion> createQuestions(const Query &query);
+    DNSQuestion createQuestion(const Query &query);
+    // std::vector<DNSQuestion> createQuestions(const Query &query);
 
     /* supportive functions */
-    size_t qetQuestionTailSize() { return sizeof(this->questions[0].qclass) + sizeof(this->questions[0].qtype); }
-    size_t getQuestionSize(int index) { return this->questions[index].qname.size() + qetQuestionTailSize(); };
+    // size_t qetQuestionTailSize() { return sizeof(this->questions[0].qclass) + sizeof(this->questions[0].qtype); }
+    // size_t getQuestionSize(int index) { return this->questions[index].qname.size() + qetQuestionTailSize(); };
+    size_t getQuestionTailSize()
+    {
+        return sizeof(this->question.qclass) + sizeof(this->question.qtype);
+    };
+    size_t getQuestionSize() { return this->question.qname.size() + getQuestionTailSize(); }
     size_t getDNSQuestionsSize();
     void convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question);
 

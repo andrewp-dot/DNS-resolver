@@ -61,36 +61,40 @@ void Message::convertAddressToLabels(std::string addr, std::vector<uint8_t> &lab
     return;
 }
 
-std::vector<DNSQuestion> Message::createQuestions(const Query &query)
+// std::vector<DNSQuestion> Message::createQuestions(const Query &query)
+// {
+//     std::vector<DNSQuestion> questions; // undefined
+//     questions.reserve(this->questionAmount);
+
+//     int i = 0;
+//     for (auto addr : query.getAddressVector())
+//     {
+//         questions[i].qclass = htons(QCLASS_IN);
+//         questions[i].qtype = htons(query.getType());
+
+//         // based on query settings set up question
+//         // if (query.getReversed())
+//         // {
+//         //     printf("reversed\n");
+//         // }
+//         // else
+//         // {
+//         //     this->convertAddressToLabels(addr, questions[i].qname);
+//         // }
+//         this->convertAddressToLabels(addr, questions[i].qname);
+//         i += 1;
+//     }
+
+//     return questions;
+// }
+
+DNSQuestion Message::createQuestion(const Query &query)
 {
-    std::vector<DNSQuestion> questions; // undefined
-    questions.reserve(this->questionAmount);
-
-    int i = 0;
-    for (auto addr : query.getAddressVector())
-    {
-        questions[i].qclass = htons(QCLASS_IN);
-        questions[i].qtype = htons(query.getType());
-
-        // based on query settings set up question
-        if (query.getReversed())
-        {
-            printf("reversed\n");
-            // convertIPv4ToLabels(query, questions[i].qname);
-            // if (query.getType() == A)
-            // {
-            //     this->convertAddressToLabels(addr, questions[i].qname);
-            // } // type A then convert IPv4 to labels
-            // else if type AAAA then convert IPv6 to labels
-        }
-        else
-        {
-            this->convertAddressToLabels(addr, questions[i].qname);
-        }
-        i += 1;
-    }
-
-    return questions;
+    DNSQuestion newQuestion;
+    newQuestion.qclass = htons(QCLASS_IN);
+    newQuestion.qtype = htons(query.getType());
+    convertAddressToLabels(query.getAddress(), newQuestion.qname);
+    return newQuestion;
 }
 
 void Message::convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question)
@@ -112,37 +116,40 @@ void Message::convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question)
 
 size_t Message::getDNSQuestionsSize()
 {
-    size_t questionsSize = 0;
-    for (int i = 0; i < this->questionAmount; i++)
-    {
-        questionsSize += getQuestionSize(i);
-    }
-    return questionsSize;
+    // size_t questionsSize = 0;
+    // for (int i = 0; i < this->questionAmount; i++)
+    // {
+    //     questionsSize += getQuestionSize(i);
+    // }
+    // return questionsSize;
+    return getQuestionSize();
 }
 
-void Message::printMessageQnames()
-{
-    for (int i = 0; i < this->questionAmount; i++)
-    {
-        for (size_t j = 0; j < questions[i].qname.size(); j++)
-        {
-            if (this->questions[i].qname[j] < 32)
-            {
-                std::cout << " ";
-            }
-            else
-                std::cout << this->questions[i].qname[j];
-        }
-        std::cout << "|" << std::endl;
-    }
-}
+// void Message::printMessageQnames()
+// {
+//     for (int i = 0; i < this->questionAmount; i++)
+//     {
+//         for (size_t j = 0; j < questions[i].qname.size(); j++)
+//         {
+//             if (this->questions[i].qname[j] < 32)
+//             {
+//                 std::cout << " ";
+//             }
+//             else
+//                 std::cout << this->questions[i].qname[j];
+//         }
+//         std::cout << "|" << std::endl;
+//     }
+// }
 
 Message::Message(const Query &query)
 {
     this->msgFormat = query.getType();
-    this->questionAmount = query.getAddressVector().size();
+    // this->questionAmount = query.getAddressVector().size();
+    this->questionAmount = 1;
     this->header = createHeader(query);
-    this->questions = createQuestions(query);
+    this->question = createQuestion(query);
+    // this->questions = createQuestions(query);
     // printMessageQnames();
 }
 
@@ -155,13 +162,16 @@ size_t Message::convertMsgToBuffer(char *buffer)
     buffer += sizeof(DNSHeader);
 
     // qname(s) copy
-    int questionNum = 0;
-    while (questionNum < this->questionAmount)
-    {
-        convertSingleQuestionToBuffer(buffer, questions[questionNum]);
-        buffer += this->getQuestionSize(questionNum);
-        questionNum += 1;
-    }
+
+    // multiquestion solution
+    // int questionNum = 0;
+    // while (questionNum < this->questionAmount)
+    // {
+    //     convertSingleQuestionToBuffer(buffer, questions[questionNum]);
+    //     buffer += this->getQuestionSize(questionNum);
+    //     questionNum += 1;
+    // }
+    convertSingleQuestionToBuffer(buffer, question);
 
     return sizeof(DNSHeader) + this->getDNSQuestionsSize();
 }

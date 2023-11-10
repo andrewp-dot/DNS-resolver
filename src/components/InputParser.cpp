@@ -54,7 +54,6 @@ void InputParser::setQueryType(Query &query)
 {
     if (query.getReversed())
     {
-        std::cout << "TRUE" << std::endl;
         query.setType(PTR);
     }
     else
@@ -74,6 +73,8 @@ void InputParser::modifyAddress(Query &query)
         if (query.getIPv6())
         {
             query.reverseIPv6();
+            // query.getAddressVector().at(0).append("TEST");
+            // std::cout << query.getAddressVector().at(0) << std::endl;
         }
         else
         {
@@ -158,7 +159,8 @@ void InputParser::setOptions(Query &query)
         }
         else
         {
-            query.pushAddress(argv[i]);
+            query.setAddress(argv[i]);
+            // query.pushAddress(argv[i]);
         }
     }
 
@@ -179,7 +181,8 @@ void InputParser::parseArgs(Query &query)
     {
         Error::printError(WRONG_ARGUMENTS, "Server has not been set.\n");
     }
-    if (query.getAddressVector().empty())
+    // if (query.getAddressVector().empty())
+    if (query.getAddress() == "")
     {
         Error::printError(WRONG_ARGUMENTS, "Address has not been set.\n");
     }
