@@ -77,9 +77,7 @@ void Connection::sendUdpQuery(const Query &query)
         return;
     }
 
-    char buffer[UDP_DATAGRAM_LIMIT] = {
-        0,
-    };
+    char buffer[UDP_DATAGRAM_LIMIT] = {0};
 
     Message msg = Message(query);
     int bufferLength = msg.convertMsgToBuffer(buffer);
@@ -87,11 +85,21 @@ void Connection::sendUdpQuery(const Query &query)
     int bytesTx = send(this->sockfd, (const char *)buffer, bufferLength, 0);
     if (bytesTx < 0)
     {
-        Error::printError(CONNECTION_FAILED, "sendto() failed\n");
+        Error::printError(CONNECTION_FAILED, "send() failed\n");
         return;
     }
 
     // recieve message
+    char recvBuffer[UDP_DATAGRAM_LIMIT] = {0};
+    int bytesRx = recv(this->sockfd, (char *)recvBuffer, UDP_DATAGRAM_LIMIT, 0);
+    if (bytesRx < 0)
+    {
+        Error::printError(CONNECTION_FAILED, "recv() failed\n");
+        return;
+    }
+
+    // parse connection to buffer
+    msg.parseResponseToBuffer(recvBuffer, bytesRx);
 
     close(this->sockfd);
 }

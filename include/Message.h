@@ -96,6 +96,38 @@ typedef struct DNSQuestion
     uint16_t qclass;            // a two octet code that specifies the class of the query.
 } DNSQuestion;
 
+/*
+                                    1  1  1  1  1  1
+    0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                                               |
+    /                                               /
+    /                      NAME                     /
+    |                                               |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                      TYPE                     |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                     CLASS                     |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                      TTL                      |
+    |                                               |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+    |                   RDLENGTH                    |
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
+    /                     RDATA                     /
+    /                                               /
+    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
+*/
+typedef struct DNSResponse
+{
+    std::vector<uint8_t> name;
+    uint16_t type;
+    uint32_t ttl;
+    uint16_t rdlen;
+    std::vector<uint8_t> rdata;
+
+} DNSResponse;
+
 class Message
 {
 
@@ -103,6 +135,7 @@ private:
     DNSHeader header;
     DNSQuestion question;
     QueryType msgFormat;
+    DNSResponse response;
     int questionAmount;
 
     unsigned short generateQueryId();
@@ -121,9 +154,15 @@ private:
     size_t getDNSQuestionsSize();
     void convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question);
 
+    // response related functions
+    DNSHeader getResponseHeader(char *buffer, size_t *offset);
+    DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
+    DNSResponse getResponse(char *buffer, size_t *offset);
+
 public:
     Message(const Query &query);
     size_t convertMsgToBuffer(char *buffer);
+    void parseResponseToBuffer(char *buffer, int bufferSize);
 };
 
 #endif

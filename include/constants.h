@@ -19,4 +19,5 @@
 #define IPV6_MAX_LENGTH 39
 #define IPV6_PART_SIZE 4
 
+#define CHAR_BITS 8
 #endif

@@ -2,6 +2,8 @@
 #include "Query.h"
 #include <iostream>
 
+#define CONVERT_TWO_CHARS_TO_UINT16(first, second) ((first << CHAR_BIT) | second);
+
 unsigned short Message::generateQueryId()
 {
     // algorithm for generating query id
@@ -71,9 +73,12 @@ DNSQuestion Message::createQuestion(const Query &query)
     return newQuestion;
 }
 
+size_t Message::getDNSQuestionsSize()
+{
+    return getQuestionSize();
+}
 void Message::convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question)
 {
-    std::cout << "Question" << std::endl;
     for (size_t i = 0; i < question.qname.size(); i++)
     {
         std::memcpy(buffer, &question.qname[i], sizeof(uint8_t));
@@ -85,12 +90,49 @@ void Message::convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question)
 
     // qclass copy
     memcpy(buffer, &question.qclass, sizeof(uint16_t));
-    // buffer += sizeof(uint16_t);
 }
 
-size_t Message::getDNSQuestionsSize()
+DNSHeader Message::getResponseHeader(char *buffer, size_t *offset)
 {
-    return getQuestionSize();
+    DNSHeader responseHeader;
+
+    // copy flags etc
+    std::memcpy(&responseHeader, buffer, sizeof(DNSHeader));
+
+    // improve uint16_t values
+    responseHeader.id = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset], buffer[*offset + 1]);
+    responseHeader.qdcount = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset + 4], buffer[*offset + 5]);
+    responseHeader.ancount = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset + 6], buffer[*offset + 7]);
+    responseHeader.nscount = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset + 8], buffer[*offset + 9]);
+    responseHeader.arcount = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset + 10], buffer[*offset + 11]);
+
+    *offset += sizeof(DNSHeader);
+    return responseHeader;
+}
+
+DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
+{
+    (void)buffer;
+    DNSQuestion responseQuestion;
+
+    // Note:: you will do this multiple times -> maybe function is required
+    std::vector<uint8_t> qname;
+    while (buffer[*offset] != 0)
+    {
+        qname.push_back(buffer[*offset]);
+        *offset += 1;
+    }
+    qname.push_back(buffer[*offset]);
+    *offset += 1;
+
+    responseQuestion.qname = qname;
+
+    responseQuestion.qtype = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset], buffer[*offset + 1]);
+    *offset += sizeof(uint16_t);
+
+    responseQuestion.qclass = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset], buffer[*offset + 1]);
+    *offset += sizeof(uint16_t);
+    return responseQuestion;
 }
 
 Message::Message(const Query &query)
@@ -111,4 +153,30 @@ size_t Message::convertMsgToBuffer(char *buffer)
     convertSingleQuestionToBuffer(buffer, question);
 
     return sizeof(DNSHeader) + this->getDNSQuestionsSize();
+}
+
+void Message::parseResponseToBuffer(char *buffer, int bufferSize)
+{
+    size_t offset = 0;
+    DNSHeader responseHeader = getResponseHeader(buffer, &offset);
+    DNSQuestion responseQuestion = getResponseQuestion(buffer, &offset);
+
+    (void)responseHeader;
+    // print qname, qtype, qclass
+    // for (size_t i = 0; i < responseQuestion.qname.size(); i++)
+    // {
+    //     std::cout << "Label: " << responseQuestion.qname[i] << std::endl;
+    // }
+
+    // std::cout << "QTYPE" << responseQuestion.qtype << std::endl;
+    // std::cout << "QCLASS" << responseQuestion.qclass << std::endl;
+
+    // DNSResponse response;
+
+    for (size_t i = 0; i < (size_t)bufferSize; i++)
+    {
+        printf("%c : %d\n", (unsigned int)buffer[i], (unsigned)buffer[i]);
+    }
+    std::cout << "Buff size::" << bufferSize << std::endl;
+    // parse data to format
 }

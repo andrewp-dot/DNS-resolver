@@ -28,6 +28,7 @@ class InputParser
 private:
     int argc;
     char **argv;
+    std::vector<std::string> queriedAddresses;
 
     /**
      * @brief checks if next program argument is a flag
