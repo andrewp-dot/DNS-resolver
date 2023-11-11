@@ -132,37 +132,31 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
     return responseQuestion;
 }
 
-void Message::setResponseName(DNSResponse &res, char *buffer, size_t *offset)
+std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 {
+    std::vector<uint8_t> resName;
     // check if incoming is a pointer
     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
     {
+        // get index
         size_t pointerIndex = (size_t)buffer[*offset + 1];
-        setResponseName(res, buffer, &pointerIndex);
-        *offset += 2;
+        resName = getNameFromResponse(buffer, &pointerIndex);
 
-        // loop until you find 00
-        // std::vector<uint8_t> resName;
-        // while (buffer[pointerIndex] != 0)
-        // {
-        //     resName.push_back(buffer[pointerIndex]);
-        //     pointerIndex += 1;
-        // }
-        // resName.push_back(buffer[pointerIndex]);
-        // pointerIndex += 1;
+        // move offset after response pointer sign and it's index
+        *offset += 2;
     }
     else // loop until you find 00
     {
-        std::vector<uint8_t> resName;
+
         while (buffer[*offset] != 0)
         {
             resName.push_back(buffer[*offset]);
             *offset += 1;
         }
         resName.push_back(buffer[*offset]);
-        *offset += 1;
-        res.name = resName;
+        // *offset += 1;
     }
+    return resName;
 }
 
 DNSResponse Message::getResponse(char *buffer, size_t *offset)
@@ -170,9 +164,9 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     DNSResponse res;
     memset(&res, 0, sizeof(DNSResponse));
 
-    setResponseName(res, buffer, offset);
+    res.name = getNameFromResponse(buffer, offset);
 
-    // memcopy
+    // get response info
     DNSResponseInfo resInfo;
     memcpy(&resInfo, buffer + (*offset), sizeof(DNSResponseInfo));
 
@@ -180,9 +174,12 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     resInfo.rclass = htons(resInfo.rclass);
     resInfo.ttl = htonl(resInfo.ttl);
     resInfo.rdlen = htons(resInfo.rdlen);
-
     res.info = resInfo;
 
+    // move offset to rdata
+    *offset += sizeof(DNSResponseInfo);
+    res.rdata = getNameFromResponse(buffer, offset);
+    std::cout << "getResponse offset: " << *offset << std::endl;
     return res;
 }
 
@@ -208,34 +205,54 @@ size_t Message::convertMsgToBuffer(char *buffer)
 
 void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 {
+    // get header and question
     size_t offset = 0;
     DNSHeader responseHeader = getResponseHeader(buffer, &offset);
     DNSQuestion responseQuestion = getResponseQuestion(buffer, &offset);
 
-    (void)responseHeader;
-    // print qname, qtype, qclass
-    // for (size_t i = 0; i < responseQuestion.qname.size(); i++)
-    // {
-    //     std::cout << "Label: " << responseQuestion.qname[i] << std::endl;
-    // }
+    this->header = responseHeader;
+    this->question = responseQuestion;
 
-    // std::cout << "QTYPE" << responseQuestion.qtype << std::endl;
-    // std::cout << "QCLASS" << responseQuestion.qclass << std::endl;
-
-    DNSResponse response = getResponse(buffer, &offset);
-
-    std::cout << "type: " << response.info.type << std::endl;
-    std::cout << "rclass: " << response.info.rclass << std::endl;
-    std::cout << "ttl: " << response.info.ttl << std::endl;
-    std::cout << "rdlen: " << response.info.rdlen << std::endl;
-
-    for (size_t i = 0; i < response.name.size(); i++)
+    // get responses
+    std::vector<DNSResponse> responses;
+    std::cout << "Number of answers: " << responseHeader.ancount << std::endl;
+    for (size_t i = 0; i < responseHeader.ancount; i++)
     {
-        std::cout << response.name[i] << std::endl;
+        DNSResponse response = getResponse(buffer, &offset);
+        responses.push_back(response);
+        std::cout << offset << std::endl;
     }
-    // for (size_t i = offset; i < (size_t)bufferSize; i++)
+
+    std::cout << "Responses size: " << responses.size() << std::endl;
+
+    for (size_t resID = 0; resID < responses.size(); resID++)
+    {
+        std::cout << std::endl;
+        std::cout << "Response " << resID << ": ";
+        for (size_t i = 0; i < responses[resID].name.size(); i++)
+        {
+            std::cout << responses[resID].name[i];
+
+            // printf("\n char: %c | %d\n", responses[resID].name[i], responses[resID].name[i]);
+        }
+        std::cout << std::endl;
+        std::cout << "Rdata " << resID << ": ";
+        for (size_t i = 0; i < responses[resID].rdata.size(); i++)
+        {
+            std::cout << responses[resID].rdata[i];
+            // printf("\n char: %c | %d\n", responses[resID].name[i], responses[resID].name[i]);
+        }
+        std::cout << std::endl;
+        std::cout << "Type: " << responses[resID].info.type << std::endl;
+        std::cout << "Rcls: " << responses[resID].info.rclass << std::endl;
+        std::cout << "Ttl:  " << responses[resID].info.ttl << std::endl;
+        std::cout << "rlen: " << responses[resID].info.rdlen << std::endl;
+        std::cout << std::endl;
+    }
+
+    // for (size_t i = 0; i < (size_t)bufferSize; i++)
     // {
-    //     printf("%c : %d\n", (uint8_t)buffer[i], (uint8_t)buffer[i]);
+    //     printf("Index: %d \t %c : %d \n", (int)i, (uint8_t)buffer[i], (uint8_t)buffer[i]);
     // }
-    std::cout << "Buff size::" << bufferSize << std::endl;
+    std::cout << "Buff size: " << bufferSize << std::endl;
 }

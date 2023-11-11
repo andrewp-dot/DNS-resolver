@@ -141,7 +141,7 @@ private:
     DNSHeader header;
     DNSQuestion question;
     QueryType msgFormat;
-    DNSResponse response; // TODO: put array in here -> support more than 1 response
+    std::vector<DNSResponse> responses;
     int questionAmount;
 
     /**
@@ -224,13 +224,13 @@ private:
     DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
 
     /**
-     * @brief Set response name of DNSResponse object
+     * @brief Pushes data to response name of DNSResponse object
      *
      * @param res
      * @param buffer
      * @param offset
      */
-    void setResponseName(DNSResponse &res, char *buffer, size_t *offset);
+    std::vector<uint8_t> getNameFromResponse(char *buffer, size_t *offset);
 
     /**
      * @brief Get the Response object
