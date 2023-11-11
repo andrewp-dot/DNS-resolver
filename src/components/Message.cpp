@@ -74,10 +74,6 @@ DNSQuestion Message::createQuestion(const Query &query)
     return newQuestion;
 }
 
-size_t Message::getDNSQuestionsSize()
-{
-    return getQuestionSize();
-}
 void Message::convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question)
 {
     for (size_t i = 0; i < question.qname.size(); i++)
@@ -171,7 +167,6 @@ void Message::setResponseName(DNSResponse &res, char *buffer, size_t *offset)
 
 DNSResponse Message::getResponse(char *buffer, size_t *offset)
 {
-    // TODO: add next params of response
     DNSResponse res;
     memset(&res, 0, sizeof(DNSResponse));
 
@@ -208,7 +203,7 @@ size_t Message::convertMsgToBuffer(char *buffer)
     buffer += sizeof(DNSHeader);
     convertSingleQuestionToBuffer(buffer, question);
 
-    return sizeof(DNSHeader) + this->getDNSQuestionsSize();
+    return sizeof(DNSHeader) + this->getQuestionSize();
 }
 
 void Message::parseResponseToBuffer(char *buffer, int bufferSize)

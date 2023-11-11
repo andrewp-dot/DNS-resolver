@@ -129,10 +129,6 @@ typedef struct DNSResponseInfo
 typedef struct DNSResponse
 {
     std::vector<uint8_t> name;
-    // uint16_t type;
-    // uint16_t rclass;
-    // uint32_t ttl;
-    // uint16_t rdlen;
     DNSResponseInfo info;
     std::vector<uint8_t> rdata;
 
@@ -145,34 +141,128 @@ private:
     DNSHeader header;
     DNSQuestion question;
     QueryType msgFormat;
-    DNSResponse response;
+    DNSResponse response; // TODO: put array in here -> support more than 1 response
     int questionAmount;
 
+    /**
+     * @brief Generate query id
+     *
+     * @return unsigned short
+     */
     unsigned short generateQueryId();
 
-    /* header */
+    /**
+     * @brief Get the opcode of Query object
+     *
+     * @param query
+     * @return QueryOpcode
+     */
     QueryOpcode getQueryOpcode(const Query &query);
+
+    /**
+     * @brief Creates a message header
+     *
+     * @param query
+     * @return DNSHeader
+     */
     DNSHeader createHeader(const Query &query);
 
-    /* questions */
+    /**
+     * @brief converts address to labels in message
+     *
+     * @param addr
+     * @param labels
+     */
     void convertAddressToLabels(std::string addr, std::vector<uint8_t> &labels);
+
+    /**
+     * @brief Creates question from query
+     *
+     * @param query
+     * @return DNSQuestion
+     */
     DNSQuestion createQuestion(const Query &query);
 
-    /* supportive functions */
+    /**
+     * @brief Returns the sum of size of class and size of type of the question
+     *
+     * @return size_t
+     */
     inline size_t getQuestionTailSize() { return sizeof(this->question.qclass) + sizeof(this->question.qtype); };
+
+    /**
+     * @brief Returns sum of question qname and question tail
+     *
+     * @return size_t
+     */
     size_t getQuestionSize() { return this->question.qname.size() + getQuestionTailSize(); }
-    size_t getDNSQuestionsSize();
+
+    /**
+     * @brief Convert one question to array of chars
+     *
+     * @param buffer
+     * @param question
+     */
     void convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question);
 
-    // response related functions
+    /**
+     * @brief Get the Response Header object
+     *
+     * @param buffer
+     * @param offset
+     * @return DNSHeader
+     */
     DNSHeader getResponseHeader(char *buffer, size_t *offset);
+
+    /**
+     * @brief Get the Response Question object
+     *
+     * @param buffer
+     * @param offset
+     * @return DNSQuestion
+     */
     DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
+
+    /**
+     * @brief Set response name of DNSResponse object
+     *
+     * @param res
+     * @param buffer
+     * @param offset
+     */
     void setResponseName(DNSResponse &res, char *buffer, size_t *offset);
+
+    /**
+     * @brief Get the Response object
+     *
+     * @param buffer
+     * @param offset
+     * @return DNSResponse
+     */
     DNSResponse getResponse(char *buffer, size_t *offset);
 
 public:
+    /**
+     * @brief Construct a new Message object based on query
+     *
+     * @param query
+     */
     Message(const Query &query);
+
+    /**
+     * @brief Converts message to array of chars
+     *
+     * @param buffer
+     * @return size_t
+     */
     size_t convertMsgToBuffer(char *buffer);
+
+    /**
+     * @brief Parses response to Message object
+     *
+     * @param buffer
+     * @param bufferSize
+     */
     void parseResponseToBuffer(char *buffer, int bufferSize);
 };
 
