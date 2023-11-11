@@ -138,25 +138,31 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
 
 DNSResponse Message::getResponse(char *buffer, size_t *offset)
 {
+    // TODO: add next params of response
     DNSResponse res;
     memset(&res, 0, sizeof(DNSResponse));
+
     // check if incoming is a pointer
     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
     {
-        uint8_t pointerIndex = (uint8_t)buffer[*offset + 1];
+        size_t pointerIndex = (size_t)buffer[*offset + 1];
         printf("pointer | value: %d | char: %c\n", buffer[*offset + 1], buffer[pointerIndex + 1]);
 
         // loop until you find 00 -> maybe recursion in here
-        std::vector<uint8_t> resName;
-        while (buffer[*offset] != 0)
-        {
-            resName.push_back(buffer[pointerIndex]);
-            pointerIndex += 1;
-        }
-        resName.push_back(buffer[pointerIndex]);
+        res = getResponse(buffer, &pointerIndex);
     }
     else // loop until you find 00
     {
+        std::vector<uint8_t> resName;
+        while (buffer[*offset] != 0)
+        {
+            resName.push_back(buffer[*offset]);
+            *offset += 1;
+        }
+        resName.push_back(buffer[*offset]);
+        *offset += 1;
+
+        res.name = resName;
     }
     return res;
 }
@@ -199,10 +205,14 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 
     DNSResponse response = getResponse(buffer, &offset);
 
-    for (size_t i = offset; i < (size_t)bufferSize; i++)
+    for (size_t i = 0; i < response.name.size(); i++)
     {
-        printf("%c : %d\n", (uint8_t)buffer[i], (uint8_t)buffer[i]);
+        std::cout << response.name[i] << std::endl;
     }
+    // for (size_t i = offset; i < (size_t)bufferSize; i++)
+    // {
+    //     printf("%c : %d\n", (uint8_t)buffer[i], (uint8_t)buffer[i]);
+    // }
     std::cout << "Buff size::" << bufferSize << std::endl;
     // parse data to format
 }
