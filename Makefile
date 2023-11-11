@@ -33,8 +33,8 @@ clean:
 # 	./$@
 # 	rm -f $@
 
-test:
-	./tests/test.sh
+test: # build this and do tests
+	python3 ./tests/tests.py
 
 log: 
 	git log --graph > dns_log.txt

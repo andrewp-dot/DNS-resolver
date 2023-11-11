@@ -20,4 +20,5 @@
 #define IPV6_PART_SIZE 4
 
 #define CHAR_BITS 8
+#define RESPONSE_POINTER_SIGN 0xc0
 #endif

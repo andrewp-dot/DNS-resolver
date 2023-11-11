@@ -1,6 +1,7 @@
 #include "Message.h"
 #include "Query.h"
 #include <iostream>
+#include "constants.h"
 
 #define CONVERT_TWO_CHARS_TO_UINT16(first, second) ((first << CHAR_BIT) | second);
 
@@ -135,6 +136,31 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
     return responseQuestion;
 }
 
+DNSResponse Message::getResponse(char *buffer, size_t *offset)
+{
+    DNSResponse res;
+    memset(&res, 0, sizeof(DNSResponse));
+    // check if incoming is a pointer
+    if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
+    {
+        uint8_t pointerIndex = (uint8_t)buffer[*offset + 1];
+        printf("pointer | value: %d | char: %c\n", buffer[*offset + 1], buffer[pointerIndex + 1]);
+
+        // loop until you find 00 -> maybe recursion in here
+        std::vector<uint8_t> resName;
+        while (buffer[*offset] != 0)
+        {
+            resName.push_back(buffer[pointerIndex]);
+            pointerIndex += 1;
+        }
+        resName.push_back(buffer[pointerIndex]);
+    }
+    else // loop until you find 00
+    {
+    }
+    return res;
+}
+
 Message::Message(const Query &query)
 {
     this->msgFormat = query.getType();
@@ -171,11 +197,11 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     // std::cout << "QTYPE" << responseQuestion.qtype << std::endl;
     // std::cout << "QCLASS" << responseQuestion.qclass << std::endl;
 
-    // DNSResponse response;
+    DNSResponse response = getResponse(buffer, &offset);
 
-    for (size_t i = 0; i < (size_t)bufferSize; i++)
+    for (size_t i = offset; i < (size_t)bufferSize; i++)
     {
-        printf("%c : %d\n", (unsigned int)buffer[i], (unsigned)buffer[i]);
+        printf("%c : %d\n", (uint8_t)buffer[i], (uint8_t)buffer[i]);
     }
     std::cout << "Buff size::" << bufferSize << std::endl;
     // parse data to format
