@@ -118,12 +118,22 @@ typedef struct DNSQuestion
     /                                               /
     +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
 */
+
+typedef struct DNSResponseInfo
+{
+    uint16_t type;
+    uint16_t rclass;
+    uint32_t ttl;
+    uint16_t rdlen;
+} DNSResponseInfo;
 typedef struct DNSResponse
 {
     std::vector<uint8_t> name;
-    uint16_t type;
-    uint32_t ttl;
-    uint16_t rdlen;
+    // uint16_t type;
+    // uint16_t rclass;
+    // uint32_t ttl;
+    // uint16_t rdlen;
+    DNSResponseInfo info;
     std::vector<uint8_t> rdata;
 
 } DNSResponse;
@@ -157,6 +167,7 @@ private:
     // response related functions
     DNSHeader getResponseHeader(char *buffer, size_t *offset);
     DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
+    void setResponseName(DNSResponse &res, char *buffer, size_t *offset);
     DNSResponse getResponse(char *buffer, size_t *offset);
 
 public:

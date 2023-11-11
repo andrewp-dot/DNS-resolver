@@ -136,20 +136,24 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
     return responseQuestion;
 }
 
-DNSResponse Message::getResponse(char *buffer, size_t *offset)
+void Message::setResponseName(DNSResponse &res, char *buffer, size_t *offset)
 {
-    // TODO: add next params of response
-    DNSResponse res;
-    memset(&res, 0, sizeof(DNSResponse));
-
     // check if incoming is a pointer
     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
     {
         size_t pointerIndex = (size_t)buffer[*offset + 1];
-        printf("pointer | value: %d | char: %c\n", buffer[*offset + 1], buffer[pointerIndex + 1]);
+        setResponseName(res, buffer, &pointerIndex);
+        *offset += 2;
 
-        // loop until you find 00 -> maybe recursion in here
-        res = getResponse(buffer, &pointerIndex);
+        // loop until you find 00
+        // std::vector<uint8_t> resName;
+        // while (buffer[pointerIndex] != 0)
+        // {
+        //     resName.push_back(buffer[pointerIndex]);
+        //     pointerIndex += 1;
+        // }
+        // resName.push_back(buffer[pointerIndex]);
+        // pointerIndex += 1;
     }
     else // loop until you find 00
     {
@@ -161,9 +165,29 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
         }
         resName.push_back(buffer[*offset]);
         *offset += 1;
-
         res.name = resName;
     }
+}
+
+DNSResponse Message::getResponse(char *buffer, size_t *offset)
+{
+    // TODO: add next params of response
+    DNSResponse res;
+    memset(&res, 0, sizeof(DNSResponse));
+
+    setResponseName(res, buffer, offset);
+
+    // memcopy
+    DNSResponseInfo resInfo;
+    memcpy(&resInfo, buffer + (*offset), sizeof(DNSResponseInfo));
+
+    resInfo.type = htons(resInfo.type);
+    resInfo.rclass = htons(resInfo.rclass);
+    resInfo.ttl = htonl(resInfo.ttl);
+    resInfo.rdlen = htons(resInfo.rdlen);
+
+    res.info = resInfo;
+
     return res;
 }
 
@@ -205,6 +229,11 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 
     DNSResponse response = getResponse(buffer, &offset);
 
+    std::cout << "type: " << response.info.type << std::endl;
+    std::cout << "rclass: " << response.info.rclass << std::endl;
+    std::cout << "ttl: " << response.info.ttl << std::endl;
+    std::cout << "rdlen: " << response.info.rdlen << std::endl;
+
     for (size_t i = 0; i < response.name.size(); i++)
     {
         std::cout << response.name[i] << std::endl;
@@ -214,5 +243,4 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     //     printf("%c : %d\n", (uint8_t)buffer[i], (uint8_t)buffer[i]);
     // }
     std::cout << "Buff size::" << bufferSize << std::endl;
-    // parse data to format
 }
