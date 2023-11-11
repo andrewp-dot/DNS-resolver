@@ -134,6 +134,7 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
 
 std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 {
+    // TODO: edit this to load only given number of characters
     std::vector<uint8_t> resName;
 
     // check if incoming is a pointer
@@ -149,40 +150,60 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
     }
     else // loop until you find 00
     {
-        // std::cout << "Loading response name: " << std::endl;
-        while (buffer[*offset] != 0)
-        {
-            if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
-            {
-                // here is bug
-                *offset += 1;
-                size_t pointerIndex = (size_t)buffer[*offset];
-                *offset += 1;
+        // get number of chars to load
+        uint8_t numberOfChars = (uint8_t)buffer[*offset];
+        std::cout << "chars num: " << (int)numberOfChars << std::endl;
+        *offset += 1;
+        resName.push_back('.');
 
-                std::vector<uint8_t> resNamePart = getNameFromResponse(buffer, &pointerIndex);
-                for (size_t i = 0; i < resNamePart.size(); i++)
-                {
-                    if (resNamePart[i] < 32)
-                    {
-                        resName.push_back('.');
-                    }
-                    else
-                    {
-                        resName.push_back(resNamePart[i]);
-                    }
-                }
-            }
-            if (buffer[*offset] < 32)
-            {
-                resName.push_back('.');
-            }
-            else
-            {
-                resName.push_back(buffer[*offset]);
-            }
+        for (uint8_t i = 0; i < numberOfChars; i++)
+        {
+            resName.push_back(buffer[*offset]);
             *offset += 1;
         }
-        resName.push_back(buffer[*offset]);
+        if ((uint16_t)buffer[*offset] != 0)
+        {
+            std::vector<uint8_t> resNamePart = getNameFromResponse(buffer, offset);
+            for (size_t i = 0; i < resNamePart.size(); i++)
+            {
+                resName.push_back(resNamePart[i]);
+            }
+        }
+
+        // while (buffer[*offset] != 0)
+        // {
+        //     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
+        //     {
+        //         // here is bug
+        //         *offset += 1;
+        //         size_t pointerIndex = (size_t)buffer[*offset];
+        //         *offset += 1;
+
+        //         std::vector<uint8_t> resNamePart = getNameFromResponse(buffer, &pointerIndex);
+        //         for (size_t i = 0; i < resNamePart.size(); i++)
+        //         {
+        //             // change this to load given amount of characters
+        //             if (resNamePart[i] < 32)
+        //             {
+        //                 resName.push_back('.');
+        //             }
+        //             else
+        //             {
+        //                 resName.push_back(resNamePart[i]);
+        //             }
+        //         }
+        //     }
+        //     if (buffer[*offset] < 32)
+        //     {
+        //         resName.push_back('.');
+        //     }
+        //     else
+        //     {
+        //         resName.push_back(buffer[*offset]);
+        //     }
+        //     *offset += 1;
+        // }
+        // resName.push_back(buffer[*offset]);
     }
     return resName;
 }
@@ -258,14 +279,14 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
         std::cout << "Response " << resID << ": ";
         for (size_t i = 0; i < responses[resID].name.size(); i++)
         {
-            // printf("Outer: %d | %c\n", responses[resID].name[i], responses[resID].name[i]);
+            // printf("%c\n", responses[resID].name[i]);
             std::cout << responses[resID].name[i];
         }
         std::cout << std::endl;
         std::cout << "Rdata " << resID << ": ";
         for (size_t i = 0; i < responses[resID].rdata.size(); i++)
         {
-            // printf("Outer: %d | %c\n", responses[resID].rdata[i], responses[resID].rdata[i]);
+            // printf("%c\n", responses[resID].rdata[i]);
             std::cout << responses[resID].rdata[i];
         }
         std::cout << std::endl;
