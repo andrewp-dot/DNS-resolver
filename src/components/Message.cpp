@@ -135,26 +135,54 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
 std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 {
     std::vector<uint8_t> resName;
+
     // check if incoming is a pointer
     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
     {
         // get index
-        size_t pointerIndex = (size_t)buffer[*offset + 1];
-        resName = getNameFromResponse(buffer, &pointerIndex);
+        *offset += 1;
+        size_t pointerIndex = (size_t)buffer[*offset];
+        *offset += 1;
 
-        // move offset after response pointer sign and it's index
-        *offset += 2;
+        // get name on that offset
+        resName = getNameFromResponse(buffer, &pointerIndex);
     }
     else // loop until you find 00
     {
-
+        // std::cout << "Loading response name: " << std::endl;
         while (buffer[*offset] != 0)
         {
-            resName.push_back(buffer[*offset]);
+            if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
+            {
+                // here is bug
+                *offset += 1;
+                size_t pointerIndex = (size_t)buffer[*offset];
+                *offset += 1;
+
+                std::vector<uint8_t> resNamePart = getNameFromResponse(buffer, &pointerIndex);
+                for (size_t i = 0; i < resNamePart.size(); i++)
+                {
+                    if (resNamePart[i] < 32)
+                    {
+                        resName.push_back('.');
+                    }
+                    else
+                    {
+                        resName.push_back(resNamePart[i]);
+                    }
+                }
+            }
+            if (buffer[*offset] < 32)
+            {
+                resName.push_back('.');
+            }
+            else
+            {
+                resName.push_back(buffer[*offset]);
+            }
             *offset += 1;
         }
         resName.push_back(buffer[*offset]);
-        // *offset += 1;
     }
     return resName;
 }
@@ -168,7 +196,7 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
 
     // get response info
     DNSResponseInfo resInfo;
-    memcpy(&resInfo, buffer + (*offset), sizeof(DNSResponseInfo));
+    memcpy(&resInfo, buffer + (*offset), sizeof(DNSResponseInfo) - sizeof(uint16_t));
 
     resInfo.type = htons(resInfo.type);
     resInfo.rclass = htons(resInfo.rclass);
@@ -177,9 +205,8 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     res.info = resInfo;
 
     // move offset to rdata
-    *offset += sizeof(DNSResponseInfo);
+    *offset += sizeof(DNSResponseInfo) - sizeof(uint16_t);
     res.rdata = getNameFromResponse(buffer, offset);
-    std::cout << "getResponse offset: " << *offset << std::endl;
     return res;
 }
 
@@ -220,9 +247,9 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     {
         DNSResponse response = getResponse(buffer, &offset);
         responses.push_back(response);
-        std::cout << offset << std::endl;
     }
 
+    // couts
     std::cout << "Responses size: " << responses.size() << std::endl;
 
     for (size_t resID = 0; resID < responses.size(); resID++)
@@ -231,16 +258,15 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
         std::cout << "Response " << resID << ": ";
         for (size_t i = 0; i < responses[resID].name.size(); i++)
         {
+            // printf("Outer: %d | %c\n", responses[resID].name[i], responses[resID].name[i]);
             std::cout << responses[resID].name[i];
-
-            // printf("\n char: %c | %d\n", responses[resID].name[i], responses[resID].name[i]);
         }
         std::cout << std::endl;
         std::cout << "Rdata " << resID << ": ";
         for (size_t i = 0; i < responses[resID].rdata.size(); i++)
         {
+            // printf("Outer: %d | %c\n", responses[resID].rdata[i], responses[resID].rdata[i]);
             std::cout << responses[resID].rdata[i];
-            // printf("\n char: %c | %d\n", responses[resID].name[i], responses[resID].name[i]);
         }
         std::cout << std::endl;
         std::cout << "Type: " << responses[resID].info.type << std::endl;
