@@ -34,7 +34,12 @@ enum QueryOpcode
 //     HS = 4,
 // };
 
-#define QCLASS_IN 1 // internet QTYPE
+enum QueryClass
+{
+    QCLASS_IN = 1
+};
+
+// #define QCLASS_IN 1 // internet QTYPE
 
 /*
                                 |1  1  1  1  1  1
@@ -61,7 +66,7 @@ typedef struct DNSHeader
     unsigned char tc : 1;     // truncated message
     unsigned char aa : 1;     // authoritative answer
     unsigned char opcode : 4; // purpose of message
-    unsigned char qr : 1;     // query/response flagyy
+    unsigned char qr : 1;     // query/response flagy
 
     unsigned char rcode : 4; // response code
     unsigned char z : 3;     // its z! reserved
@@ -224,7 +229,7 @@ private:
     DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
 
     /**
-     * @brief Pushes data to response name of DNSResponse object
+     * @brief Pushes data to response name of DNSResponse object. Set offset to point to end of the name
      *
      * @param res
      * @param buffer
@@ -240,6 +245,35 @@ private:
      * @return DNSResponse
      */
     DNSResponse getResponse(char *buffer, size_t *offset);
+
+    /**
+     * @brief Converts boolean value to string
+     *
+     * @param value - boolean to be entered
+     * @return std::string - returns "Yes" if value is true, else returns "No"
+     */
+    inline std::string convertBoolToString(bool value) { return value ? "Yes" : "No"; };
+
+    /**
+     * @brief prints vector of uint8_t to the screen
+     *
+     * @param vec
+     */
+    void print8bitVector(std::vector<uint8_t> vec);
+
+    /**
+     * @brief converts query type to string
+     *
+     * @return std::string
+     */
+    std::string convertTypeToString(uint16_t qtype);
+
+    /**
+     * @brief Converts query class to string
+     *
+     * @return std::string
+     */
+    std::string convertClassToString(uint16_t qclass);
 
 public:
     /**
@@ -264,6 +298,12 @@ public:
      * @param bufferSize
      */
     void parseResponseToBuffer(char *buffer, int bufferSize);
+
+    /**
+     * @brief prints response in correct format
+     *
+     */
+    void printResponse();
 };
 
 #endif

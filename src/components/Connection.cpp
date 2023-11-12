@@ -40,16 +40,6 @@
  * google : 8.8.8.8
  */
 
-/**
- * TODO:
- * 1) sendUdpQuery devide structure
- * 2) suupport reverse queries
- * 3) recieve message
- * 4) recieve messages from multiple questions
- * 5) write tests
- * 6) documentation
- */
-
 void Connection::sendUdpQuery(const Query &query)
 {
 

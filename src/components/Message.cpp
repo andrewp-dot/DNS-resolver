@@ -112,18 +112,12 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
     (void)buffer;
     DNSQuestion responseQuestion;
 
-    // Note:: you will do this multiple times -> maybe function is required
-    std::vector<uint8_t> qname;
-    while (buffer[*offset] != 0)
-    {
-        qname.push_back(buffer[*offset]);
-        *offset += 1;
-    }
-    qname.push_back(buffer[*offset]);
-    *offset += 1;
+    std::vector<uint8_t> qname = getNameFromResponse(buffer, offset);
 
     responseQuestion.qname = qname;
 
+    // get char after end of string/qname
+    *offset += 1;
     responseQuestion.qtype = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset], buffer[*offset + 1]);
     *offset += sizeof(uint16_t);
 
@@ -152,7 +146,6 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
     {
         // get number of chars to load
         uint8_t numberOfChars = (uint8_t)buffer[*offset];
-        std::cout << "chars num: " << (int)numberOfChars << std::endl;
         *offset += 1;
         resName.push_back('.');
 
@@ -169,41 +162,10 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
                 resName.push_back(resNamePart[i]);
             }
         }
-
-        // while (buffer[*offset] != 0)
-        // {
-        //     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
-        //     {
-        //         // here is bug
-        //         *offset += 1;
-        //         size_t pointerIndex = (size_t)buffer[*offset];
-        //         *offset += 1;
-
-        //         std::vector<uint8_t> resNamePart = getNameFromResponse(buffer, &pointerIndex);
-        //         for (size_t i = 0; i < resNamePart.size(); i++)
-        //         {
-        //             // change this to load given amount of characters
-        //             if (resNamePart[i] < 32)
-        //             {
-        //                 resName.push_back('.');
-        //             }
-        //             else
-        //             {
-        //                 resName.push_back(resNamePart[i]);
-        //             }
-        //         }
-        //     }
-        //     if (buffer[*offset] < 32)
-        //     {
-        //         resName.push_back('.');
-        //     }
-        //     else
-        //     {
-        //         resName.push_back(buffer[*offset]);
-        //     }
-        //     *offset += 1;
-        // }
-        // resName.push_back(buffer[*offset]);
+        else
+        {
+            resName.push_back('.');
+        }
     }
     return resName;
 }
@@ -228,7 +190,56 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     // move offset to rdata
     *offset += sizeof(DNSResponseInfo) - sizeof(uint16_t);
     res.rdata = getNameFromResponse(buffer, offset);
+
     return res;
+}
+
+void Message::print8bitVector(std::vector<uint8_t> vec)
+{
+    // skip first dot
+    if (vec[0] == '.')
+    {
+        std::cout << " ";
+    }
+
+    // print rest of the string
+    for (size_t i = 1; i < vec.size(); i++)
+    {
+        std::cout << vec[i];
+    }
+}
+
+std::string Message::convertTypeToString(uint16_t qtype)
+{
+    switch (qtype)
+    {
+    case A:
+        return "A";
+    case NS:
+        return "NS";
+    case CNAME:
+        return "CNAME";
+    case SOA:
+        return "SOA";
+    case PTR:
+        return "PTR";
+    case AAAA:
+        return "AAAA";
+    default:
+        return "UNKNOWN";
+    }
+}
+
+std::string Message::convertClassToString(uint16_t qclass)
+{
+    switch (qclass)
+    {
+    case QCLASS_IN:
+        return "IN";
+
+    default:
+        return "UNKNOWN";
+    }
 }
 
 Message::Message(const Query &query)
@@ -277,16 +288,14 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     {
         std::cout << std::endl;
         std::cout << "Response " << resID << ": ";
-        for (size_t i = 0; i < responses[resID].name.size(); i++)
+        for (size_t i = 1; i < responses[resID].name.size(); i++)
         {
-            // printf("%c\n", responses[resID].name[i]);
             std::cout << responses[resID].name[i];
         }
         std::cout << std::endl;
         std::cout << "Rdata " << resID << ": ";
-        for (size_t i = 0; i < responses[resID].rdata.size(); i++)
+        for (size_t i = 1; i < responses[resID].rdata.size(); i++)
         {
-            // printf("%c\n", responses[resID].rdata[i]);
             std::cout << responses[resID].rdata[i];
         }
         std::cout << std::endl;
@@ -302,4 +311,23 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     //     printf("Index: %d \t %c : %d \n", (int)i, (uint8_t)buffer[i], (uint8_t)buffer[i]);
     // }
     std::cout << "Buff size: " << bufferSize << std::endl;
+
+    std::cout << "Test output print: " << std::endl;
+    printResponse();
+}
+
+void Message::printResponse()
+{
+    // header section
+    std::cout << "Authoritative: " << convertBoolToString(this->header.aa) << ", ";
+    std::cout << "Recursive: " << convertBoolToString(this->header.rd) << ", ";
+    std::cout << "Truncated: " << convertBoolToString(this->header.tc) << std::endl;
+
+    // question section
+    std::cout << "Question section (" << this->header.qdcount << ")" << std::endl;
+
+    // function to ouptut uint8_t vector
+    print8bitVector(this->question.qname);
+    std::cout << "," << convertTypeToString(this->question.qtype);
+    std::cout << "," << convertClassToString(this->question.qclass) << std::endl;
 }
