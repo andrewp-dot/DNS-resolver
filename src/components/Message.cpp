@@ -154,8 +154,10 @@ std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len,
     std::vector<uint8_t> res;
     for (size_t i = 0; i < len; i++)
     {
-        res.push_back(buffer[*offset + i]);
+        std::cout << "Address pushing: " << std::hex << (uint16_t)buffer[*offset + i] << std::dec << std::endl;
+        res.push_back(buffer[*offset]);
         res.push_back('.');
+        *offset += 1;
     }
     return res;
 }
@@ -231,7 +233,6 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
                 }
                 return resName;
             }
-            // *offset += 1; // get next char
         }
         // na konci stringu posun offseet o 1
         resName.push_back('.');
