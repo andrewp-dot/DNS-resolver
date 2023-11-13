@@ -3,6 +3,7 @@
 #include <unistd.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
+#include <netdb.h>
 #include "constants.h"
 #include "Connection.h"
 #include "Message.h"
@@ -40,6 +41,7 @@
  * google : 8.8.8.8
  */
 
+// popis v dokumentacii
 void Connection::sendUdpQuery(const Query &query)
 {
 
@@ -57,7 +59,26 @@ void Connection::sendUdpQuery(const Query &query)
     memset(&from, 0, sizeof(sockaddr_in));
 
     // TODO: here function to convert example kazi.fit
+    // gethostbyaddr();
+
+    // popis v dokumentacii
+    // struct addrinfo hints, *results;
+
+    // hints.ai_family = AF_INET;
+    // hints.ai_socktype = SOCK_DGRAM;
+
+    // int status = getaddrinfo(query.getServer().c_str(), NULL, &hints, &results);
+    // if (status != 0)
+    // {
+    //     Error::printError(CONNECTION_FAILED, gai_strerror(status));
+    //     std::cout << std::endl;
+    //     return;
+    // }
+    // std::cout << "S addr: " << results->ai_addr->sa_data << std::endl;
+
+    // std::cout << host->h_addr_list[0] <<
     server.sin_addr.s_addr = inet_addr(query.getServer().c_str());
+    // server.sin_addr.s_addr = inet_addr(results->ai_addr->sa_data);
     server.sin_port = htons(query.getPort());
     server.sin_family = AF_INET;
 

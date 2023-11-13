@@ -21,4 +21,5 @@
 
 #define CHAR_BITS 8
 #define RESPONSE_POINTER_SIGN 0xc0
+#define RESPONSE_POINTER_INDEX_MASK 0x3f
 #endif

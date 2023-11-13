@@ -1,9 +1,32 @@
+#include <iostream>
 #include "Message.h"
 #include "Query.h"
-#include <iostream>
 #include "constants.h"
 
 #define CONVERT_TWO_CHARS_TO_UINT16(first, second) ((first << CHAR_BIT) | second);
+
+void debugPrintChar(char c, int pos)
+{
+    std::cout << "\t\t\t\tc: " << c << " hex: " << std::hex << (uint16_t)c << " on position: " << std::dec << pos << std::endl;
+}
+
+void debugPrint(char *buffer, int bufferSize)
+{
+    for (size_t i = 0; i < (size_t)bufferSize; i++)
+    {
+        if (!(i % 8))
+        {
+            std::cout << "   ";
+        }
+        if (!(i % 16))
+        {
+            std::cout << std::endl;
+        }
+        std::cout << std::hex << (uint16_t)buffer[i];
+        std::cout << " ";
+    }
+    std::cout << std::endl;
+}
 
 unsigned short Message::generateQueryId()
 {
@@ -126,47 +149,134 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
     return responseQuestion;
 }
 
+std::vector<uint8_t> Message::getLabelsFromPointer(char *buffer, size_t *offset)
+{
+    (void)buffer;
+    (void)offset;
+    std::vector<uint8_t> resName;
+    // *offset += 1;
+    // size_t pointerIndex = buffer[*offset];
+
+    // int numberOfChars = buffer[pointerIndex];
+    // pointerIndex += 1;
+    // resName.push_back('.');
+
+    // while (numberOfChars != 0)
+    // {
+    //     for (int i = 0; i < numberOfChars; i++)
+    //     {
+    //         resName.push_back(buffer[pointerIndex]);
+    //         pointerIndex += 1;
+    //     }
+    //     numberOfChars = buffer[pointerIndex];
+    //     resName.push_back('.');
+    // }
+
+    // std::cout << "Got from pointer: " << std::endl;
+    // for (int i = 0; i < resName.size(); i++)
+    // {
+    //     printf("%c", resName[i]);
+    // }
+    // std::cout << std::endl;
+    return resName;
+}
+
+std::vector<uint8_t> Message::getLabelsFromSequence(char *buffer, size_t *offset)
+{
+    (void)buffer;
+    (void)offset;
+    std::vector<uint8_t> resName;
+    return resName;
+}
+
 std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 {
-    // TODO: edit this to load only given number of characters
+    static int numberOfPointers = 0;
+    /**
+     * TODO:
+     * nastavit pointer aby pointoval pri konci funkcie na:
+     * 1) c0 XY ...data...
+     *       ^
+     * 2) XY 00 ...data...
+     *       ^
+     * potom:
+     * posunut offset na data
+     *
+     *
+     */
     std::vector<uint8_t> resName;
 
-    // check if incoming is a pointer
+    // a pointer
     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
     {
-        // get index
-        *offset += 1;
-        size_t pointerIndex = (size_t)buffer[*offset];
+
+        // ani toto
+        numberOfPointers += 1;
         *offset += 1;
 
-        // get name on that offset
-        resName = getNameFromResponse(buffer, &pointerIndex);
+        // TODO: vymaskovat ten index a upravit podmienku
+        size_t pointerIndex = buffer[*offset];
+        // zavolat rekurzivne funkciu; pointer je terat na
+        // 1) c0 XY ...data...
+        //       ^
+        resName = getLabelsFromPointer(buffer, &pointerIndex);
+        // *offset += 1;
+        return resName;
     }
-    else // loop until you find 00
+    else
     {
-        // get number of chars to load
-        uint8_t numberOfChars = (uint8_t)buffer[*offset];
-        *offset += 1;
+        int numberOfChars = buffer[*offset];
+        // posunutie pointeru na dalsi prvok
+
+        // iterovat cez labely az dokym nenarazis na 00
+        while (numberOfChars != 0)
+        {
+            // miesto cisla pushni bodku
+            *offset += 1;
+            resName.push_back('.');
+            // pridavat numberOfChars labelov
+            for (size_t i = 0; i < (size_t)numberOfChars; i++)
+            {
+                resName.push_back(buffer[*offset + i]);
+            }
+
+            *offset += numberOfChars;
+            numberOfChars = buffer[*offset];
+
+            // ak je nasledujuci pocet rovny pointeru,
+
+            // toto sa nikdy nestane
+            if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
+            {
+                numberOfPointers += 1;
+                *offset += 1;
+
+                // TODO: vymaskovat ten index a upravit podmienku
+                size_t pointerIndex = buffer[*offset];
+                // zavolaj rekurzivne funkciu a pridaj cast labelu do resName
+                std::vector<uint8_t> resNameSuffix;
+                resNameSuffix = getNameFromResponse(buffer, &pointerIndex);
+
+                for (size_t i = 0; i < resNameSuffix.size(); i++)
+                {
+                    resName.push_back(resNameSuffix[i]);
+                }
+                // *offset += 1;
+                return resName;
+            }
+            // *offset += 1; // get next char
+        }
+        // na konci stringu posun offseet o 1
+        // *offset += 1;
         resName.push_back('.');
 
-        for (uint8_t i = 0; i < numberOfChars; i++)
-        {
-            resName.push_back(buffer[*offset]);
-            *offset += 1;
-        }
-        if ((uint16_t)buffer[*offset] != 0)
-        {
-            std::vector<uint8_t> resNamePart = getNameFromResponse(buffer, offset);
-            for (size_t i = 0; i < resNamePart.size(); i++)
-            {
-                resName.push_back(resNamePart[i]);
-            }
-        }
-        else
-        {
-            resName.push_back('.');
-        }
+        // pointer teraz ukazuje tu.
+        // 2) XY 00 ...data...
+        //       ^
     }
+
+    // pointer ukazujuci na data
+    std::cout << "number of pointers: " << numberOfPointers << std::endl;
     return resName;
 }
 
@@ -175,7 +285,9 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     DNSResponse res;
     memset(&res, 0, sizeof(DNSResponse));
 
+    debugPrintChar(buffer[*offset], (int)*offset);
     res.name = getNameFromResponse(buffer, offset);
+    *offset += 1;
 
     // get response info
     DNSResponseInfo resInfo;
@@ -189,8 +301,10 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
 
     // move offset to rdata
     *offset += sizeof(DNSResponseInfo) - sizeof(uint16_t);
-    res.rdata = getNameFromResponse(buffer, offset);
 
+    debugPrintChar(buffer[*offset], (int)*offset);
+    res.rdata = getNameFromResponse(buffer, offset);
+    *offset += 1;
     return res;
 }
 
@@ -264,6 +378,7 @@ size_t Message::convertMsgToBuffer(char *buffer)
 
 void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 {
+    (void)bufferSize;
     // get header and question
     size_t offset = 0;
     DNSHeader responseHeader = getResponseHeader(buffer, &offset);
@@ -274,46 +389,55 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 
     // get responses
     std::vector<DNSResponse> responses;
-    std::cout << "Number of answers: " << responseHeader.ancount << std::endl;
     for (size_t i = 0; i < responseHeader.ancount; i++)
     {
-        DNSResponse response = getResponse(buffer, &offset);
-        responses.push_back(response);
+        // printf("Before response offset: %d\n", (int)offset);
+        DNSResponse res = getResponse(buffer, &offset);
+        responses.push_back(res);
     }
 
-    // couts
-    std::cout << "Responses size: " << responses.size() << std::endl;
+    for (size_t i = 0; i < responseHeader.nscount; i++)
+    {
+        DNSResponse res = getResponse(buffer, &offset);
+        responses.push_back(res);
+    }
+
+    for (size_t i = 0; i < responseHeader.arcount; i++)
+    {
+        DNSResponse res = getResponse(buffer, &offset);
+        responses.push_back(res);
+    }
 
     for (size_t resID = 0; resID < responses.size(); resID++)
     {
-        std::cout << std::endl;
-        std::cout << "Response " << resID << ": ";
-        for (size_t i = 1; i < responses[resID].name.size(); i++)
+        std::cout << "Response: " << resID << std::endl;
+        for (size_t i = 0; i < responses[resID].name.size(); i++)
         {
-            std::cout << responses[resID].name[i];
+            printf("%c", responses[resID].name[i]);
         }
         std::cout << std::endl;
-        std::cout << "Rdata " << resID << ": ";
-        for (size_t i = 1; i < responses[resID].rdata.size(); i++)
+        std::cout << "Rtype:  " << responses[resID].info.type << std::endl;
+        std::cout << "Rclass: " << responses[resID].info.rclass << std::endl;
+        std::cout << "ttl:    " << responses[resID].info.ttl << std::endl;
+        std::cout << "Rdlen:  " << responses[resID].info.rdlen << std::endl;
+        std::cout << std::endl;
+
+        std::cout << "Rdata: " << resID << std::endl;
+        for (size_t i = 0; i < responses[resID].rdata.size(); i++)
         {
-            std::cout << responses[resID].rdata[i];
+            printf("%c", responses[resID].rdata[i]);
         }
         std::cout << std::endl;
-        std::cout << "Type: " << responses[resID].info.type << std::endl;
-        std::cout << "Rcls: " << responses[resID].info.rclass << std::endl;
-        std::cout << "Ttl:  " << responses[resID].info.ttl << std::endl;
-        std::cout << "rlen: " << responses[resID].info.rdlen << std::endl;
         std::cout << std::endl;
     }
 
     // for (size_t i = 0; i < (size_t)bufferSize; i++)
     // {
-    //     printf("Index: %d \t %c : %d \n", (int)i, (uint8_t)buffer[i], (uint8_t)buffer[i]);
+    //     printf("%d: c: %c\n", (int)i, buffer[i]);
     // }
-    std::cout << "Buff size: " << bufferSize << std::endl;
 
-    std::cout << "Test output print: " << std::endl;
-    printResponse();
+    std::cout << bufferSize << std::endl;
+    // debugPrint(buffer, bufferSize);
 }
 
 void Message::printResponse()
