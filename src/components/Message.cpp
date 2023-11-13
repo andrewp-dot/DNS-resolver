@@ -5,6 +5,57 @@
 
 #define CONVERT_TWO_CHARS_TO_UINT16(first, second) ((first << CHAR_BIT) | second);
 
+static void convertBinaryToPrintable(std::vector<uint8_t> &printable, uint8_t binary)
+{
+    std::vector<uint8_t> reversedPrintable;
+    while (binary != 0)
+    {
+        // own function
+        switch (binary % 10)
+        {
+        case 1:
+            reversedPrintable.push_back('1');
+            break;
+        case 2:
+            reversedPrintable.push_back('2');
+            break;
+        case 3:
+            reversedPrintable.push_back('3');
+            break;
+        case 4:
+            reversedPrintable.push_back('4');
+            break;
+        case 5:
+            reversedPrintable.push_back('5');
+            break;
+        case 6:
+            reversedPrintable.push_back('6');
+            break;
+        case 7:
+            reversedPrintable.push_back('7');
+            break;
+        case 8:
+            reversedPrintable.push_back('8');
+            break;
+        case 9:
+            reversedPrintable.push_back('9');
+            break;
+        case 0:
+            reversedPrintable.push_back('0');
+
+        default:
+            break;
+        }
+        binary = binary / 10;
+    }
+
+    for (size_t i = 0; i < reversedPrintable.size(); i++)
+    {
+        printable.push_back(reversedPrintable[reversedPrintable.size() - i - 1]);
+    }
+    // need to reverse it
+}
+
 void debugPrintChar(char c, int pos)
 {
     std::cout << "\t\t\t\tc: " << c << " hex: " << std::hex << (uint16_t)c << " on position: " << std::dec << pos << std::endl;
@@ -149,86 +200,68 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
     return responseQuestion;
 }
 
-std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len, size_t *offset)
+std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len, size_t *offset, uint16_t type)
 {
     std::vector<uint8_t> res;
     for (size_t i = 0; i < len; i++)
     {
-        std::cout << "Address pushing: " << std::hex << (uint16_t)buffer[*offset + i] << std::dec << std::endl;
-        res.push_back(buffer[*offset]);
+        if (type == A)
+        {
+            convertBinaryToPrintable(res, (uint8_t)buffer[*offset]);
+        }
+        else
+        {
+            res.push_back(buffer[*offset]);
+        }
         res.push_back('.');
         *offset += 1;
     }
+    res.pop_back();
     return res;
 }
 
 std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 {
-    static int numberOfPointers = 0;
+    // static int numberOfPointers = 0;
     std::vector<uint8_t> resName;
 
     // a pointer
-    if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
+    // mask the value out
+    if (((uint8_t)buffer[*offset] & RESPONSE_POINTER_SIGN) == RESPONSE_POINTER_SIGN)
     {
-        printf("true\n");
-        // ani toto
-        numberOfPointers += 1;
+        size_t pointerIndex = ((((uint16_t)buffer[*offset] << CHAR_BIT) | ((uint16_t)buffer[*offset + 1] & UINT8_MASK)) & RESPONSE_POINTER_MASK);
         *offset += 1;
 
-        // TODO: vymaskovat ten index a upravit podmienku
-        size_t pointerIndex = buffer[*offset];
-        // zavolat rekurzivne funkciu; pointer je terat na
-        // 1) c0 XY ...data...
-        //       ^
-
-        // tu si to asi prepisujem dalsou rekurziou...
+        std::cout << "Pointer index: " << pointerIndex << std::endl;
         resName = getNameFromResponse(buffer, &pointerIndex);
-        // std::cout << "res name size: " << resName.size() << std::endl;
-        // for (size_t i = 0; i < resName.size(); i++)
-        // {
-        //     printf("\t\t| pushed: %c\n", resName[i]);
-        // }
         return resName;
     }
     else
     {
-        // chyba pri adresach -> treba to ziskavat na zaklada rdlen
         int numberOfChars = buffer[*offset];
-        // std::cout << "number of chars before cycle: " << numberOfChars << std::endl;
         // iterovat cez labely az dokym nenarazis na 00
         while (numberOfChars != 0)
         {
             *offset += 1;
             resName.push_back('.');
 
-            // std::cout << "number of chars: " << numberOfChars << "Offset: " << *offset << " char: " << std::hex << (int)buffer[*offset] << std::dec << std::endl;
             // pridavat numberOfChars labelov
             for (size_t i = 0; i < (size_t)numberOfChars; i++)
             {
-                // here it throws segfault, bcs of wrong formmatting -> too large numberOfChars
                 resName.push_back(buffer[*offset + i]);
             }
 
             *offset += numberOfChars;
             numberOfChars = buffer[*offset];
 
-            // ak je nasledujuci pocet rovny pointeru,
-
-            // toto sa nikdy nestane
-            if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
+            // ak je nasledujuci pocet rovny pointeru
+            if (((uint8_t)buffer[*offset] & RESPONSE_POINTER_SIGN) == RESPONSE_POINTER_SIGN)
             {
-                // numberOfPointers += 1;
-                // *offset += 1;
-
-                // // TODO: vymaskovat ten index a upravit podmienku
-                // size_t pointerIndex = buffer[*offset];
-                // zavolaj rekurzivne funkciu a pridaj cast labelu do resName
                 std::vector<uint8_t> resNameSuffix;
                 resNameSuffix = getNameFromResponse(buffer, offset);
 
                 for (size_t i = 0; i < resNameSuffix.size(); i++)
                 {
-                    // printf("| pushing: %c\n", resNameSuffix[i]);
                     resName.push_back(resNameSuffix[i]);
                 }
                 return resName;
@@ -241,19 +274,14 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
         // 2) XY 00 ...data...
         //       ^
     }
-
-    // pointer ukazujuci na data
-    std::cout << "number of pointers: " << numberOfPointers << std::endl;
     return resName;
 }
 
 DNSResponse Message::getResponse(char *buffer, size_t *offset)
 {
-    printf("Response start --------\n");
     DNSResponse res;
     memset(&res, 0, sizeof(DNSResponse));
 
-    debugPrintChar(buffer[*offset], (int)*offset);
     res.name = getNameFromResponse(buffer, offset);
     *offset += 1;
 
@@ -270,34 +298,31 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     // move offset to rdata
     *offset += sizeof(DNSResponseInfo) - sizeof(uint16_t);
 
-    debugPrintChar(buffer[*offset], (int)*offset);
-
     // toto tu ziskat na zaklade rdlen
     if (resInfo.type == A || resInfo.type == AAAA)
     {
-        res.rdata = getAddressFromResponse(buffer, resInfo.rdlen, offset);
-        printf("Address\n");
+        res.rdata = getAddressFromResponse(buffer, resInfo.rdlen, offset, resInfo.type);
     }
     else
     {
         res.rdata = getNameFromResponse(buffer, offset);
         *offset += 1;
     }
-
-    printf("Response end ----------\n");
     return res;
 }
 
 void Message::print8bitVector(std::vector<uint8_t> vec)
 {
     // skip first dot
-    if (vec[0] == '.')
+    size_t i = 0;
+    if (vec[i] == '.')
     {
         std::cout << " ";
+        i += 1;
     }
 
     // print rest of the string
-    for (size_t i = 1; i < vec.size(); i++)
+    for (; i < vec.size(); i++)
     {
         std::cout << vec[i];
     }
@@ -336,6 +361,14 @@ std::string Message::convertClassToString(uint16_t qclass)
     }
 }
 
+void Message::printResponse(DNSResponse res)
+{
+    // print response based on type
+    print8bitVector(res.name);
+    print8bitVector(res.rdata);
+    std::cout << std::endl;
+}
+
 Message::Message(const Query &query)
 {
     this->msgFormat = query.getType();
@@ -358,6 +391,10 @@ size_t Message::convertMsgToBuffer(char *buffer)
 
 void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 {
+    // for (size_t i = 0; i < (size_t)bufferSize; i++)
+    // {
+    //     printf("%d: c: %c\n", (int)i, buffer[i]);
+    // }
     (void)bufferSize;
     // get header and question
     size_t offset = 0;
@@ -371,7 +408,6 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     std::vector<DNSResponse> responses;
     for (size_t i = 0; i < responseHeader.ancount; i++)
     {
-        // printf("Before response offset: %d\n", (int)offset);
         DNSResponse res = getResponse(buffer, &offset);
         responses.push_back(res);
     }
@@ -387,6 +423,8 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
         DNSResponse res = getResponse(buffer, &offset);
         responses.push_back(res);
     }
+
+    this->responses = responses;
 
     for (size_t resID = 0; resID < responses.size(); resID++)
     {
@@ -411,13 +449,38 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
         std::cout << std::endl;
     }
 
-    // for (size_t i = 0; i < (size_t)bufferSize; i++)
-    // {
-    //     printf("%d: c: %c\n", (int)i, buffer[i]);
-    // }
+    printResponse();
+    // std::cout << bufferSize << std::endl;
+}
 
-    std::cout << bufferSize << std::endl;
-    // debugPrint(buffer, bufferSize);
+void Message::printAnswers()
+{
+    size_t printedResponses = 0;
+    std::cout << "Answer section (" << this->header.ancount << ")" << std::endl;
+    for (size_t i = printedResponses; i < this->header.ancount; i++)
+    {
+        printResponse(this->responses[i]);
+        printedResponses += 1;
+    }
+    std::cout << std::endl;
+
+    size_t startIndex = printedResponses;
+    std::cout << "Authority section (" << this->header.nscount << ")" << std::endl;
+    for (size_t i = printedResponses; i < startIndex + this->header.nscount; i++)
+    {
+        printResponse(this->responses[i]);
+        printedResponses += 1;
+    }
+    std::cout << std::endl;
+
+    startIndex = printedResponses;
+    std::cout << "Additional section (" << this->header.arcount << ")" << std::endl;
+    for (size_t i = printedResponses; i < startIndex + this->header.arcount; i++)
+    {
+        printResponse(this->responses[i]);
+        printedResponses += 1;
+    }
+    std::cout << std::endl;
 }
 
 void Message::printResponse()
@@ -434,4 +497,7 @@ void Message::printResponse()
     print8bitVector(this->question.qname);
     std::cout << "," << convertTypeToString(this->question.qtype);
     std::cout << "," << convertClassToString(this->question.qclass) << std::endl;
+
+    // print answers
+    this->printAnswers();
 }

@@ -228,7 +228,7 @@ private:
      */
     DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
 
-    std::vector<uint8_t> getAddressFromResponse(char *buffer, uint16_t len, size_t *offset);
+    std::vector<uint8_t> getAddressFromResponse(char *buffer, uint16_t len, size_t *offset, uint16_t type);
 
     /**
      * @brief Pushes data to response name of DNSResponse object. Set offset to point to end of the name or a pointer
@@ -277,6 +277,13 @@ private:
      */
     std::string convertClassToString(uint16_t qclass);
 
+    /**
+     * @brief Prints given response
+     *
+     * @param res
+     */
+    void printResponse(DNSResponse res);
+
 public:
     /**
      * @brief Construct a new Message object based on query
@@ -302,7 +309,13 @@ public:
     void parseResponseToBuffer(char *buffer, int bufferSize);
 
     /**
-     * @brief prints response in correct format
+     * @brief Prints answered resources in correct format
+     *
+     */
+    void printAnswers();
+
+    /**
+     * @brief Prints response in correct format
      *
      */
     void printResponse();
