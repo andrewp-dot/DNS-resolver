@@ -232,7 +232,7 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
         size_t pointerIndex = ((((uint16_t)buffer[*offset] << CHAR_BIT) | ((uint16_t)buffer[*offset + 1] & UINT8_MASK)) & RESPONSE_POINTER_MASK);
         *offset += 1;
 
-        std::cout << "Pointer index: " << pointerIndex << std::endl;
+        // std::cout << "Pointer index: " << pointerIndex << std::endl;
         resName = getNameFromResponse(buffer, &pointerIndex);
         return resName;
     }
@@ -365,6 +365,10 @@ void Message::printResponse(DNSResponse res)
 {
     // print response based on type
     print8bitVector(res.name);
+    std::cout << ", " << convertTypeToString(res.info.type);
+    std::cout << ", " << convertClassToString(res.info.rclass);
+    std::cout << ", " << res.info.ttl;
+    std::cout << ", ";
     print8bitVector(res.rdata);
     std::cout << std::endl;
 }
@@ -426,28 +430,28 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 
     this->responses = responses;
 
-    for (size_t resID = 0; resID < responses.size(); resID++)
-    {
-        std::cout << "Response: " << resID << std::endl;
-        for (size_t i = 0; i < responses[resID].name.size(); i++)
-        {
-            printf("%c", responses[resID].name[i]);
-        }
-        std::cout << std::endl;
-        std::cout << "Rtype:  " << responses[resID].info.type << std::endl;
-        std::cout << "Rclass: " << responses[resID].info.rclass << std::endl;
-        std::cout << "ttl:    " << responses[resID].info.ttl << std::endl;
-        std::cout << "Rdlen:  " << responses[resID].info.rdlen << std::endl;
-        std::cout << std::endl;
+    // for (size_t resID = 0; resID < responses.size(); resID++)
+    // {
+    //     std::cout << "Response: " << resID << std::endl;
+    //     for (size_t i = 0; i < responses[resID].name.size(); i++)
+    //     {
+    //         printf("%c", responses[resID].name[i]);
+    //     }
+    //     std::cout << std::endl;
+    //     std::cout << "Rtype:  " << responses[resID].info.type << std::endl;
+    //     std::cout << "Rclass: " << responses[resID].info.rclass << std::endl;
+    //     std::cout << "ttl:    " << responses[resID].info.ttl << std::endl;
+    //     std::cout << "Rdlen:  " << responses[resID].info.rdlen << std::endl;
+    //     std::cout << std::endl;
 
-        std::cout << "Rdata: " << resID << std::endl;
-        for (size_t i = 0; i < responses[resID].rdata.size(); i++)
-        {
-            printf("%c", responses[resID].rdata[i]);
-        }
-        std::cout << std::endl;
-        std::cout << std::endl;
-    }
+    //     std::cout << "Rdata: " << resID << std::endl;
+    //     for (size_t i = 0; i < responses[resID].rdata.size(); i++)
+    //     {
+    //         printf("%c", responses[resID].rdata[i]);
+    //     }
+    //     std::cout << std::endl;
+    //     std::cout << std::endl;
+    // }
 
     printResponse();
     // std::cout << bufferSize << std::endl;
@@ -462,7 +466,6 @@ void Message::printAnswers()
         printResponse(this->responses[i]);
         printedResponses += 1;
     }
-    std::cout << std::endl;
 
     size_t startIndex = printedResponses;
     std::cout << "Authority section (" << this->header.nscount << ")" << std::endl;
@@ -471,7 +474,6 @@ void Message::printAnswers()
         printResponse(this->responses[i]);
         printedResponses += 1;
     }
-    std::cout << std::endl;
 
     startIndex = printedResponses;
     std::cout << "Additional section (" << this->header.arcount << ")" << std::endl;
@@ -480,7 +482,6 @@ void Message::printAnswers()
         printResponse(this->responses[i]);
         printedResponses += 1;
     }
-    std::cout << std::endl;
 }
 
 void Message::printResponse()
