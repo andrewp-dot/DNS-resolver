@@ -228,23 +228,10 @@ private:
      */
     DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
 
-    /**
-     * @brief Get the labels from given pointer index in buffer
-     *
-     */
-    std::vector<uint8_t> getLabelsFromPointer(char *buffer, size_t *offset);
+    std::vector<uint8_t> getAddressFromResponse(char *buffer, uint16_t len, size_t *offset);
 
     /**
-     * @brief Get the labels from given sequence in buffer
-     *
-     * @param buffer
-     * @param offset
-     * @return std::vector<uint8_t>
-     */
-    std::vector<uint8_t> getLabelsFromSequence(char *buffer, size_t *offset);
-
-    /**
-     * @brief Pushes data to response name of DNSResponse object. Set offset to point to end of the name
+     * @brief Pushes data to response name of DNSResponse object. Set offset to point to end of the name or a pointer
      *
      * @param res
      * @param buffer

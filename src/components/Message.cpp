@@ -149,67 +149,26 @@ DNSQuestion Message::getResponseQuestion(char *buffer, size_t *offset)
     return responseQuestion;
 }
 
-std::vector<uint8_t> Message::getLabelsFromPointer(char *buffer, size_t *offset)
+std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len, size_t *offset)
 {
-    (void)buffer;
-    (void)offset;
-    std::vector<uint8_t> resName;
-    // *offset += 1;
-    // size_t pointerIndex = buffer[*offset];
-
-    // int numberOfChars = buffer[pointerIndex];
-    // pointerIndex += 1;
-    // resName.push_back('.');
-
-    // while (numberOfChars != 0)
-    // {
-    //     for (int i = 0; i < numberOfChars; i++)
-    //     {
-    //         resName.push_back(buffer[pointerIndex]);
-    //         pointerIndex += 1;
-    //     }
-    //     numberOfChars = buffer[pointerIndex];
-    //     resName.push_back('.');
-    // }
-
-    // std::cout << "Got from pointer: " << std::endl;
-    // for (int i = 0; i < resName.size(); i++)
-    // {
-    //     printf("%c", resName[i]);
-    // }
-    // std::cout << std::endl;
-    return resName;
-}
-
-std::vector<uint8_t> Message::getLabelsFromSequence(char *buffer, size_t *offset)
-{
-    (void)buffer;
-    (void)offset;
-    std::vector<uint8_t> resName;
-    return resName;
+    std::vector<uint8_t> res;
+    for (size_t i = 0; i < len; i++)
+    {
+        res.push_back(buffer[*offset + i]);
+        res.push_back('.');
+    }
+    return res;
 }
 
 std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 {
     static int numberOfPointers = 0;
-    /**
-     * TODO:
-     * nastavit pointer aby pointoval pri konci funkcie na:
-     * 1) c0 XY ...data...
-     *       ^
-     * 2) XY 00 ...data...
-     *       ^
-     * potom:
-     * posunut offset na data
-     *
-     *
-     */
     std::vector<uint8_t> resName;
 
     // a pointer
     if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
     {
-
+        printf("true\n");
         // ani toto
         numberOfPointers += 1;
         *offset += 1;
@@ -219,24 +178,32 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
         // zavolat rekurzivne funkciu; pointer je terat na
         // 1) c0 XY ...data...
         //       ^
-        resName = getLabelsFromPointer(buffer, &pointerIndex);
-        // *offset += 1;
+
+        // tu si to asi prepisujem dalsou rekurziou...
+        resName = getNameFromResponse(buffer, &pointerIndex);
+        // std::cout << "res name size: " << resName.size() << std::endl;
+        // for (size_t i = 0; i < resName.size(); i++)
+        // {
+        //     printf("\t\t| pushed: %c\n", resName[i]);
+        // }
         return resName;
     }
     else
     {
+        // chyba pri adresach -> treba to ziskavat na zaklada rdlen
         int numberOfChars = buffer[*offset];
-        // posunutie pointeru na dalsi prvok
-
+        // std::cout << "number of chars before cycle: " << numberOfChars << std::endl;
         // iterovat cez labely az dokym nenarazis na 00
         while (numberOfChars != 0)
         {
-            // miesto cisla pushni bodku
             *offset += 1;
             resName.push_back('.');
+
+            // std::cout << "number of chars: " << numberOfChars << "Offset: " << *offset << " char: " << std::hex << (int)buffer[*offset] << std::dec << std::endl;
             // pridavat numberOfChars labelov
             for (size_t i = 0; i < (size_t)numberOfChars; i++)
             {
+                // here it throws segfault, bcs of wrong formmatting -> too large numberOfChars
                 resName.push_back(buffer[*offset + i]);
             }
 
@@ -248,26 +215,25 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
             // toto sa nikdy nestane
             if ((uint8_t)buffer[*offset] == RESPONSE_POINTER_SIGN)
             {
-                numberOfPointers += 1;
-                *offset += 1;
+                // numberOfPointers += 1;
+                // *offset += 1;
 
-                // TODO: vymaskovat ten index a upravit podmienku
-                size_t pointerIndex = buffer[*offset];
+                // // TODO: vymaskovat ten index a upravit podmienku
+                // size_t pointerIndex = buffer[*offset];
                 // zavolaj rekurzivne funkciu a pridaj cast labelu do resName
                 std::vector<uint8_t> resNameSuffix;
-                resNameSuffix = getNameFromResponse(buffer, &pointerIndex);
+                resNameSuffix = getNameFromResponse(buffer, offset);
 
                 for (size_t i = 0; i < resNameSuffix.size(); i++)
                 {
+                    // printf("| pushing: %c\n", resNameSuffix[i]);
                     resName.push_back(resNameSuffix[i]);
                 }
-                // *offset += 1;
                 return resName;
             }
             // *offset += 1; // get next char
         }
         // na konci stringu posun offseet o 1
-        // *offset += 1;
         resName.push_back('.');
 
         // pointer teraz ukazuje tu.
@@ -282,6 +248,7 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 
 DNSResponse Message::getResponse(char *buffer, size_t *offset)
 {
+    printf("Response start --------\n");
     DNSResponse res;
     memset(&res, 0, sizeof(DNSResponse));
 
@@ -303,8 +270,20 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     *offset += sizeof(DNSResponseInfo) - sizeof(uint16_t);
 
     debugPrintChar(buffer[*offset], (int)*offset);
-    res.rdata = getNameFromResponse(buffer, offset);
-    *offset += 1;
+
+    // toto tu ziskat na zaklade rdlen
+    if (resInfo.type == A || resInfo.type == AAAA)
+    {
+        res.rdata = getAddressFromResponse(buffer, resInfo.rdlen, offset);
+        printf("Address\n");
+    }
+    else
+    {
+        res.rdata = getNameFromResponse(buffer, offset);
+        *offset += 1;
+    }
+
+    printf("Response end ----------\n");
     return res;
 }
 
