@@ -25,8 +25,7 @@ private:
     port_t port;
     std::string server;
     std::string address;
-    // std::vector<std::string> addressVector;
-    bool isOk;
+    // bool isOk;
 
 public:
     Query();
@@ -39,9 +38,6 @@ public:
     void setPort(port_t portNum) { this->port = portNum; };
     void setServer(std::string server) { this->server = server; };
     void setAddress(std::string address) { this->address = address; };
-    void setIsOk(bool value) { this->isOk = value; };
-    // void setAddressVector(std::vector<std::string> addrVector) { this->addressVector = addrVector; };
-    // void pushAddress(std::string address) { this->addressVector.push_back(address); };
 
     // getters
     bool getRecursionDesired() const { return this->recursionDesired; };
@@ -51,15 +47,38 @@ public:
     port_t getPort() const { return this->port; };
     std::string getServer() const { return this->server; };
     std::string getAddress() const { return this->address; };
-    // std::vector<std::string> getAddressVector() const { return this->addressVector; };
-    bool getIsOk() const { return this->isOk; };
 
-    /* supportive functions */
+    /**
+     * @brief Reverses
+     *
+     * @param vec
+     */
     void reverseStringVector(std::vector<std::string> &vec);
+
+    /**
+     * @brief Reverses IPv4
+     *
+     */
     void reverseIPv4();
+
+    /**
+     * @brief Reverses IPv6
+     *
+     */
     void reverseIPv6();
 
+    /**
+     * @brief Converts boolean to string
+     *
+     * @param expr
+     * @return std::string - "Yes" if expr is true, "No" if expr is false
+     */
     std::string boolToString(bool expr);
+
+    /**
+     * @brief Prints options of the query
+     *
+     */
     void printQueryOptions();
 };
 

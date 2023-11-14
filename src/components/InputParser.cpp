@@ -73,13 +73,11 @@ void InputParser::modifyAddress(Query &query)
         {
             query.reverseIPv6();
             query.setAddress(query.getAddress().append("ip6.arpa"));
-            // std::cout << query.getAddress() << std::endl;
         }
         else
         {
             query.reverseIPv4();
             query.setAddress(query.getAddress().append("IN-ADDR.ARPA"));
-            // std::cout << query.getAddress() << std::endl;
         }
     }
 }
@@ -93,7 +91,7 @@ void InputParser::setOptions(Query &query)
             if (strlen(argv[i]) != FLAG_LENGTH)
             {
                 std::cerr << "Unknown flag: " << argv[i] << std::endl;
-                query.setIsOk(false);
+                // query.setIsOk(false);
                 continue;
             }
             switch (argv[i][1])
@@ -114,12 +112,10 @@ void InputParser::setOptions(Query &query)
                 i += 1;
                 if (i >= argc)
                 {
-                    query.setIsOk(false);
                     break;
                 }
                 if (isFlag(argv[i]))
                 {
-                    query.setIsOk(false);
                     break;
                 }
                 else
@@ -133,13 +129,11 @@ void InputParser::setOptions(Query &query)
                 {
                     // if port is wrong, set it to PORT 53
                     std::cerr << "Undefined option: " << argv[i] << "" << std::endl;
-                    query.setIsOk(false);
                     break;
                 }
                 if (isFlag(argv[i]))
                 {
                     Error::printError(WRONG_ARGUMENTS, "Missing port.\n");
-                    query.setIsOk(false);
                     break;
                 }
                 if (isGoodPortFormat(argv[i]))
@@ -149,7 +143,6 @@ void InputParser::setOptions(Query &query)
                 else
                 {
                     Error::printError(WRONG_ARGUMENTS, "Invalid port. Port is set by default to %d.\n", DNS_PORT);
-                    query.setIsOk(false);
                 }
                 break;
 
@@ -161,7 +154,6 @@ void InputParser::setOptions(Query &query)
         else
         {
             query.setAddress(argv[i]);
-            // query.pushAddress(argv[i]);
         }
     }
 
@@ -174,17 +166,18 @@ void InputParser::parseArgs(Query &query)
     if (this->argc <= 1)
     {
         Error::printError(WRONG_ARGUMENTS, "Wrong number of arguments.\n");
-        query.setIsOk(false);
         return;
     }
     setOptions(query);
     if (query.getServer() == "")
     {
         Error::printError(WRONG_ARGUMENTS, "Server has not been set.\n");
+        return;
     }
     // if (query.getAddressVector().empty())
     if (query.getAddress() == "")
     {
         Error::printError(WRONG_ARGUMENTS, "Address has not been set.\n");
+        return;
     }
 }

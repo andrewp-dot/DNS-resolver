@@ -28,6 +28,10 @@ void Connection::connectionSetup(const Query &query)
     memset(&this->server, 0, sizeof(sockaddr_in));
     // memset(&this->from, 0, sizeof(sockaddr_in));
 
+    /**
+     * TODO:
+     * use get host by name here
+     */
     this->server.sin_addr.s_addr = inet_addr(query.getServer().c_str());
     this->server.sin_port = htons(query.getPort());
     this->server.sin_family = AF_INET;
@@ -53,11 +57,10 @@ void Connection::sendAndDisplayAnswer(const Query &query)
         return;
     }
 
-    // maybe implement timeout
     // recieve message
     char recvBuffer[UDP_DATAGRAM_LIMIT] = {0};
 
-    // timeout
+    // timeout #DOC
     fd_set readSet;
     FD_ZERO(&readSet);              /* clear the set */
     FD_SET(this->sockfd, &readSet); /* add our file descriptor to the set */
@@ -98,10 +101,9 @@ void Connection::connectionClose()
     close(this->sockfd);
 }
 
-// popis v dokumentacii
+// #DOC
 void Connection::sendUdpQuery(const Query &query)
 {
-
     connectionSetup(query);
     sendAndDisplayAnswer(query);
     connectionClose();

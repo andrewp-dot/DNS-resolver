@@ -11,7 +11,6 @@ Query::Query()
     this->type = A;
     this->port = DNS_PORT;
     this->server = "";
-    this->isOk = true;
 }
 
 void Query::reverseStringVector(std::vector<std::string> &vec)
@@ -72,13 +71,8 @@ void Query::reverseIPv4()
 void Query::reverseIPv6()
 {
     std::string parsedAddress;
-    // std::string address = this->getAddressVector().at(0);
     std::string address = this->getAddress();
-    // count all 4 chars ->  translate this 4321:0:1:2:3:4:567:89ab
-    // int this -> b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4
-    // int this -> b.a.9.8.7.6.5.0.4.0.0.0.3.0.0.0.2.0.0.0.1.0.0.0.0.0.0.0.1.2.3.4.
 
-    // idea -> going from behind -> place every 4 chars and again until end // MAX_CHARS
     for (size_t i = 0; i < address.size(); i++)
     {
         // get part
@@ -111,7 +105,9 @@ void Query::reverseIPv6()
 std::string Query::boolToString(bool expr)
 {
     if (expr)
+    {
         return "Yes";
+    }
     return "No";
 }
 
@@ -121,5 +117,5 @@ void Query::printQueryOptions()
     std::cout << "Recursive: " << boolToString(this->recursionDesired) << ", ";
     std::cout << "Reversed query: " << boolToString(this->reversed) << std::endl;
     std::cout << "Server: " << this->server << std::endl;
-    // std::cout << "Address: " << this->address << std::endl;
+    std::cout << "Address: " << this->address << std::endl;
 }
