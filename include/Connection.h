@@ -1,28 +1,57 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 #include "Query.h"
+#include <arpa/inet.h>
+#include <sys/socket.h>
 
-enum ConnectionType
-{
-    UDP,
-    TCP
-};
+// enum ConnectionType
+// {
+//     UDP,
+//     TCP
+// };
 
 class Connection
 {
 private:
-    ConnectionType type;
+    // ConnectionType type;
     int sockfd;
+    struct sockaddr_in server;
+    struct sockaddr_in from;
 
-    void setIPv6Settings();
+    // void setIPv6Settings();
+
+    /**
+     * @brief Sets the settings for connection
+     *
+     */
+    void connectionSetup(const Query &query);
+
+    /**
+     * @brief Sends query and displays recieved answer
+     *
+     */
+    void sendAndDisplayAnswer(const Query &query);
+
+    /**
+     * @brief Closes the connection
+     *
+     */
+    void connectionClose();
 
 public:
-    Connection(ConnectionType type = UDP)
-    {
-        this->type = type;
-    };
+    /**
+     * @brief Construct a new Connection object
+     *
+     * @param type
+     */
+    Connection() { this->sockfd = -1; };
+
+    /**
+     * @brief Sends query using udp protocol
+     *
+     * @param query
+     */
     void sendUdpQuery(const Query &query);
-    void createTcpConnection();
 };
 
 #endif

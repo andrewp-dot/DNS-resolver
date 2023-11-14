@@ -32,7 +32,7 @@ int main(int argc, char **argv)
     parser.parseArgs(query);
     // query.printQueryOptions();
 
-    Connection connection = Connection(UDP);
+    Connection connection = Connection();
     connection.sendUdpQuery(query);
 
     // get response

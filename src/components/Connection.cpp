@@ -9,42 +9,8 @@
 #include "Message.h"
 #include "Error.h"
 
-/**
- * @brief
- * The resolver starts with knowledge of at least one name server.
- *
- * In return, the resolver either receives the desired
- * information or a referral to another name server.
- *
- * AUTHORITATIVE DATA
- * Name servers manage two kinds of data.  The first kind of data held in
- * sets called zones; each zone is the complete database for a particular
- * "pruned" subtree of the domain space.  This data is called
- * authoritative.
- */
-
-/**
- * @brief Name grammar
- * <domain> ::= <subdomain> | " "
- * <subdomain> ::= <label> | <subdomain> "." <label>
- * <label> ::= <letter> [ [ <ldh-str> ] <let-dig> ]
- * <ldh-str> ::= <let-dig-hyp> | <let-dig-hyp> <ldh-str>
- * <let-dig-hyp> ::= <let-dig> | "-"
- * <let-dig> ::= <letter> | <digit>
- * <letter> ::= any one of the 52 alphabetic characters A through Z in upper case and a through z in lower case
- * <digit> ::= any one of the ten digits 0 through 9
- */
-
-/*
- * DNS server:
- * kazi.fit.vutbr.cz
- * google : 8.8.8.8
- */
-
-// popis v dokumentacii
-void Connection::sendUdpQuery(const Query &query)
+void Connection::connectionSetup(const Query &query)
 {
-
     // setup socket
     this->sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0)
@@ -54,35 +20,17 @@ void Connection::sendUdpQuery(const Query &query)
     }
 
     // setup server address
-    struct sockaddr_in server, from;
-    memset(&server, 0, sizeof(sockaddr_in));
-    memset(&from, 0, sizeof(sockaddr_in));
+    memset(&this->server, 0, sizeof(sockaddr_in));
+    memset(&this->from, 0, sizeof(sockaddr_in));
 
-    // TODO: here function to convert example kazi.fit
-    // gethostbyaddr();
+    this->server.sin_addr.s_addr = inet_addr(query.getServer().c_str());
+    this->server.sin_port = htons(query.getPort());
+    this->server.sin_family = AF_INET;
+}
 
-    // popis v dokumentacii
-    // struct addrinfo hints, *results;
-
-    // hints.ai_family = AF_INET;
-    // hints.ai_socktype = SOCK_DGRAM;
-
-    // int status = getaddrinfo(query.getServer().c_str(), NULL, &hints, &results);
-    // if (status != 0)
-    // {
-    //     Error::printError(CONNECTION_FAILED, gai_strerror(status));
-    //     std::cout << std::endl;
-    //     return;
-    // }
-    // std::cout << "S addr: " << results->ai_addr->sa_data << std::endl;
-
-    // std::cout << host->h_addr_list[0] <<
-    server.sin_addr.s_addr = inet_addr(query.getServer().c_str());
-    // server.sin_addr.s_addr = inet_addr(results->ai_addr->sa_data);
-    server.sin_port = htons(query.getPort());
-    server.sin_family = AF_INET;
-
-    if (connect(this->sockfd, (struct sockaddr *)&server, sizeof(server)) < 0)
+void Connection::sendAndDisplayAnswer(const Query &query)
+{
+    if (connect(this->sockfd, (struct sockaddr *)(&this->server), sizeof(this->server)) < 0)
     {
         Error::printError(CONNECTION_FAILED, "connect() failed\n");
         return;
@@ -111,12 +59,19 @@ void Connection::sendUdpQuery(const Query &query)
 
     // parse connection to buffer
     msg.parseResponseToBuffer(recvBuffer, bytesRx);
+    msg.printResponse();
+}
 
+void Connection::connectionClose()
+{
     close(this->sockfd);
 }
 
-// // maybe
-// void Connection::createTcpConnection()
-// {
-//     std::cout << "TODO: create tcp connection " << std::endl;
-// }
+// popis v dokumentacii
+void Connection::sendUdpQuery(const Query &query)
+{
+
+    connectionSetup(query);
+    sendAndDisplayAnswer(query);
+    connectionClose();
+}

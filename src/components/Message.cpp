@@ -477,8 +477,6 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     //     std::cout << std::endl;
     //     std::cout << std::endl;
     // }
-
-    printResponse();
     // std::cout << bufferSize << std::endl;
 }
 
