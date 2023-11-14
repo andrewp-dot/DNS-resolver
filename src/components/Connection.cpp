@@ -21,12 +21,12 @@ void Connection::connectionSetup(const Query &query)
         return;
     }
 
+    // set the socket to be non-blocking
     int flags = fcntl(this->sockfd, F_GETFL, 0);
     fcntl(this->sockfd, F_SETFL, flags | O_NONBLOCK);
 
     // setup server address
     memset(&this->server, 0, sizeof(sockaddr_in));
-    // memset(&this->from, 0, sizeof(sockaddr_in));
 
     /**
      * TODO:

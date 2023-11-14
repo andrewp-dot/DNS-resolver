@@ -9,9 +9,6 @@ class Connection
 private:
     int sockfd;
     struct sockaddr_in server;
-    // struct sockaddr_in from;
-
-    // void setIPv6Settings();
 
     /**
      * @brief Sets the settings for connection

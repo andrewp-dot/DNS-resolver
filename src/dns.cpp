@@ -23,19 +23,13 @@
 #include "Message.h"
 #include "Connection.h"
 
-#define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
-
 int main(int argc, char **argv)
 {
     InputParser parser(argc, argv);
     Query query;
     parser.parseArgs(query);
-    // query.printQueryOptions();
 
     Connection connection = Connection();
     connection.sendUdpQuery(query);
-
-    // get response
-    // print data
     return Error::getErrorCode();
 }
