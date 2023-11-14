@@ -4,19 +4,12 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-// enum ConnectionType
-// {
-//     UDP,
-//     TCP
-// };
-
 class Connection
 {
 private:
-    // ConnectionType type;
     int sockfd;
     struct sockaddr_in server;
-    struct sockaddr_in from;
+    // struct sockaddr_in from;
 
     // void setIPv6Settings();
 
