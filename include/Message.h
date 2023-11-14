@@ -228,6 +228,15 @@ private:
      */
     DNSQuestion getResponseQuestion(char *buffer, size_t *offset);
 
+    /**
+     * @brief Get the address from  response buffer. Set the offset to pint on the last character of the name.
+     *
+     * @param buffer
+     * @param len
+     * @param offset
+     * @param type
+     * @return std::vector<uint8_t>
+     */
     std::vector<uint8_t> getAddressFromResponse(char *buffer, uint16_t len, size_t *offset, uint16_t type);
 
     /**
@@ -255,6 +264,13 @@ private:
      * @return std::string - returns "Yes" if value is true, else returns "No"
      */
     inline std::string convertBoolToString(bool value) { return value ? "Yes" : "No"; };
+
+    /**
+     * @brief Prints IPv6 from vector
+     *
+     * @param vec
+     */
+    void printIPv6Address(std::vector<uint8_t> ip6);
 
     /**
      * @brief prints vector of uint8_t to the screen

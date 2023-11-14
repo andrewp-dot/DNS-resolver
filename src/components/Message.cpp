@@ -3,7 +3,7 @@
 #include "Query.h"
 #include "constants.h"
 
-#define CONVERT_TWO_CHARS_TO_UINT16(first, second) ((first << CHAR_BIT) | second);
+#define CONVERT_TWO_CHARS_TO_UINT16(first, second) ((first << CHAR_BIT) | second)
 
 static void convertBinaryToPrintable(std::vector<uint8_t> &printable, uint8_t binary)
 {
@@ -53,31 +53,34 @@ static void convertBinaryToPrintable(std::vector<uint8_t> &printable, uint8_t bi
     {
         printable.push_back(reversedPrintable[reversedPrintable.size() - i - 1]);
     }
-    // need to reverse it
 }
 
-void debugPrintChar(char c, int pos)
-{
-    std::cout << "\t\t\t\tc: " << c << " hex: " << std::hex << (uint16_t)c << " on position: " << std::dec << pos << std::endl;
-}
+// static void convertHexToPrintable(std::vector<uint8_t> &ip6, uint8_t hex)
+// {
+// }
 
-void debugPrint(char *buffer, int bufferSize)
-{
-    for (size_t i = 0; i < (size_t)bufferSize; i++)
-    {
-        if (!(i % 8))
-        {
-            std::cout << "   ";
-        }
-        if (!(i % 16))
-        {
-            std::cout << std::endl;
-        }
-        std::cout << std::hex << (uint16_t)buffer[i];
-        std::cout << " ";
-    }
-    std::cout << std::endl;
-}
+// static void debugPrintChar(char c, int pos)
+// {
+//     std::cout << "\t\t\t\tc: " << c << " hex: " << std::hex << (uint16_t)c << " on position: " << std::dec << pos << std::endl;
+// }
+
+// static void debugPrint(char *buffer, int bufferSize)
+// {
+//     for (size_t i = 0; i < (size_t)bufferSize; i++)
+//     {
+//         if (!(i % 8))
+//         {
+//             std::cout << "   ";
+//         }
+//         if (!(i % 16))
+//         {
+//             std::cout << std::endl;
+//         }
+//         std::cout << std::hex << (uint16_t)buffer[i];
+//         std::cout << " ";
+//     }
+//     std::cout << std::endl;
+// }
 
 unsigned short Message::generateQueryId()
 {
@@ -208,14 +211,15 @@ std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len,
         if (type == A)
         {
             convertBinaryToPrintable(res, (uint8_t)buffer[*offset]);
+            res.push_back('.');
         }
         else
         {
             res.push_back(buffer[*offset]);
         }
-        res.push_back('.');
         *offset += 1;
     }
+    // remove last '.' or ':'
     res.pop_back();
     return res;
 }
@@ -301,6 +305,7 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     // toto tu ziskat na zaklade rdlen
     if (resInfo.type == A || resInfo.type == AAAA)
     {
+
         res.rdata = getAddressFromResponse(buffer, resInfo.rdlen, offset, resInfo.type);
     }
     else
@@ -311,13 +316,25 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     return res;
 }
 
+void Message::printIPv6Address(std::vector<uint8_t> ip6)
+{
+    for (size_t i = 0; i < ip6.size(); i += 2)
+    {
+        uint16_t ip6Part = CONVERT_TWO_CHARS_TO_UINT16(ip6[i], ip6[i + 1]);
+        std::cout << std::hex << ip6Part << std::dec;
+        if (!(i % 4) && i != (ip6.size() - 1))
+        {
+            std::cout << ":";
+        }
+    }
+}
+
 void Message::print8bitVector(std::vector<uint8_t> vec)
 {
     // skip first dot
     size_t i = 0;
     if (vec[i] == '.')
     {
-        std::cout << " ";
         i += 1;
     }
 
@@ -364,12 +381,20 @@ std::string Message::convertClassToString(uint16_t qclass)
 void Message::printResponse(DNSResponse res)
 {
     // print response based on type
+    std::cout << " ";
     print8bitVector(res.name);
     std::cout << ", " << convertTypeToString(res.info.type);
     std::cout << ", " << convertClassToString(res.info.rclass);
     std::cout << ", " << res.info.ttl;
     std::cout << ", ";
-    print8bitVector(res.rdata);
+    if (res.info.type == AAAA)
+    {
+        printIPv6Address(res.rdata);
+    }
+    else
+    {
+        print8bitVector(res.rdata);
+    }
     std::cout << std::endl;
 }
 
@@ -495,6 +520,7 @@ void Message::printResponse()
     std::cout << "Question section (" << this->header.qdcount << ")" << std::endl;
 
     // function to ouptut uint8_t vector
+    std::cout << " ";
     print8bitVector(this->question.qname);
     std::cout << "," << convertTypeToString(this->question.qtype);
     std::cout << "," << convertClassToString(this->question.qclass) << std::endl;
