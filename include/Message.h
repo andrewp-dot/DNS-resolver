@@ -26,20 +26,19 @@ enum QueryOpcode
     OPCODE_SERVER_STATUS = 2
 };
 
-// enum QType
-// {
-//     IN = 1,
-//     CS = 2,
-//     CH = 3,
-//     HS = 4,
-// };
-
 enum QueryClass
 {
     QCLASS_IN = 1
 };
 
-// #define QCLASS_IN 1 // internet QTYPE
+typedef struct SOATypeInfo
+{
+    uint32_t serial;
+    uint32_t refresh;
+    uint32_t retry;
+    uint32_t expire;
+    uint32_t minimum;
+} SOAinfo;
 
 /*
                                 |1  1  1  1  1  1
@@ -136,6 +135,7 @@ typedef struct DNSResponse
     std::vector<uint8_t> name;
     DNSResponseInfo info;
     std::vector<uint8_t> rdata;
+    // std::vector<SOAType> soa; // vector for specific soa types
 
 } DNSResponse;
 
@@ -152,9 +152,9 @@ private:
     /**
      * @brief Generate query id
      *
-     * @return unsigned short
+     * @return uint16_t
      */
-    unsigned short generateQueryId();
+    uint16_t generateQueryId(const Query &query);
 
     /**
      * @brief Get the opcode of Query object
@@ -239,6 +239,8 @@ private:
      */
     std::vector<uint8_t> getAddressFromResponse(char *buffer, uint16_t len, size_t *offset, uint16_t type);
 
+    std::vector<uint8_t> getSoaFromResponse(char *buffer, size_t *offset);
+
     /**
      * @brief Pushes data to response name of DNSResponse object. Set offset to point to end of the name or a pointer
      *
@@ -246,7 +248,8 @@ private:
      * @param buffer
      * @param offset
      */
-    std::vector<uint8_t> getNameFromResponse(char *buffer, size_t *offset);
+    std::vector<uint8_t>
+    getNameFromResponse(char *buffer, size_t *offset);
 
     /**
      * @brief Get the Response object
@@ -264,6 +267,12 @@ private:
      * @return std::string - returns "Yes" if value is true, else returns "No"
      */
     inline std::string convertBoolToString(bool value) { return value ? "Yes" : "No"; };
+
+    /**
+     * @brief prints SOA record in correct way
+     *
+     */
+    void printSoaRecord(std::vector<uint8_t> vec);
 
     /**
      * @brief Prints IPv6 from vector

@@ -1,4 +1,5 @@
 #include <iostream>
+#include <cstdlib>
 #include "Message.h"
 #include "Query.h"
 #include "constants.h"
@@ -55,46 +56,35 @@ static void convertBinaryToPrintable(std::vector<uint8_t> &printable, uint8_t bi
     }
 }
 
-// static void convertHexToPrintable(std::vector<uint8_t> &ip6, uint8_t hex)
-// {
-// }
-
-// static void debugPrintChar(char c, int pos)
-// {
-//     std::cout << "\t\t\t\tc: " << c << " hex: " << std::hex << (uint16_t)c << " on position: " << std::dec << pos << std::endl;
-// }
-
-// static void debugPrint(char *buffer, int bufferSize)
-// {
-//     for (size_t i = 0; i < (size_t)bufferSize; i++)
-//     {
-//         if (!(i % 8))
-//         {
-//             std::cout << "   ";
-//         }
-//         if (!(i % 16))
-//         {
-//             std::cout << std::endl;
-//         }
-//         std::cout << std::hex << (uint16_t)buffer[i];
-//         std::cout << " ";
-//     }
-//     std::cout << std::endl;
-// }
-
-unsigned short Message::generateQueryId()
+static void pushUINT8vectorToUINT8vector(std::vector<uint8_t> &dst, std::vector<uint8_t> &src)
 {
-    // algorithm for generating query id
-    // random number generator or hash function -> prefer hash function
-    return 12345;
+    size_t i = 0;
+    if (src[0] == '.')
+    {
+        i += 1;
+    }
+    for (; i < src.size(); i++)
+    {
+        dst.push_back(src[i]);
+    }
+    dst.push_back('|');
+}
+
+uint16_t Message::generateQueryId(const Query &query)
+{
+    srand((unsigned)time(NULL));
+
+    int id = rand();
+    std::string addr = query.getAddress();
+    return (uint16_t)(id << addr.size());
 }
 
 QueryOpcode Message::getQueryOpcode(const Query &query)
 {
     if (query.getReversed())
     {
-        // return OPCODE_IQUERY;
-        return OPCODE_QUERY;
+        return OPCODE_IQUERY;
+        // return OPCODE_QUERY;
     }
     return OPCODE_QUERY;
 }
@@ -105,7 +95,7 @@ DNSHeader Message::createHeader(const Query &query)
     std::memset(&header, 0, sizeof(DNSHeader));
 
     // set flags
-    header.id = htons(generateQueryId());
+    header.id = htons(generateQueryId(query));
     header.qr = QUERY;
     header.opcode = htons(getQueryOpcode(query));
     header.rd = query.getRecursionDesired();
@@ -224,32 +214,70 @@ std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len,
     return res;
 }
 
+std::vector<uint8_t> Message::getSoaFromResponse(char *buffer, size_t *offset)
+{
+    std::vector<uint8_t> rdata;
+    std::vector<uint8_t> *rdataPointer = &rdata;
+
+    // get email name
+    std::vector<uint8_t> mname = getNameFromResponse(buffer, offset);
+    *offset += 1;
+
+    pushUINT8vectorToUINT8vector(rdata, mname);
+
+    // get resource name
+    std::vector<uint8_t> rname = getNameFromResponse(buffer, offset);
+    *offset += 1;
+
+    pushUINT8vectorToUINT8vector(rdata, rname);
+
+    // copy the soa info
+    SOAinfo soaInfo;
+    memcpy(&soaInfo, buffer, sizeof(SOAinfo));
+
+    // push uint32_T to uint8_vector
+    soaInfo.serial = htons(soaInfo.serial);
+    rdata.push_back(',');
+
+    soaInfo.refresh = htons(soaInfo.refresh);
+    rdata.push_back(',');
+
+    soaInfo.retry = htons(soaInfo.retry);
+    rdata.push_back(',');
+
+    soaInfo.expire = htons(soaInfo.expire);
+    rdata.push_back(',');
+
+    soaInfo.minimum = htons(soaInfo.minimum);
+    rdata.push_back(',');
+
+    return rdata;
+}
+
 std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 {
-    // static int numberOfPointers = 0;
     std::vector<uint8_t> resName;
 
     // a pointer
-    // mask the value out
     if (((uint8_t)buffer[*offset] & RESPONSE_POINTER_SIGN) == RESPONSE_POINTER_SIGN)
     {
+        // mask the value out
         size_t pointerIndex = ((((uint16_t)buffer[*offset] << CHAR_BIT) | ((uint16_t)buffer[*offset + 1] & UINT8_MASK)) & RESPONSE_POINTER_MASK);
         *offset += 1;
 
-        // std::cout << "Pointer index: " << pointerIndex << std::endl;
         resName = getNameFromResponse(buffer, &pointerIndex);
         return resName;
     }
     else
     {
         int numberOfChars = buffer[*offset];
-        // iterovat cez labely az dokym nenarazis na 00
+        // iterate until you find 0
         while (numberOfChars != 0)
         {
             *offset += 1;
             resName.push_back('.');
 
-            // pridavat numberOfChars labelov
+            // add numberOfChars labels
             for (size_t i = 0; i < (size_t)numberOfChars; i++)
             {
                 resName.push_back(buffer[*offset + i]);
@@ -271,12 +299,7 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
                 return resName;
             }
         }
-        // na konci stringu posun offseet o 1
         resName.push_back('.');
-
-        // pointer teraz ukazuje tu.
-        // 2) XY 00 ...data...
-        //       ^
     }
     return resName;
 }
@@ -308,6 +331,11 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
 
         res.rdata = getAddressFromResponse(buffer, resInfo.rdlen, offset, resInfo.type);
     }
+    else if (resInfo.type == SOA)
+    {
+        res.rdata = getSoaFromResponse(buffer, offset);
+        // res.soa.push_back(getSoaFromResponse(buffer, offset));
+    }
     else
     {
         res.rdata = getNameFromResponse(buffer, offset);
@@ -327,6 +355,16 @@ void Message::printIPv6Address(std::vector<uint8_t> ip6)
             std::cout << ":";
         }
     }
+}
+
+void Message::printSoaRecord(std::vector<uint8_t> vec)
+{
+    (void)vec;
+    // print mname
+
+    // print rname
+
+    // print other info
 }
 
 void Message::print8bitVector(std::vector<uint8_t> vec)
@@ -382,14 +420,22 @@ void Message::printResponse(DNSResponse res)
 {
     // print response based on type
     std::cout << " ";
-    print8bitVector(res.name);
-    std::cout << ", " << convertTypeToString(res.info.type);
-    std::cout << ", " << convertClassToString(res.info.rclass);
-    std::cout << ", " << res.info.ttl;
-    std::cout << ", ";
+    if (res.name.size() != 1 && res.name[0] != 0)
+    {
+        print8bitVector(res.name);
+        std::cout << ", ";
+    }
+    std::cout << convertTypeToString(res.info.type);
+    std::cout << "," << convertClassToString(res.info.rclass);
+    std::cout << "," << res.info.ttl;
+    std::cout << ",";
     if (res.info.type == AAAA)
     {
         printIPv6Address(res.rdata);
+    }
+    else if (res.info.type == SOA)
+    {
+        print8bitVector(res.rdata);
     }
     else
     {
@@ -420,10 +466,6 @@ size_t Message::convertMsgToBuffer(char *buffer)
 
 void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 {
-    // for (size_t i = 0; i < (size_t)bufferSize; i++)
-    // {
-    //     printf("%d: c: %c\n", (int)i, buffer[i]);
-    // }
     (void)bufferSize;
     // get header and question
     size_t offset = 0;
@@ -454,30 +496,6 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
     }
 
     this->responses = responses;
-
-    // for (size_t resID = 0; resID < responses.size(); resID++)
-    // {
-    //     std::cout << "Response: " << resID << std::endl;
-    //     for (size_t i = 0; i < responses[resID].name.size(); i++)
-    //     {
-    //         printf("%c", responses[resID].name[i]);
-    //     }
-    //     std::cout << std::endl;
-    //     std::cout << "Rtype:  " << responses[resID].info.type << std::endl;
-    //     std::cout << "Rclass: " << responses[resID].info.rclass << std::endl;
-    //     std::cout << "ttl:    " << responses[resID].info.ttl << std::endl;
-    //     std::cout << "Rdlen:  " << responses[resID].info.rdlen << std::endl;
-    //     std::cout << std::endl;
-
-    //     std::cout << "Rdata: " << resID << std::endl;
-    //     for (size_t i = 0; i < responses[resID].rdata.size(); i++)
-    //     {
-    //         printf("%c", responses[resID].rdata[i]);
-    //     }
-    //     std::cout << std::endl;
-    //     std::cout << std::endl;
-    // }
-    // std::cout << bufferSize << std::endl;
 }
 
 void Message::printAnswers()
