@@ -11,10 +11,22 @@ private:
     struct sockaddr_in server;
 
     /**
+     * @brief Get the ip address of host
+     *
+     * @param server
+     * @return true - if the address is found
+     * @return false - if the address is not found
+     */
+    bool getHostIPaddress(const char *server, struct in_addr *dst);
+
+    /**
      * @brief Sets the settings for connection
      *
+     * @param query
+     * @return true - if conection was set up correctly
+     * @return false - if there is an error
      */
-    void connectionSetup(const Query &query);
+    bool connectionSetup(const Query &query);
 
     /**
      * @brief Sends query and displays recieved answer

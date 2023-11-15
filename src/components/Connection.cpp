@@ -11,30 +11,79 @@
 #include "Message.h"
 #include "Error.h"
 
-void Connection::connectionSetup(const Query &query)
+bool Connection::getHostIPaddress(const char *server, struct in_addr *dst)
+{
+    struct hostent *hostInfo;
+
+    // check if host was found
+    hostInfo = gethostbyname(server);
+    if (hostInfo == NULL)
+    {
+        Error::printError(CONNECTION_FAILED, "Host IP address not found.\n");
+        return false;
+    }
+
+    // get ip address
+    struct in_addr **addressList = (struct in_addr **)hostInfo->h_addr_list;
+    if (addressList == NULL)
+    {
+        Error::printError(CONNECTION_FAILED, "Host IP address not found.\n");
+        return false;
+    }
+
+    // iterate through address list
+    for (size_t i = 0; addressList[i] != NULL; i++)
+    {
+        char *ipAddr = inet_ntoa(*addressList[i]);
+
+        // inet_pton() returns 1 on success
+        if (inet_pton(AF_INET, ipAddr, &dst->s_addr) < 1)
+        {
+            // if there is no more ip address in list, get error
+            if (addressList[i + 1] == NULL)
+            {
+                Error::printError(CONNECTION_FAILED, "Host IP address not found.\n");
+                return false;
+            }
+        }
+        // found
+        else
+        {
+            break;
+        }
+    }
+
+    return true;
+}
+
+bool Connection::connectionSetup(const Query &query)
 {
     // setup socket
     this->sockfd = socket(AF_INET, SOCK_DGRAM, 0);
     if (sockfd < 0)
     {
         Error::printError(CONNECTION_FAILED, "socket() failed\n");
-        return;
+        return false;
     }
 
-    // set the socket to be non-blocking
+    // set the socket to be non-blocking - needed for timeout implementation
     int flags = fcntl(this->sockfd, F_GETFL, 0);
     fcntl(this->sockfd, F_SETFL, flags | O_NONBLOCK);
 
     // setup server address
     memset(&this->server, 0, sizeof(sockaddr_in));
 
-    /**
-     * TODO:
-     * use get host by name here
-     */
-    this->server.sin_addr.s_addr = inet_addr(query.getServer().c_str());
+    struct in_addr serverAddr;
+    if (!getHostIPaddress(query.getServer().c_str(), &serverAddr))
+    {
+        return false;
+    }
+
+    this->server.sin_addr = serverAddr;
     this->server.sin_port = htons(query.getPort());
     this->server.sin_family = AF_INET;
+
+    return true;
 }
 
 void Connection::sendAndDisplayAnswer(const Query &query)
@@ -104,7 +153,9 @@ void Connection::connectionClose()
 // #DOC
 void Connection::sendUdpQuery(const Query &query)
 {
-    connectionSetup(query);
+    if (connectionSetup(query))
+    {
+    }
     sendAndDisplayAnswer(query);
     connectionClose();
 }
