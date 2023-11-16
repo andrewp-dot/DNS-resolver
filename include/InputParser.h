@@ -20,6 +20,7 @@
 #define INPUT_PARSER_H
 #include "Query.h"
 #include <string>
+#include <vector>
 
 #define FLAG_LENGTH 2
 
@@ -28,7 +29,7 @@ class InputParser
 private:
     int argc;
     char **argv;
-    std::vector<std::string> queriedAddresses;
+    // std::vector<std::string> queriedAddresses;
 
     /**
      * @brief checks if next program argument is a flag

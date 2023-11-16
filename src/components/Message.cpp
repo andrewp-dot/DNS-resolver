@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <cstdlib>
 #include "Message.h"
 #include "Query.h"
