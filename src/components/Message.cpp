@@ -334,7 +334,7 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 DNSResponse Message::getResponse(char *buffer, size_t *offset)
 {
     DNSResponse res;
-    memset(&res, 0, sizeof(struct DNSResponse));
+    // memset(&res, 0, sizeof(struct DNSResponse));
 
     res.name = getNameFromResponse(buffer, offset);
     *offset += 1;
