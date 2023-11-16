@@ -67,7 +67,16 @@ static void pushUINT8vectorToUINT8vector(std::vector<uint8_t> &dst, std::vector<
     {
         dst.push_back(src[i]);
     }
-    dst.push_back('|');
+    dst.push_back(',');
+}
+
+static void pushUINT32ToUINT8vector(std::vector<uint8_t> &dst, uint32_t number)
+{
+    for (size_t i = 0; i < sizeof(number) / sizeof(uint8_t); i++)
+    {
+        uint8_t numberPart = (number >> (i * CHAR_BIT) & 0xff);
+        dst.push_back(numberPart);
+    }
 }
 
 uint16_t Message::generateQueryId(const Query &query)
@@ -217,39 +226,52 @@ std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len,
 std::vector<uint8_t> Message::getSoaFromResponse(char *buffer, size_t *offset)
 {
     std::vector<uint8_t> rdata;
-    std::vector<uint8_t> *rdataPointer = &rdata;
 
     // get email name
     std::vector<uint8_t> mname = getNameFromResponse(buffer, offset);
     *offset += 1;
 
     pushUINT8vectorToUINT8vector(rdata, mname);
+    rdata.push_back(0);
 
     // get resource name
     std::vector<uint8_t> rname = getNameFromResponse(buffer, offset);
     *offset += 1;
 
+    // push to vector and end it with zero
     pushUINT8vectorToUINT8vector(rdata, rname);
+    rdata.push_back(0);
 
     // copy the soa info
     SOAinfo soaInfo;
-    memcpy(&soaInfo, buffer, sizeof(SOAinfo));
+    memcpy(&soaInfo, (buffer + *offset), sizeof(SOAinfo));
 
     // push uint32_T to uint8_vector
-    soaInfo.serial = htons(soaInfo.serial);
-    rdata.push_back(',');
+    soaInfo.serial = htonl(soaInfo.serial);
+    pushUINT32ToUINT8vector(rdata, soaInfo.serial);
+    // rdata.push_back(',');
 
-    soaInfo.refresh = htons(soaInfo.refresh);
-    rdata.push_back(',');
+    soaInfo.refresh = htonl(soaInfo.refresh);
+    pushUINT32ToUINT8vector(rdata, soaInfo.refresh);
+    // rdata.push_back(',');
 
-    soaInfo.retry = htons(soaInfo.retry);
-    rdata.push_back(',');
+    soaInfo.retry = htonl(soaInfo.retry);
+    pushUINT32ToUINT8vector(rdata, soaInfo.retry);
+    // rdata.push_back(',');
 
-    soaInfo.expire = htons(soaInfo.expire);
-    rdata.push_back(',');
+    soaInfo.expire = htonl(soaInfo.expire);
+    pushUINT32ToUINT8vector(rdata, soaInfo.expire);
+    // rdata.push_back(',');
 
-    soaInfo.minimum = htons(soaInfo.minimum);
-    rdata.push_back(',');
+    soaInfo.minimum = htonl(soaInfo.minimum);
+    pushUINT32ToUINT8vector(rdata, soaInfo.minimum);
+
+    std::cout << "Got: " << std::endl;
+    std::cout << soaInfo.serial << std::endl;
+    std::cout << soaInfo.refresh << std::endl;
+    std::cout << soaInfo.retry << std::endl;
+    std::cout << soaInfo.expire << std::endl;
+    std::cout << soaInfo.minimum << std::endl;
 
     return rdata;
 }
@@ -334,7 +356,6 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     else if (resInfo.type == SOA)
     {
         res.rdata = getSoaFromResponse(buffer, offset);
-        // res.soa.push_back(getSoaFromResponse(buffer, offset));
     }
     else
     {
@@ -359,12 +380,44 @@ void Message::printIPv6Address(std::vector<uint8_t> ip6)
 
 void Message::printSoaRecord(std::vector<uint8_t> vec)
 {
-    (void)vec;
+    size_t recordOffset = 0;
+
     // print mname
+    for (size_t i = 0; vec[i] != 0; i++)
+    {
+        std::cout << vec[recordOffset];
+        recordOffset += 1;
+    }
+    // skip the zero
+    recordOffset += 1;
 
     // print rname
+    while (vec[recordOffset] != 0)
+    {
+        recordOffset += 1;
+        std::cout << vec[recordOffset];
+    }
+    // skip the zero
+    recordOffset += 1;
 
-    // print other info
+    // print other soa info
+    uint32_t infoPart = 0;
+    for (size_t i = 0; i < sizeof(SOAinfo) / sizeof(uint32_t); i++)
+    {
+        // convert uint32_t from 4 uint8_t
+        infoPart = 0;
+        for (size_t j = 0; j < sizeof(uint32_t); j++)
+        {
+            infoPart |= (uint32_t)(vec[recordOffset + j] << ((j % 4) * CHAR_BIT));
+        }
+        // skip the part value
+        recordOffset += sizeof(uint32_t);
+        std::cout << infoPart;
+        if (i + 1 != sizeof(SOAinfo) / sizeof(uint32_t))
+        {
+            std::cout << ',';
+        }
+    }
 }
 
 void Message::print8bitVector(std::vector<uint8_t> vec)
@@ -435,7 +488,7 @@ void Message::printResponse(DNSResponse res)
     }
     else if (res.info.type == SOA)
     {
-        print8bitVector(res.rdata);
+        printSoaRecord(res.rdata);
     }
     else
     {
