@@ -68,6 +68,8 @@ static void pushUINT8vectorToUINT8vector(std::vector<uint8_t> &dst, std::vector<
         dst.push_back(src[i]);
     }
     dst.push_back(',');
+    // this is just for output formmating
+    dst.push_back(' ');
 }
 
 static void pushUINT32ToUINT8vector(std::vector<uint8_t> &dst, uint32_t number)
@@ -415,7 +417,7 @@ void Message::printSoaRecord(std::vector<uint8_t> vec)
         std::cout << infoPart;
         if (i + 1 != sizeof(SOAinfo) / sizeof(uint32_t))
         {
-            std::cout << ',';
+            std::cout << ", ";
         }
     }
 }
@@ -472,16 +474,16 @@ std::string Message::convertClassToString(uint16_t qclass)
 void Message::printResponse(DNSResponse res)
 {
     // print response based on type
-    std::cout << " ";
+    std::cout << "  ";
     if (res.name.size() != 1 && res.name[0] != 0)
     {
         print8bitVector(res.name);
         std::cout << ", ";
     }
     std::cout << convertTypeToString(res.info.type);
-    std::cout << "," << convertClassToString(res.info.rclass);
-    std::cout << "," << res.info.ttl;
-    std::cout << ",";
+    std::cout << ", " << convertClassToString(res.info.rclass);
+    std::cout << ", " << res.info.ttl;
+    std::cout << ", ";
     if (res.info.type == AAAA)
     {
         printIPv6Address(res.rdata);
@@ -589,10 +591,10 @@ void Message::printResponse()
     std::cout << "Question section (" << this->header.qdcount << ")" << std::endl;
 
     // function to ouptut uint8_t vector
-    std::cout << " ";
+    std::cout << "  ";
     print8bitVector(this->question.qname);
-    std::cout << "," << convertTypeToString(this->question.qtype);
-    std::cout << "," << convertClassToString(this->question.qclass) << std::endl;
+    std::cout << ", " << convertTypeToString(this->question.qtype);
+    std::cout << ", " << convertClassToString(this->question.qclass) << std::endl;
 
     // print answers
     this->printAnswers();
