@@ -18,6 +18,7 @@
 
 #include <iostream>
 #include <ctype.h>
+#include <cstring>
 #include "InputParser.h"
 #include "Error.h"
 #include "constants.h"
@@ -43,7 +44,7 @@ bool InputParser::isGoodPortFormat(const char *port)
     }
 
     unsigned long portNum = strtoul(port, NULL, 10);
-    if (portNum < 0 || portNum > MAX_PORT_NUMBER)
+    if ((long)portNum < 0 || portNum > MAX_PORT_NUMBER)
         return false;
 
     return true;

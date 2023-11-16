@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <cstdlib>
+#include <cstring>
+#include <arpa/inet.h>
 #include "Message.h"
 #include "Query.h"
 #include "constants.h"
@@ -104,7 +106,7 @@ QueryOpcode Message::getQueryOpcode(const Query &query)
 DNSHeader Message::createHeader(const Query &query)
 {
     DNSHeader header;
-    std::memset(&header, 0, sizeof(DNSHeader));
+    std::memset(&header, 0, sizeof(struct DNSHeader));
 
     // set flags
     header.id = htons(generateQueryId(query));
@@ -173,7 +175,7 @@ DNSHeader Message::getResponseHeader(char *buffer, size_t *offset)
     DNSHeader responseHeader;
 
     // copy flags etc
-    std::memcpy(&responseHeader, buffer, sizeof(DNSHeader));
+    std::memcpy(&responseHeader, buffer, sizeof(struct DNSHeader));
 
     // improve uint16_t values
     responseHeader.id = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset], buffer[*offset + 1]);
@@ -182,7 +184,7 @@ DNSHeader Message::getResponseHeader(char *buffer, size_t *offset)
     responseHeader.nscount = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset + 8], buffer[*offset + 9]);
     responseHeader.arcount = CONVERT_TWO_CHARS_TO_UINT16(buffer[*offset + 10], buffer[*offset + 11]);
 
-    *offset += sizeof(DNSHeader);
+    *offset += sizeof(struct DNSHeader);
     return responseHeader;
 }
 
@@ -332,14 +334,16 @@ std::vector<uint8_t> Message::getNameFromResponse(char *buffer, size_t *offset)
 DNSResponse Message::getResponse(char *buffer, size_t *offset)
 {
     DNSResponse res;
-    memset(&res, 0, sizeof(DNSResponse));
+    memset(&res, 0, sizeof(struct DNSResponse));
 
     res.name = getNameFromResponse(buffer, offset);
     *offset += 1;
 
     // get response info
     DNSResponseInfo resInfo;
-    memcpy(&resInfo, buffer + (*offset), sizeof(DNSResponseInfo) - sizeof(uint16_t));
+
+    // sizeof(struct DNSResponseInfo) - sizeof(uint16_t) bcs of implicit memory alignment
+    memcpy(&resInfo, buffer + (*offset), sizeof(struct DNSResponseInfo) - sizeof(uint16_t));
 
     resInfo.type = htons(resInfo.type);
     resInfo.rclass = htons(resInfo.rclass);
@@ -348,7 +352,7 @@ DNSResponse Message::getResponse(char *buffer, size_t *offset)
     res.info = resInfo;
 
     // move offset to rdata
-    *offset += sizeof(DNSResponseInfo) - sizeof(uint16_t);
+    *offset += sizeof(struct DNSResponseInfo) - sizeof(uint16_t);
 
     // toto tu ziskat na zaklade rdlen
     if (resInfo.type == A || resInfo.type == AAAA)
@@ -511,13 +515,13 @@ Message::Message(const Query &query)
 size_t Message::convertMsgToBuffer(char *buffer)
 {
     // header copy
-    std::memcpy(buffer, &this->header, sizeof(DNSHeader));
+    std::memcpy(buffer, &this->header, sizeof(struct DNSHeader));
 
     // skip header
-    buffer += sizeof(DNSHeader);
+    buffer += sizeof(struct DNSHeader);
     convertSingleQuestionToBuffer(buffer, question);
 
-    return sizeof(DNSHeader) + this->getQuestionSize();
+    return sizeof(struct DNSHeader) + this->getQuestionSize();
 }
 
 void Message::parseResponseToBuffer(char *buffer, int bufferSize)
