@@ -1,24 +1,25 @@
 import subprocess as sp
 from digParser import answerTemplate, soaAnswerTemplate
-from enum import Enum
+import sys
 
-class ReturnCode(Enum):
-    SUCCESS = 0,
-    FORMAT_ERROR = 1,
-    SERVER_FAILURE = 2,
-    NAME_NOT_EXIST = 3,
-    UNSUPPORTED_QUERY = 4,
-    QUERY_REFUSED = 5,
-    CONNECTION_FAILED = 6,
-    WRONG_ARGUMENTS = 7,
-    INTERNAL = 99
+SUCCESS = 0
+FORMAT_ERROR = 1
+SERVER_FAILURE = 2
+NAME_NOT_EXIST = 3
+UNSUPPORTED_QUERY = 4
+QUERY_REFUSED = 5
+CONNECTION_FAILED = 6
+WRONG_ARGUMENTS = 7
+INTERNAL = 99
 
 def createAnswer(answer: str):
     answer = answer.strip()
     answerParts = answer.split(", ")
+
     # skip ttl on index 3 
     if answerParts[0] == "SOA":
         return dict(soaAnswerTemplate)
+    
     if len(answerParts) >= 5:
         return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[1], answer=answerParts[4])
     return dict(answerTemplate)
@@ -26,7 +27,9 @@ def createAnswer(answer: str):
 def dnsExec(argList: list):
     command = ['./dns'] + argList
     result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
-    if result.returncode != ReturnCode.SUCCESS:
+    if result.returncode != SUCCESS:
+        print("FIRST TIME IT FAILED: ",file=sys.stderr, end="")
+        print(result.returncode, file=sys.stderr)
         result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
 
     output = result.stdout.decode('ascii')
@@ -74,5 +77,7 @@ def parseDnsOutput(argList: list):
             if line != "":
                 gotAdditional.append(createAnswer(line))
             continue
-        
+    # if program havent recieved any data from server
+    # if(gotAnswers == [] and gotAuthority == [] and gotAdditional == []):
+    #     return ()
     return gotAnswers, gotAuthority, gotAdditional

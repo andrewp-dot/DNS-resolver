@@ -46,7 +46,6 @@ def createAnswer(answer: str) -> dict:
 
 def digExec(argList: list):
     command = ['dig'] + argList
-    # ['dig','@8.8.8.8', 'www.github.com']
 
     result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
     output = result.stdout.decode('ascii')
@@ -54,9 +53,6 @@ def digExec(argList: list):
     return lines
 
 def parseDigOutput(argList: list):
-    # split output to array
-    # result = sp.run(['dig','@8.8.8.8', 'www.github.com'], stdout=sp.PIPE, stderr=sp.PIPE)
-    # output = result.stdout.decode('ascii')
     lines = digExec(argList=argList)
 
     # parse dig output to an arrays
@@ -103,5 +99,5 @@ def parseDigOutput(argList: list):
             # create and object and push it to expectedAdditional
             expectedAdditional.append(createAnswer(line))
             continue
-
+    
     return expectedAnswers,expectedAuthority,expectedAdditional
