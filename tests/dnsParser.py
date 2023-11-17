@@ -1,4 +1,5 @@
 import subprocess as sp
+import os
 from digParser import answerTemplate, soaAnswerTemplate
 import sys
 
@@ -25,7 +26,9 @@ def createAnswer(answer: str):
     return dict(answerTemplate)
 
 def dnsExec(argList: list):
-    command = ['./dns'] + argList
+    cwd = os.getcwd()
+    program = cwd + '/dns'
+    command = [program] + argList
     result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
     if result.returncode != SUCCESS:
         print("FIRST TIME IT FAILED: ",file=sys.stderr, end="")
