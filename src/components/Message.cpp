@@ -547,6 +547,11 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
         return;
     }
 
+    if (this->header.tc)
+    {
+        return;
+    }
+
     // get responses
     std::vector<DNSResponse> responses;
     for (size_t i = 0; i < responseHeader.ancount; i++)
