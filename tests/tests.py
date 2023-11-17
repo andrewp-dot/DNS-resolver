@@ -1,6 +1,5 @@
 import subprocess as sp
-import sys
-import re
+from digParser import parseDigOutput
 
 prog_name="./dns"
 localhost="127.0.0.1"
@@ -22,11 +21,20 @@ def printFail(msg): print("\033[91m {}\033[00m" .format(msg),flush=True)
 def printSuccess(msg): print("\033[92m {}\033[00m" .format(msg),flush=True)
 def printTestSection(msg): print("\033[95m {}\033[00m" .format(msg),flush=True)
 
+# error codes
+SUCCESS = 0
+CONNECTION_FAILED = 1
+NAME_NOT_EXIST = 2
+NOT_FOUND = 3
+WRONG_ARGUMENTS = 4
+INTERNAL = 99
+
+
+
 # wrong arguments testing
+## server not given
 
-# server not given
-
-# address not given
+## address not given
 
 # -r 
 
@@ -44,4 +52,5 @@ def printTestSection(msg): print("\033[95m {}\033[00m" .format(msg),flush=True)
 
 
 if __name__ == "__main__" :
-    print("main")
+    parseDigOutput()
+

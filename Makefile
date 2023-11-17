@@ -2,14 +2,16 @@
 CC := g++
 CFLAGS := -Wall -Werror -Wextra -pedantic --std=c++17
 
+#program settings
+PROG := dns
+
 # directories
 SRC := src
 OBJ := obj
 INCLUDE := include
-SRC_FILES := $(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/components/*.cpp)
-
-#program settings
-PROG := dns
+COMPONENTS := $(SRC)/components
+# SRC_FILES := $(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/components/*.cpp)
+SRC_FILES := $(SRC)/$(PROG).cpp $(COMPONENTS)/Connection.cpp $(COMPONENTS)/Error.cpp $(COMPONENTS)/InputParser.cpp $(COMPONENTS)/Message.cpp $(COMPONENTS)/Query.cpp
 
 # test modules
 TESTS := tests
@@ -28,13 +30,11 @@ run: $(PROG)
 clean: 
 	rm -rf $(PROG) test *.dSYM
 
-# test: $(SRC_FILES) $(TEST_SRC_FILES) $(SRC)/$(PROG).cpp
-# 	$(CC) $(CFLAGS) -DTEST -I$(INCLUDE) $^ -o $@
-# 	./$@
-# 	rm -f $@
+test: $(PROG)
+	cp $(PROG) ./tests/$(PROG)
+	# python3 ./tests/tests.py
+	rm ./tests/$(PROG)
 
-test: # build this and do tests
-	python3 ./tests/tests.py
 
 log: 
 	git log --graph > dns_log.txt

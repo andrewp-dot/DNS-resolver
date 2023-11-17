@@ -381,7 +381,7 @@ void Message::printIPv6Address(std::vector<uint8_t> ip6)
     {
         uint16_t ip6Part = CONVERT_TWO_CHARS_TO_UINT16(ip6[i], ip6[i + 1]);
         std::cout << std::hex << ip6Part << std::dec;
-        std::cerr << "ippart: " << std::hex << ip6Part << std::dec << " i " << i << std::endl;
+
         if (!(i % 2) && i + 2 != (ip6.size()))
         {
             std::cout << ":";
