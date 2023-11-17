@@ -31,8 +31,8 @@ def dnsExec(argList: list):
     command = [program] + argList
     result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
     if result.returncode != SUCCESS:
-        print("FIRST TIME IT FAILED: ",file=sys.stderr, end="")
-        print(result.returncode, file=sys.stderr)
+        # print("FIRST TIME IT FAILED: ",file=sys.stderr, end="")
+        # print(result.returncode, file=sys.stderr)
         result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
 
     output = result.stdout.decode('ascii')
