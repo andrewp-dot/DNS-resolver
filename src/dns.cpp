@@ -29,7 +29,10 @@ int main(int argc, char **argv)
     Query query;
     parser.parseArgs(query);
 
-    Connection connection = Connection();
-    connection.sendUdpQuery(query);
+    if (Error::getErrorCode() == SUCCESS)
+    {
+        Connection connection = Connection();
+        connection.sendUdpQuery(query);
+    }
     return Error::getErrorCode();
 }

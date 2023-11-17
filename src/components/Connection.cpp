@@ -127,7 +127,7 @@ void Connection::sendAndDisplayAnswer(const Query &query)
     }
     else if (rv == 0)
     {
-        Error::printError(CONNECTION_FAILED, "Invalid server\n");
+        Error::printError(CONNECTION_FAILED, "Timeout: server is unrachable.\n");
         return;
     }
     else
@@ -153,8 +153,9 @@ void Connection::connectionClose()
 // #DOC
 void Connection::sendUdpQuery(const Query &query)
 {
-    if (connectionSetup(query))
+    if (!connectionSetup(query))
     {
+        return;
     }
     sendAndDisplayAnswer(query);
     connectionClose();

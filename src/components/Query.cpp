@@ -12,6 +12,7 @@ Query::Query()
     this->type = A;
     this->port = DNS_PORT;
     this->server = "";
+    this->address = "";
 }
 
 void Query::reverseStringVector(std::vector<std::string> &vec)
