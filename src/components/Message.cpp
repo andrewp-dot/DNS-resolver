@@ -223,8 +223,11 @@ std::vector<uint8_t> Message::getAddressFromResponse(char *buffer, uint16_t len,
         }
         *offset += 1;
     }
-    // remove last '.' or ':'
-    res.pop_back();
+    // remove last '.'
+    if (type == A)
+    {
+        res.pop_back();
+    }
     return res;
 }
 
@@ -271,12 +274,12 @@ std::vector<uint8_t> Message::getSoaFromResponse(char *buffer, size_t *offset)
     soaInfo.minimum = htonl(soaInfo.minimum);
     pushUINT32ToUINT8vector(rdata, soaInfo.minimum);
 
-    std::cout << "Got: " << std::endl;
-    std::cout << soaInfo.serial << std::endl;
-    std::cout << soaInfo.refresh << std::endl;
-    std::cout << soaInfo.retry << std::endl;
-    std::cout << soaInfo.expire << std::endl;
-    std::cout << soaInfo.minimum << std::endl;
+    // std::cout << "Got: " << std::endl;
+    // std::cout << soaInfo.serial << std::endl;
+    // std::cout << soaInfo.refresh << std::endl;
+    // std::cout << soaInfo.retry << std::endl;
+    // std::cout << soaInfo.expire << std::endl;
+    // std::cout << soaInfo.minimum << std::endl;
 
     return rdata;
 }
@@ -378,7 +381,8 @@ void Message::printIPv6Address(std::vector<uint8_t> ip6)
     {
         uint16_t ip6Part = CONVERT_TWO_CHARS_TO_UINT16(ip6[i], ip6[i + 1]);
         std::cout << std::hex << ip6Part << std::dec;
-        if (!(i % 4) && i != (ip6.size() - 1))
+        std::cerr << "ippart: " << std::hex << ip6Part << std::dec << " i " << i << std::endl;
+        if (!(i % 2) && i + 2 != (ip6.size()))
         {
             std::cout << ":";
         }
