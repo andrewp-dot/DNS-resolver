@@ -2,10 +2,6 @@ import subprocess as sp
 from digParser import parseDigOutput
 from dnsParser import parseDnsOutput
 
-prog_name="./dns"
-localhost="127.0.0.1"
-port="53"
-
 # stasts variables
 numOfTests=0
 passedTests=0
@@ -51,14 +47,6 @@ def printStats():
     printSuccess(passedTests)
     print("Failed tests: ", end="")
     printFail(failedTests)
-
-# error codes
-SUCCESS = 0
-CONNECTION_FAILED = 1
-NAME_NOT_EXIST = 2
-NOT_FOUND = 3
-WRONG_ARGUMENTS = 4
-INTERNAL = 99
 
 def printResult(testName: str, isOk: bool, gotAnswer: tuple, expectedAnswer: tuple):
     print('%20s' % testName, end=": ")
@@ -170,7 +158,7 @@ def invertedRecursionQueries():
 def runAll():
     recursionOnlyTests()
     invertedQueriesTests()
-    # ipv6Quries()
+    ipv6Quries()
 
 if __name__ == "__main__" :
     runAll()

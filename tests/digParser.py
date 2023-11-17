@@ -3,6 +3,25 @@ import subprocess as sp
 answerTemplate = {"qname": "","cls": "", "type": "", "answer": ""}
 soaAnswerTemplate = {"None": "not implemented"}
 
+def expandIPv6Address(address: str) -> str:
+    if '::' in address:
+        # split the address into parts
+        parts = address.split('::')
+        
+        # get left and right part of the address
+        left = parts[0].split(':')
+        right = parts[1].split(':')
+
+        # calculate the number of missing parts
+        missingPartsNumber = 8 - (len(left) + len(right))
+
+        # expand the :: shortcut
+        expandedAddress = ':'.join(left + ['0'] * missingPartsNumber + right)
+    else:
+        expandedAddress = address
+
+    return expandedAddress
+
 def removeEmptyStrings(stringParts: list) -> str:
     while "" in stringParts:
         stringParts.remove("")
@@ -19,7 +38,10 @@ def createAnswer(answer: str) -> dict:
 
     # skip the ttl, ttl is on index 1
     if len(answerParts) >= 5:
-        return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[3], answer=answerParts[4])
+        answerDict = dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[3], answer=answerParts[4])
+        if answerDict["type"] == "AAAA":
+            answerDict["answer"] = expandIPv6Address(answerDict["answer"])
+        return  answerDict
     return dict(answerTemplate)
 
 def digExec(argList: list):

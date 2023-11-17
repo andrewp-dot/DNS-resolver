@@ -13,15 +13,14 @@ enum ErrorCode
     NAME_NOT_EXIST = 3,
     UNSUPPORTED_QUERY = 4,
     QUERY_REFUSED = 5,
-    CONNECTION_FAILED,
+    CONNECTION_FAILED = 6,
     /**
      * This happens when the referenced name exists, but data of the
      * appropriate type does not.  For example, a host address
      * function applied to a mailbox name would return this error
      * since the name exists, but no address RR is present.
      */
-    NOT_FOUND,
-    WRONG_ARGUMENTS,
+    WRONG_ARGUMENTS = 7,
     INTERNAL = 99
 };
 

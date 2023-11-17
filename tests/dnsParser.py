@@ -1,5 +1,17 @@
 import subprocess as sp
 from digParser import answerTemplate, soaAnswerTemplate
+from enum import Enum
+
+class ReturnCode(Enum):
+    SUCCESS = 0,
+    FORMAT_ERROR = 1,
+    SERVER_FAILURE = 2,
+    NAME_NOT_EXIST = 3,
+    UNSUPPORTED_QUERY = 4,
+    QUERY_REFUSED = 5,
+    CONNECTION_FAILED = 6,
+    WRONG_ARGUMENTS = 7,
+    INTERNAL = 99
 
 def createAnswer(answer: str):
     answer = answer.strip()
@@ -14,6 +26,9 @@ def createAnswer(answer: str):
 def dnsExec(argList: list):
     command = ['./dns'] + argList
     result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
+    if result.returncode != ReturnCode.SUCCESS:
+        result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
+
     output = result.stdout.decode('ascii')
     lines = output.split('\n')
     return lines
