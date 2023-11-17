@@ -7,7 +7,9 @@ def createAnswer(answer: str):
     # skip ttl on index 3 
     if answerParts[0] == "SOA":
         return dict(soaAnswerTemplate)
-    return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[1], answer=answerParts[4])
+    if len(answerParts) >= 5:
+        return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[1], answer=answerParts[4])
+    return dict(answerTemplate)
 
 def dnsExec(argList: list):
     command = ['./dns'] + argList

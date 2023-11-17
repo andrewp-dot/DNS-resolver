@@ -10,15 +10,17 @@ def removeEmptyStrings(stringParts: list) -> str:
 
 
 def createAnswer(answer: str) -> dict:
-    answerParts = answer.split('\t')
+    answerParts = answer.split()
     answerParts = removeEmptyStrings(stringParts=answerParts)
 
     # if answer is type SOA
     if answerParts[0] == "SOA":
         return dict(soaAnswerTemplate)
-    
+
     # skip the ttl, ttl is on index 1
-    return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[3], answer=answerParts[4])
+    if len(answerParts) >= 5:
+        return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[3], answer=answerParts[4])
+    return dict(answerTemplate)
 
 def digExec(argList: list):
     command = ['dig'] + argList
