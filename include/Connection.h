@@ -1,6 +1,7 @@
 #ifndef CONNECTION_H
 #define CONNECTION_H
 #include "Query.h"
+#include <netinet/in.h>
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
