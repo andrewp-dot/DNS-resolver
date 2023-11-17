@@ -37,3 +37,30 @@ void Error::printError(ErrorCode err, const char *format, ...)
     // exit(Error::getErrorCode());
     return;
 }
+
+void Error::setErrorByResponseCode(unsigned char errCode)
+{
+    switch (errCode)
+    {
+    case 0:
+        setErrorCode(SUCCESS);
+        return;
+    case 1:
+        Error::printError(FORMAT_ERROR, "The name server was unable to interpret query.\n");
+        return;
+    case 2:
+        Error::printError(SERVER_FAILURE, "The name server was unable to process query.\n");
+        return;
+    case 3:
+        Error::printError(NAME_NOT_EXIST, "The domain name refferenced in query does not exist.\n");
+        return;
+    case 4:
+        Error::printError(UNSUPPORTED_QUERY, "The name server does not support requested query type.\n");
+        return;
+    case 5:
+        Error::printError(QUERY_REFUSED, "The name server refuses to perform the specified operation for policy reasons.\n");
+        return;
+    default:
+        return;
+    }
+}

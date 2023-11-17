@@ -4,6 +4,7 @@
 #include <cstring>
 #include <arpa/inet.h>
 #include "Message.h"
+#include "Error.h"
 #include "Query.h"
 #include "constants.h"
 
@@ -538,6 +539,13 @@ void Message::parseResponseToBuffer(char *buffer, int bufferSize)
 
     this->header = responseHeader;
     this->question = responseQuestion;
+
+    // if response throws error
+    if (this->header.rcode != SUCCESS)
+    {
+        Error::setErrorByResponseCode(this->header.rcode);
+        return;
+    }
 
     // get responses
     std::vector<DNSResponse> responses;
