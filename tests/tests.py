@@ -52,5 +52,8 @@ INTERNAL = 99
 
 
 if __name__ == "__main__" :
-    parseDigOutput()
+    expectedAnswers,expectedAuthority,expectedAdditional = parseDigOutput()
+    print(expectedAnswers)
+    print(expectedAuthority)
+    print(expectedAdditional)
 

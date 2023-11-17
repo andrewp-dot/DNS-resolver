@@ -1,6 +1,7 @@
 import subprocess as sp
 
-answerTemplate = {"qname": "","qclass": "", "type": "", "answer": ""}
+answerTemplate = {"qname": "","class": "", "type": "", "answer": ""}
+soaAnswerTemplate = {"None": "not implemented"}
 
 def removeEmptyStrings(stringParts: list) -> str:
     while "" in stringParts:
@@ -9,10 +10,15 @@ def removeEmptyStrings(stringParts: list) -> str:
 
 
 def createAnswer(str: str) -> dict:
-    strParts = str.split('\t')
-    strParts = removeEmptyStrings(stringParts=strParts)
+    answerParts = str.split('\t')
+    answerParts = removeEmptyStrings(stringParts=answerParts)
+
+    # if answer is type SOA
+    if answerParts[0] == "SOA":
+        return dict(soaAnswerTemplate)
+    
     # skip the ttl, ttl is on index 1
-    return dict(answerTemplate,qname=strParts[0], qclass=strParts[2], type=strParts[3], answer=strParts[4])
+    return dict(answerTemplate,qname=answerParts[0], qclass=answerParts[2], type=answerParts[3], answer=answerParts[4])
 
 
 def parseDigOutput():
@@ -46,21 +52,24 @@ def parseDigOutput():
             if line.strip() == "":
                 isAnswering = False
                 continue
-            # print("BEGIN|" + line + "|END")
-            # create and object and push it to expectedAnswers
+            # create and object and push it to expectedAuthority
             expectedAnswers.append(createAnswer(line))
             continue
         
         if isAuthority:
             if line.strip() == "":
                 isAuthority = False
-            # print("BEGIN|" + line + "|END")
+                continue
+            # create and object and push it to expectedAuthority
+            expectedAuthority.append(createAnswer(line))
             continue
             
         if isAdditional:
             if line.strip() == "":
                 isAdditional = False
-            # print("BEGIN|" + line + "|END")
+                continue
+            # create and object and push it to expectedAdditional
+            expectedAdditional.append(createAnswer(line))
             continue
 
-    print(expectedAnswers)
+    return expectedAnswers,expectedAuthority,expectedAdditional
