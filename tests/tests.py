@@ -43,6 +43,10 @@ def printStats():
     global passedTests 
     global failedTests 
     global numOfTests
+    if(passedTests == passedTests):
+        printSuccess("All tests passed.")
+        return
+
     print("Passed tests: ", end="")
     printSuccess(passedTests)
     print("Failed tests: ", end="")
@@ -82,6 +86,12 @@ def compareAnswers(testName: str,gotAnswer: tuple, expectedAnswer: tuple):
     
     printResult(testName, resultIsOk)
 
+def test(testName: str, digArgList: list, dnsArgList: list):
+    expectedAnswer = parseDigOutput(digArgList)
+    gotAnswer = parseDnsOutput(dnsArgList)
+    compareAnswers(testName, gotAnswer,expectedAnswer)
+
+
 # wrong arguments testing
 ## server not given
 
@@ -110,10 +120,7 @@ def compareAnswers(testName: str,gotAnswer: tuple, expectedAnswer: tuple):
 
 if __name__ == "__main__" :
     # this is function for new test
-    expectedAnswer = parseDigOutput(['@8.8.8.8', 'www.fit.vut.cz'])
-    gotAnswer = parseDnsOutput(['-s','8.8.8.8','www.fit.vut.cz'])
-    compareAnswers("TEST", gotAnswer,expectedAnswer)
-
+    test("TEST", ['@8.8.8.8', 'www.fit.vut.cz'],['-s','8.8.8.8','www.fit.vut.cz'])
     printStats()
 
 
