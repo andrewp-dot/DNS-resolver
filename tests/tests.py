@@ -1,18 +1,23 @@
 import subprocess as sp
 from digParser import parseDigOutput
+from dnsParser import parseDnsOutput
 
 prog_name="./dns"
 localhost="127.0.0.1"
 port="53"
 
 # stasts variables
-num_of_tests=0
-passed_tests=0
-failed_tests=0
+numOfTests=0
+passedTests=0
+failedTests=0
 
 # teseting values
 domainNames = ("www.github.com", "www.facebook.com", "www.google.com", "github.com", "facebook.com", "google.com", "kazi.fit.vutbr.cz", "www.fit.vut.cz")
+
+# ip4 testing values
 ips4 = ("147.229.8.12","147.229.9.26")
+
+# ip6 testing values
 ips6 = ("2001:67c:1220:809::93e5:91a")
 
 
@@ -20,6 +25,28 @@ ips6 = ("2001:67c:1220:809::93e5:91a")
 def printFail(msg): print("\033[91m {}\033[00m" .format(msg),flush=True)
 def printSuccess(msg): print("\033[92m {}\033[00m" .format(msg),flush=True)
 def printTestSection(msg): print("\033[95m {}\033[00m" .format(msg),flush=True)
+
+# functions for test count
+def addPassedTest():
+    global passedTests 
+    global numOfTests
+    passedTests += 1
+    numOfTests += 1
+
+def addFailedTest():
+    global failedTests 
+    global numOfTests
+    failedTests += 1
+    numOfTests += 1
+
+def printStats():
+    global passedTests 
+    global failedTests 
+    global numOfTests
+    print("Passed tests: ", end="")
+    printSuccess(passedTests)
+    print("Failed tests: ", end="")
+    printFail(failedTests)
 
 # error codes
 SUCCESS = 0
@@ -29,7 +56,31 @@ NOT_FOUND = 3
 WRONG_ARGUMENTS = 4
 INTERNAL = 99
 
+def printResult(testName: str, isOk: bool):
+    print(testName, end=": ")
+    if isOk:
+        printSuccess("Pass")
+    else:
+        printFail("Fail")
 
+def compareLists(gotList: list, expectedList: list) -> bool:
+    gotList.sort()
+    expectedList.sort()
+    return gotList == expectedList
+
+def compareAnswers(testName: str,gotAnswer: tuple, expectedAnswer: tuple):
+    resultIsOk = True
+    for answerType in range (0,3):
+        listsAreSame = compareLists(gotAnswer[answerType], expectedAnswer[answerType])
+        if not listsAreSame:
+            resultIsOk = False 
+
+    if resultIsOk:
+        addPassedTest()
+    else:
+        addFailedTest()
+    
+    printResult(testName, resultIsOk)
 
 # wrong arguments testing
 ## server not given
@@ -39,21 +90,30 @@ INTERNAL = 99
 # -r 
 
 # -x
+# dig @8.8.8.8 example.com +norecurse 
 
 # -6
+# dig AAAA @8.8.8.8 example.com +norecurse 
 
 # -r -x
+# dig -x @8.8.8.8 example.com 
 
 # -r -6
+# dig AAAA @8.8.8.8 example.com 
 
 # -x -6
+# dig -x AAAA @8.8.8.8 example.com +norecurse 
 
 # -r -x -6
+# dig AAAA @8.8.8.8 example.com -x
 
 
 if __name__ == "__main__" :
-    expectedAnswers,expectedAuthority,expectedAdditional = parseDigOutput()
-    print(expectedAnswers)
-    print(expectedAuthority)
-    print(expectedAdditional)
+    # this is function for new test
+    expectedAnswer = parseDigOutput(['@8.8.8.8', 'www.fit.vut.cz'])
+    gotAnswer = parseDnsOutput(['-s','8.8.8.8','www.fit.vut.cz'])
+    compareAnswers("TEST", gotAnswer,expectedAnswer)
+
+    printStats()
+
 

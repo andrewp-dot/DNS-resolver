@@ -1,6 +1,6 @@
 import subprocess as sp
 
-answerTemplate = {"qname": "","class": "", "type": "", "answer": ""}
+answerTemplate = {"qname": "","cls": "", "type": "", "answer": ""}
 soaAnswerTemplate = {"None": "not implemented"}
 
 def removeEmptyStrings(stringParts: list) -> str:
@@ -9,8 +9,8 @@ def removeEmptyStrings(stringParts: list) -> str:
     return stringParts
 
 
-def createAnswer(str: str) -> dict:
-    answerParts = str.split('\t')
+def createAnswer(answer: str) -> dict:
+    answerParts = answer.split('\t')
     answerParts = removeEmptyStrings(stringParts=answerParts)
 
     # if answer is type SOA
@@ -18,14 +18,22 @@ def createAnswer(str: str) -> dict:
         return dict(soaAnswerTemplate)
     
     # skip the ttl, ttl is on index 1
-    return dict(answerTemplate,qname=answerParts[0], qclass=answerParts[2], type=answerParts[3], answer=answerParts[4])
+    return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[3], answer=answerParts[4])
 
+def digExec(argList: list):
+    command = ['dig'] + argList
+    # ['dig','@8.8.8.8', 'www.github.com']
 
-def parseDigOutput():
-    # split output to array
-    result = sp.run(['dig','@8.8.8.8', 'www.github.com'], stdout=sp.PIPE, stderr=sp.PIPE)
+    result = sp.run(command, stdout=sp.PIPE, stderr=sp.PIPE)
     output = result.stdout.decode('ascii')
     lines = output.split('\n')
+    return lines
+
+def parseDigOutput(argList: list):
+    # split output to array
+    # result = sp.run(['dig','@8.8.8.8', 'www.github.com'], stdout=sp.PIPE, stderr=sp.PIPE)
+    # output = result.stdout.decode('ascii')
+    lines = digExec(argList=argList)
 
     # parse dig output to an arrays
     expectedAnswers = []
