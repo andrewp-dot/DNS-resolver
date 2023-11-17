@@ -78,7 +78,7 @@ void InputParser::modifyAddress(Query &query)
         else
         {
             query.reverseIPv4();
-            query.setAddress(query.getAddress().append("IN-ADDR.ARPA"));
+            query.setAddress(query.getAddress().append("in-addr.arpa"));
         }
     }
 }

@@ -8,13 +8,14 @@ passedTests=0
 failedTests=0
 
 # teseting values
-domainNames = ("www.fit.vutbr.cz", "kazi.fit.vutbr.cz", "www.vut.cz", "merlin.fit.vutbr.cz", "facebook.com")
+# domainNames = ("www.fit.vutbr.cz", "kazi.fit.vutbr.cz", "www.vut.cz", "merlin.fit.vutbr.cz", "facebook.com")
+domainNames = ("www.fit.vutbr.cz", "kazi.fit.vutbr.cz", "www.facebook.com")
 
 # ip4 testing values
 ips4 = ("147.229.8.12","147.229.9.26")
 
 # ip6 testing values
-ips6 = ("2001:67c:1220:809::93e5:91a", "2001:67c:1220:808:0:0:93e5:80c")
+ips6 = ("2001:67c:1220:809:0:0:93e5:91a", "2a03:2880:f107:83:face:b00c:0:25de")
 
 # function for colorful terminal output
 def printFail(msg): print("\033[91m {}\033[00m" .format(msg),flush=True)
@@ -94,6 +95,7 @@ def test(testName: str, digArgList: list, dnsArgList: list):
 
 def testSet(name: str, serchedNames, digArgs: list, dnsArgs: list):
     printTestSection(name)
+    # parse results from file
     for domain in serchedNames:
         digArgs.append(domain)
         dnsArgs.append(domain)
@@ -115,7 +117,7 @@ def recursionOnlyTests():
 # -x
 # dig @8.8.8.8 example.com +norecurse 
 def invertedQueriesTests():
-    digArgs = ['@8.8.8.8', '+norecurse']
+    digArgs = ['@8.8.8.8', '+norecurse','-x']
     dnsArgs = ['-s','8.8.8.8' , '-x']
     testSet("Inverted queries [-x]", ips4, digArgs ,dnsArgs)
 
@@ -129,7 +131,7 @@ def ipv6Quries():
 # -r -x
 # dig -x @8.8.8.8 example.com 
 def invertedRecursionQueries():
-    digArgs = ['AAAA','@8.8.8.8','-x']
+    digArgs = ['@8.8.8.8','-x']
     dnsArgs = ['-s','8.8.8.8','-r', '-x']
     testSet("Inverted recursive queries [-r, -x]", ips4, digArgs ,dnsArgs)
 
@@ -143,14 +145,14 @@ def recursionIPv6Queries():
 # -x -6
 # dig -x AAAA @8.8.8.8 example.com +norecurse 
 def invertedIPv6Queries():
-    digArgs = ['AAAA','@8.8.8.8','-x','+norecurse']
+    digArgs = ['AAAA','@8.8.8.8','+norecurse','-x']
     dnsArgs = ['-s','8.8.8.8','-r', '-6']
     testSet("Inverted IPv6 queries [-x, -6]", ips6, digArgs ,dnsArgs)
 
 # -r -x -6
-# dig AAAA @8.8.8.8 example.com -x
+# dig @8.8.8.8 -x example.com 
 def invertedRecursiveIPv6Queries():
-    digArgs = ['AAAA','@8.8.8.8','-x']
+    digArgs = ['@8.8.8.8','-x']
     dnsArgs = ['-s','8.8.8.8','-r', '-6', '-x']
     testSet("Inverted IPv6 queries [-r, -6, -x]", ips6, digArgs ,dnsArgs)
 
