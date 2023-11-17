@@ -13,16 +13,11 @@ COMPONENTS := $(SRC)/components
 # SRC_FILES := $(wildcard $(SRC)/*.cpp) $(wildcard $(SRC)/components/*.cpp)
 SRC_FILES := $(SRC)/$(PROG).cpp $(COMPONENTS)/Connection.cpp $(COMPONENTS)/Error.cpp $(COMPONENTS)/InputParser.cpp $(COMPONENTS)/Message.cpp $(COMPONENTS)/Query.cpp
 
-# test modules
-TESTS := tests
-ARG_TEST := $(TESTS)/argument-tests/arg-test.cpp
-TEST_SRC_FILES := $(wildcard tests/**/*.cpp) $(wildcard tests/*.cpp)
-
 .PHONY: clean test log run
 
 #rules
 $(PROG): $(SRC_FILES)
-	$(CC) $(CFLAGS) -I$(INCLUDE) $^ -o $@
+	$(CC) $(CFLAGS) -I$(INCLUDE) $(SRC_FILES) -o $(PROG)
 
 run: $(PROG)
 	./$(PROG) $(ARGS)
