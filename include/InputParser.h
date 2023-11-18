@@ -1,6 +1,7 @@
 /**
  * @file InputParser.h
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief InputParser is component for argument parsing and generating query settings.
  * @date 2023-11-18
  *
@@ -21,7 +22,6 @@ class InputParser
 private:
     int argc;
     char **argv;
-    // std::vector<std::string> queriedAddresses;
 
     /**
      * @brief checks if next program argument is a flag

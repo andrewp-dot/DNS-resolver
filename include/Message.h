@@ -1,6 +1,7 @@
 /**
  * @file Message.h
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Message module contatins information about sent message and recieved answer.
  * @date 2023-11-18
  *
@@ -12,20 +13,6 @@
 #define MESSAGE_H
 #include <vector>
 #include "Query.h"
-
-/* Messages:
-    +---------------------+
-    |        Header       |
-    +---------------------+
-    |       Question      | the question for the name server
-    +---------------------+
-    |        Answer       | RRs answering the question
-    +---------------------+
-    |      Authority      | RRs pointing toward an authority
-    +---------------------+
-    |      Additional     | RRs holding additional information
-    +---------------------+
-*/
 
 #define QUERY 0
 #define RESPONSE 1
@@ -51,24 +38,6 @@ typedef struct SOATypeInfo
     uint32_t minimum;
 } SOAinfo;
 
-/*
-                                |1  1  1  1  1  1
-    |0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                      ID                       |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |QR|   Opcode  |AA|TC|RD|RA|   Z    |   RCODE   |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    QDCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    ANCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    NSCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                    ARCOUNT                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*/
-
 typedef struct DNSHeader
 {
     uint16_t id;              // identification number
@@ -76,7 +45,7 @@ typedef struct DNSHeader
     unsigned char tc : 1;     // truncated message
     unsigned char aa : 1;     // authoritative answer
     unsigned char opcode : 4; // purpose of message
-    unsigned char qr : 1;     // query/response flagy
+    unsigned char qr : 1;     // query/response flags
 
     unsigned char rcode : 4; // response code
     unsigned char z : 3;     // its z! reserved
@@ -87,52 +56,12 @@ typedef struct DNSHeader
     uint16_t arcount;        // number of resource entries
 } DNSHeader;
 
-/*
-QNAME           a domain name represented as a sequence of labels, where
-                each label consists of a length octet followed by that
-                number of octets.  The domain name terminates with the
-                zero length octet for the null label of the root.  Note
-                that this field may be an odd number of octets; no
-                padding is used.
-
-QTYPE           a two octet code which specifies the type of the query.
-                The values for this field include all codes valid for a
-                TYPE field, together with some more general codes which
-                can match more than one type of RR.
-
-QCLASS          a two octet code that specifies the class of the query.
-                For example, the QCLASS field is IN for the Internet.
-*/
-
 typedef struct DNSQuestion
 {
-    std::vector<uint8_t> qname; // sequence of labels -> maybe array/ vector of octets // example 3 www 6 github 3 com 0
+    std::vector<uint8_t> qname; // sequence of labels; each label starts with byte, which represents length in chars of the label
     uint16_t qtype;             // 2 octet code which spicfices type of query
-    uint16_t qclass;            // a two octet code that specifies the class of the query.
+    uint16_t qclass;            // 2 octet code that specifies the class of the query
 } DNSQuestion;
-
-/*
-                                    1  1  1  1  1  1
-    0  1  2  3  4  5  6  7  8  9  0  1  2  3  4  5
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                                               |
-    /                                               /
-    /                      NAME                     /
-    |                                               |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                      TYPE                     |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                     CLASS                     |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                      TTL                      |
-    |                                               |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-    |                   RDLENGTH                    |
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--|
-    /                     RDATA                     /
-    /                                               /
-    +--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+--+
-*/
 
 typedef struct DNSResponseInfo
 {
@@ -146,7 +75,6 @@ typedef struct DNSResponse
     std::vector<uint8_t> name;
     DNSResponseInfo info;
     std::vector<uint8_t> rdata;
-    // std::vector<SOAType> soa; // vector for specific soa types
 
 } DNSResponse;
 

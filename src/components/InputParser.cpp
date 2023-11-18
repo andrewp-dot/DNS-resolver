@@ -1,6 +1,7 @@
 /**
  * @file InputParser.cpp
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Implementation and function definitions of InputParser.h module
  * @date 2023-11-18
  *
@@ -167,7 +168,6 @@ void InputParser::parseArgs(Query &query)
         Error::printError(WRONG_ARGUMENTS, "Server has not been set.\n");
         return;
     }
-    // if (query.getAddressVector().empty())
     if (query.getAddress() == "")
     {
         Error::printError(WRONG_ARGUMENTS, "Address has not been set.\n");

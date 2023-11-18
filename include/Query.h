@@ -1,6 +1,7 @@
 /**
  * @file Query.h
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Query module stores user defined data next for processing.
  * @date 2023-11-18
  *
@@ -36,27 +37,109 @@ private:
     port_t port;
     std::string server;
     std::string address;
-    // bool isOk;
 
 public:
     Query();
 
-    // setters
+    /**
+     * @brief Set the recursionDesired flag
+     *
+     * @param value
+     */
     void setRecursionDesired(bool value) { this->recursionDesired = value; };
+
+    /**
+     * @brief Set the reversed flag, if the query is reversed
+     *
+     * @param value
+     */
     void setReversed(bool value) { this->reversed = value; };
+
+    /**
+     * @brief Set ipv6 flag. This flag indicates usage of IP version. If ipv6 is true, IPv6 addresses are used
+     *
+     * @param value
+     */
     void setIPv6(bool value) { this->ipv6 = value; };
+
+    /**
+     * @brief Set the type of the query
+     *
+     * @param type
+     */
     void setType(QueryType type) { this->type = type; };
+
+    /**
+     * @brief Set the port
+     *
+     * @param portNum
+     */
     void setPort(port_t portNum) { this->port = portNum; };
+
+    /**
+     * @brief Set the server address
+     *
+     * @param server
+     */
     void setServer(std::string server) { this->server = server; };
+
+    /**
+     * @brief Set the requested address
+     *
+     * @param address
+     */
     void setAddress(std::string address) { this->address = address; };
 
-    // getters
+    /**
+     * @brief Get the recursionDesired flag value
+     *
+     * @return true
+     * @return false
+     */
     bool getRecursionDesired() const { return this->recursionDesired; };
+
+    /**
+     * @brief Get the reversed flag value
+     *
+     * @return true
+     * @return false
+     */
     bool getReversed() const { return this->reversed; };
+
+    /**
+     * @brief Get the ipv6 flag value
+     *
+     * @return true
+     * @return false
+     */
     bool getIPv6() const { return this->ipv6; };
+
+    /**
+     * @brief Get the type of the query object
+     *
+     * @return QueryType
+     */
     QueryType getType() const { return this->type; };
+
+    /**
+     * @brief Get the used port of the query
+     *
+     * @return port_t
+     */
     port_t getPort() const { return this->port; };
+
+    /**
+     * @brief Get the server address
+     *
+     * @return std::string
+     */
     std::string getServer() const { return this->server; };
+
+    /**
+     * @brief Get the requested address
+     *
+     * @return std::string
+     */
     std::string getAddress() const { return this->address; };
 
     /**

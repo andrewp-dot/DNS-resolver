@@ -1,5 +1,6 @@
 # Module: tests.py
 # Author: Adrián Ponechal (xponec01@stud.fit.vut.cz)
+# Login: xponec01
 # Date: 2023-11-18
 # Test program for testing functionality of current dns program
 

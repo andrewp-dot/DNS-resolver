@@ -1,6 +1,7 @@
 /**
  * @file Query.cpp
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Implementation and function definitions of Query.h module
  * @date 2023-11-18
  *
@@ -45,7 +46,6 @@ void Query::reverseIPv4()
     size_t startPos = 0;
 
     std::vector<std::string> parsedAddress;
-    // std::string address = this->getAddressVector().at(0);
     std::string address = this->getAddress();
     while (startPos < address.npos)
     {

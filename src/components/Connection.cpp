@@ -1,6 +1,7 @@
 /**
  * @file Connection.cpp
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Implementation and function definitions of Connection.h functions
  * @date 2023-11-18
  *

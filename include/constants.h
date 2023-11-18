@@ -1,6 +1,7 @@
 /**
  * @file constants.h
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Header file which contains universal constants.
  * @date 2023-11-18
  *
@@ -12,13 +13,6 @@
 #define CONSTANTS_H
 
 #include <climits>
-/**
- * @brief
- * labels          63 octets or less
- * names           255 octets or less
- * TTL             positive values of a signed 32 bit number.
- * UDP messages    512 octets or less
- */
 #define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
 
 #define UDP_DATAGRAM_LIMIT 512

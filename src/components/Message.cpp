@@ -1,6 +1,7 @@
 /**
  * @file Message.cpp
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Implementation and function definitions of Message.h module.
  * @date 2023-11-18
  *
@@ -109,7 +110,6 @@ QueryOpcode Message::getQueryOpcode(const Query &query)
     if (query.getReversed())
     {
         return OPCODE_IQUERY;
-        // return OPCODE_QUERY;
     }
     return OPCODE_QUERY;
 }
@@ -284,13 +284,6 @@ std::vector<uint8_t> Message::getSoaFromResponse(char *buffer, size_t *offset)
 
     soaInfo.minimum = htonl(soaInfo.minimum);
     pushUINT32ToUINT8vector(rdata, soaInfo.minimum);
-
-    // std::cout << "Got: " << std::endl;
-    // std::cout << soaInfo.serial << std::endl;
-    // std::cout << soaInfo.refresh << std::endl;
-    // std::cout << soaInfo.retry << std::endl;
-    // std::cout << soaInfo.expire << std::endl;
-    // std::cout << soaInfo.minimum << std::endl;
 
     return rdata;
 }

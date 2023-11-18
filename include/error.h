@@ -1,6 +1,7 @@
 /**
  * @file Error.h
- * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @author Adrián Ponechal (xponec01@stud.fit.vutbr.cz)
+ * @login xponec01
  * @brief Module that is used for reporting errors.
  * @date 2023-11-18
  *
@@ -30,10 +31,34 @@ private:
     static ErrorCode errorCode;
 
 public:
-    static void
-    printError(ErrorCode err, const char *format, ...);
+    /**
+     * @brief Prints error on the screen and sets error code
+     *
+     * @param err - code of error
+     * @param format - format of the string, to be printed (like in printf)
+     * @param ...
+     */
+    static void printError(ErrorCode err, const char *format, ...);
+
+    /**
+     * @brief Get the error code of the program
+     *
+     * @return ErrorCode
+     */
     static ErrorCode getErrorCode();
+
+    /**
+     * @brief Set the first found error code
+     *
+     * @param err - code of error
+     */
     static void setErrorCode(ErrorCode err);
+
+    /**
+     * @brief Set the error code got by answer from DNS server recieved in Message module
+     *
+     * @param errCode
+     */
     static void setErrorByResponseCode(unsigned char errCode);
 };
 
