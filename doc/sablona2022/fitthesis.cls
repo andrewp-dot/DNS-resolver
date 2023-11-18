@@ -939,30 +939,30 @@ Management}{\@fit@EN}%
   }
   \vfill
 
-  \mkuctxtt{10}{\ifslovak\@projecttype@SK\else\ifczech\@projecttype@CS\else\@projecttype@EN\fi\fi}
-  \iftoggle{slovak_used}{
-  \mkuctxtt{8}{\@projecttype@EN}
-  }{
-  \mkuctxtt{8}{\ifenslovak\@projecttype@SK\else\ifczech\@projecttype@EN\else\@projecttype@CS\fi\fi}
-  }
+  % \mkuctxtt{10}{\ifslovak\@projecttype@SK\else\ifczech\@projecttype@CS\else\@projecttype@EN\fi\fi}
+  % \iftoggle{slovak_used}{
+  % \mkuctxtt{8}{\@projecttype@EN}
+  % }{
+  % \mkuctxtt{8}{\ifenslovak\@projecttype@SK\else\ifczech\@projecttype@EN\else\@projecttype@CS\fi\fi}
+  % }
 
-  \vspace{3mm}
+  % \vspace{3mm}
 
-  \mktxtt{10}{\MakeUppercase{\ifslovak\@author@SK\else\ifczech\@author@CS\else\@author@EN\fi\fi} \hfill \get@author}
-  \iftoggle{slovak_used}{
-    \mkuctxtt{8}{\@author@EN}
-  }{
-    \mkuctxtt{8}{\ifenslovak\@author@SK\else\ifczech\@author@EN\else\@author@CS\fi\fi}
-  }
+  % \mktxtt{10}{\MakeUppercase{\ifslovak\@author@SK\else\ifczech\@author@CS\else\@author@EN\fi\fi} \hfill \get@author}
+  % \iftoggle{slovak_used}{
+  %   \mkuctxtt{8}{\@author@EN}
+  % }{
+  %   \mkuctxtt{8}{\ifenslovak\@author@SK\else\ifczech\@author@EN\else\@author@CS\fi\fi}
+  % }
 
-  \vspace{3mm}
+  % \vspace{3mm}
 
-  \mktxtt{10}{\MakeUppercase{\ifslovak\@supervisor@SK\else\ifczech\@supervisor@CS\else\@supervisor@EN\fi\fi} \hfill \get@supervisor}
-  \iftoggle{slovak_used}{
-    \mkuctxtt{8}{\@supervisor@EN}
-  }{
-    \mkuctxtt{8}{\ifenslovak\@supervisor@SK\else\ifczech\@supervisor@EN\else\@supervisor@CS\fi\fi}
-  }
+  % \mktxtt{10}{\MakeUppercase{\ifslovak\@supervisor@SK\else\ifczech\@supervisor@CS\else\@supervisor@EN\fi\fi} \hfill \get@supervisor}
+  % \iftoggle{slovak_used}{
+  %   \mkuctxtt{8}{\@supervisor@EN}
+  % }{
+  %   \mkuctxtt{8}{\ifenslovak\@supervisor@SK\else\ifczech\@supervisor@EN\else\@supervisor@CS\fi\fi}
+  % }
 
   \vspace{8mm}
 
@@ -988,12 +988,12 @@ Management}{\@fit@EN}%
   }
   \vfill
 
-  \mkuctxtt{14}{\ifslovak\@projecttype@SK\else\ifczech\@projecttype@CS\else\@projecttype@EN\fi\fi}
-  \iftoggle{slovak_used}{
-    \mkuctxtt{10}{\@projecttype@EN}
-  }{
-    \mkuctxtt{10}{\ifenslovak\@projecttype@SK\else\ifczech\@projecttype@EN\else\@projecttype@CS\fi\fi}
-  }
+  % \mkuctxtt{14}{\ifslovak\@projecttype@SK\else\ifczech\@projecttype@CS\else\@projecttype@EN\fi\fi}
+  % \iftoggle{slovak_used}{
+  %   \mkuctxtt{10}{\@projecttype@EN}
+  % }{
+  %   \mkuctxtt{10}{\ifenslovak\@projecttype@SK\else\ifczech\@projecttype@EN\else\@projecttype@CS\fi\fi}
+  % }
 
   \vspace{5mm}
 
@@ -1006,12 +1006,12 @@ Management}{\@fit@EN}%
 
   \vspace{5mm}
 
-  \mktxtt{14}{\MakeUppercase{\ifslovak\@supervisor@SK\else\ifczech\@supervisor@CS\else\@supervisor@EN\fi\fi} \hfill \get@supervisor}
-  \iftoggle{slovak_used}{
-    \mkuctxtt{10}{\@supervisor@EN}
-  }{
-    \mkuctxtt{10}{\ifenslovak\@supervisor@SK\else\ifczech\@supervisor@EN\else\@supervisor@CS\fi\fi}
-  }
+  % \mktxtt{14}{\MakeUppercase{\ifslovak\@supervisor@SK\else\ifczech\@supervisor@CS\else\@supervisor@EN\fi\fi} \hfill \get@supervisor}
+  % \iftoggle{slovak_used}{
+  %   \mkuctxtt{10}{\@supervisor@EN}
+  % }{
+  %   \mkuctxtt{10}{\ifenslovak\@supervisor@SK\else\ifczech\@supervisor@EN\else\@supervisor@CS\fi\fi}
+  % }
 
   \vspace{10mm}
 
@@ -1053,7 +1053,7 @@ Management}{\@fit@EN}%
 \fontfamily{\familydefault}\selectfont%
 
 %=================================================================================
-\makeabstract
+% \makeabstract
 \ifx\@textendedabstract\@empty
 \else
   \makeextendedabstract
