@@ -159,7 +159,7 @@ void InputParser::parseArgs(Query &query)
 {
     if (this->argc <= 1)
     {
-        Error::printError(WRONG_ARGUMENTS, "Wrong number of arguments.\n");
+        Error::printError(WRONG_ARGUMENTS, USAGE);
         return;
     }
     setOptions(query);

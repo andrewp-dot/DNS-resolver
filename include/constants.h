@@ -13,7 +13,7 @@
 #define CONSTANTS_H
 
 #include <climits>
-#define USAGE "dns [-r] [-x] [-6] -s server [-p port] adresa"
+#define USAGE "./dns [-r] [-x] [-6] -s server [-p port] address\n"
 
 #define UDP_DATAGRAM_LIMIT 512
 #define MAX_PORT_NUMBER 65535
