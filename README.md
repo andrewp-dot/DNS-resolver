@@ -37,6 +37,20 @@ Popis:
 *Poznámka:* <br>
 v prípade nezadania ani jedného z prepínačou sa vypíše požie programu.
 
+## Príklad spustenia
+<code>./dns -s kazi.fit.vutbr.cz 147.229.8.12 -r -x</code>
+
+<pre>
+Authoritative: Yes, Recursive: Yes, Truncated: No
+Question section (1)
+  12.8.229.147.in-addr.arpa., PTR, IN
+Answer section (1)
+  12.8.229.147.in-addr.arpa., PTR, IN, 14400, kazi.fit.vutbr.cz.
+Authority section (0)
+Additional section (0)
+</pre>
+
+
 # Zoznam súborov
 
 <pre>
