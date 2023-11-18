@@ -26,9 +26,7 @@ clean:
 	rm -rf $(PROG) test *.dSYM
 
 test: $(PROG)
-	@cp $(PROG) ./tests/$(PROG)
 	@python3 ./tests/tests.py
-	@rm ./tests/$(PROG)
 	@rm -r ./tests/__pycache__
 
 

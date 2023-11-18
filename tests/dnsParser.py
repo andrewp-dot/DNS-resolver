@@ -1,6 +1,6 @@
 import subprocess as sp
 import os
-from digParser import answerTemplate, soaAnswerTemplate
+from digParser import answerTemplate
 import sys
 
 SUCCESS = 0
@@ -18,8 +18,8 @@ def createAnswer(answer: str):
     answerParts = answer.split(", ")
 
     # skip ttl on index 3 
-    if answerParts[0] == "SOA":
-        return dict(soaAnswerTemplate)
+    # if answerParts[0] == "SOA":
+    #     return dict(soaAnswerTemplate)
     
     if len(answerParts) >= 5:
         return dict(answerTemplate,qname=answerParts[0], cls=answerParts[2], type=answerParts[1], answer=answerParts[4])

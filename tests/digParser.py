@@ -1,7 +1,7 @@
 import subprocess as sp
 
 answerTemplate = {"qname": "","cls": "", "type": "", "answer": ""}
-soaAnswerTemplate = {"None": "not implemented"}
+# soaAnswerTemplate = {"None": "not implemented"}
 
 def expandIPv6Address(address: str) -> str:
     if '::' in address:
@@ -33,8 +33,8 @@ def createAnswer(answer: str) -> dict:
     answerParts = removeEmptyStrings(stringParts=answerParts)
 
     # if answer is type SOA
-    if answerParts[0] == "SOA":
-        return dict(soaAnswerTemplate)
+    # if answerParts[0] == "SOA":
+    #     return dict(soaAnswerTemplate)
 
     # skip the ttl, ttl is on index 1
     if len(answerParts) >= 5:

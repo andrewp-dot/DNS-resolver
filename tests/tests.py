@@ -1,6 +1,5 @@
 from digParser import parseDigOutput
 from dnsParser import parseDnsOutput
-import time
 
 # stasts variables
 numOfTests=0
@@ -143,10 +142,10 @@ def recursionIPv6Queries():
     testSet("Recursive IPv6 queries [-r, -6]", domainNames, digArgs ,dnsArgs)
 
 # -x -6
-# dig -x AAAA @8.8.8.8 example.com +norecurse 
+# dig -x  @8.8.8.8 example.com +norecurse 
 def invertedIPv6Queries():
-    digArgs = ['AAAA','@8.8.8.8','+norecurse','-x']
-    dnsArgs = ['-s','8.8.8.8','-r', '-6']
+    digArgs = ['@8.8.8.8','+norecurse','-x']
+    dnsArgs = ['-s','8.8.8.8','-x', '-6']
     testSet("Inverted IPv6 queries [-x, -6]", ips6, digArgs ,dnsArgs)
 
 # -r -x -6
