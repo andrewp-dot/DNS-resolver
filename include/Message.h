@@ -1,3 +1,13 @@
+/**
+ * @file Message.h
+ * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @brief Message module contatins information about sent message and recieved answer.
+ * @date 2023-11-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #ifndef MESSAGE_H
 #define MESSAGE_H
 #include <vector>

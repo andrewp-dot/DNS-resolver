@@ -1,3 +1,13 @@
+/**
+ * @file constants.h
+ * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @brief Header file which contains universal constants.
+ * @date 2023-11-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #ifndef CONSTANTS_H
 #define CONSTANTS_H
 

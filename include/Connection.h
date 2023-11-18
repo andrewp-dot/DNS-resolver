@@ -1,3 +1,13 @@
+/**
+ * @file Connection.h
+ * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @brief Module for communication processing
+ * @date 2023-11-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #ifndef CONNECTION_H
 #define CONNECTION_H
 #include "Query.h"

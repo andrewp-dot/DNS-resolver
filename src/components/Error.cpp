@@ -1,15 +1,17 @@
+/**
+ * @file Error.cpp
+ * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @brief Implementation and function definitions of Error.h functions
+ * @date 2023-11-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include <iostream>
 #include <fstream>
 #include <stdarg.h>
 #include "Error.h"
-
-// void printToDebugFile()
-// {
-//     std::ofstream debugFile;
-//     debugFile.open("example.txt");
-//     debugFile << "Writing this to a file.\n";
-//     debugFile.close();
-// }
 
 ErrorCode Error::errorCode;
 

@@ -1,3 +1,8 @@
+# Module: dnsParser.py
+# Author: Adrián Ponechal (xponec01@stud.fit.vut.cz)
+# Date: 2023-11-18
+# Submodule for parsing output from tested dns progam
+
 import subprocess as sp
 import os
 from digParser import answerTemplate

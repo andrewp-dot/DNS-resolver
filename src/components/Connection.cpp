@@ -1,3 +1,13 @@
+/**
+ * @file Connection.cpp
+ * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @brief Implementation and function definitions of Connection.h functions
+ * @date 2023-11-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include <iostream>
 #include <cstring>
 #include <unistd.h>

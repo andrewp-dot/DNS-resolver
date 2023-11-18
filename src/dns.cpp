@@ -16,6 +16,16 @@
     along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
+/**
+ * @file dns.cpp
+ * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @brief Main body of dns resolver program.
+ * @date 2023-11-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #include <iostream>
 #include <stdio.h>
 #include "Error.h"

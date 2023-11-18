@@ -1,3 +1,8 @@
+# Module: digParser.py
+# Author: Adrián Ponechal (xponec01@stud.fit.vut.cz)
+# Date: 2023-11-18
+# Submodule for parsing output from dig progam
+
 import subprocess as sp
 
 answerTemplate = {"qname": "","cls": "", "type": "", "answer": ""}

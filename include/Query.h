@@ -1,3 +1,13 @@
+/**
+ * @file Query.h
+ * @author Adrián Ponechal (xponec01@stud.fit.vut.cz)
+ * @brief Query module stores user defined data next for processing.
+ * @date 2023-11-18
+ *
+ * @copyright Copyright (c) 2023
+ *
+ */
+
 #ifndef QUERY_H
 #define QUERY_H
 #include <string>
