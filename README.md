@@ -38,3 +38,29 @@ Popis:
 v prípade nezadania ani jedného z prepínačou sa vypíše požie programu.
 
 # Zoznam súborov
+
+<pre>
+include
+|-- Conection.h
+|-- constants.h
+|-- Error.h
+|-- InputParser.h
+|-- Message.h
+`-- Query.h
+src
+|-- components
+|   |-- Connection.cpp
+|   |-- Error.cpp
+|   |-- InputParser.cpp
+|   |-- Message.cpp
+|   `-- Query.h
+`-- dns.cpp
+tests
+|-- digParser.py
+|-- dnsParser.py
+`-- tests.py
+LICENSE
+Makefile
+README.md
+manual.pdf
+</pre>
