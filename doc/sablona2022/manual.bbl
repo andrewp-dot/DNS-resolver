@@ -1,0 +1,12 @@
+\makeatletter
+\makeatother
+\begin{thebibliography}{1}
+
+\bibitem{Pravidla}
+{\sc\bgroup}Hlavsa{\egroup}, Z. et~al.
+\newblock {\em Pravidla českého pravopisu}.
+\newblock 2. vyd.
+\newblock Academia, 2009.
+\newblock ISBN 80-200-1327-X.
+
+\end{thebibliography}

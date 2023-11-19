@@ -15,16 +15,65 @@
 % \label{Úvod}
 \addNewChapter{Úvod}
 
-\section{Spôsob testovania}
-\cite[Hello]{Pravidla}
+
+\section{Domain name system}
+\label{Domain name system}
+DNS (angl. domain name system) je systém, ktorého cieľom je poskytnúť mechanizmus na pomenovávanie
+zdrojov (zariadení) takým spôsobom, aby tieto mená boli použiteľné v rôznych zariadeniach, sieťach, protokolových rodinách, 
+na internete a administratívnych organizáciach. [RFC1035]
+
+Princíp DNS:
+
+/*
+ * popis problému
+ * spôsob fungovania DNS
+ * DNS resolver
+ */
+
+
+
+
+\section{Formát správy}
+\label{Formát správy}
+
+% \subsection{QCLASS}
+
+\section{Formát odpovede}
+
+\section{IPv6}
+
+
 % Pro kompilaci po částech (viz projekt.tex) nutno odkomentovat
 %\end{document}
 
 \addNewChapter{Návrh programu}
+Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nástroj GNU Make 3.81. Program je vyvíjaný podľa štandardu c++17.
+
+/*
+ * stub resolver
+ * objektový nárvh / diagram
+ * spustenie
+ * výstup   - standard
+            - chybové stavy
+ */
+
 
 
 \addNewChapter{Popis programu}
+/*
+ * kompatibilita
+ * popis Častí kódu 
+ * odosielanie, prijatie 
+ */
 
 
 \addNewChapter{Testovanie}
+/*
+ * testovacie prostredie
+ * spôsoby testovania
+ * použité nástroje - python3
+                    - dig 
+ */
+
+\cite[Hello]{Pravidla}
 
