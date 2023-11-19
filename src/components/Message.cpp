@@ -100,9 +100,11 @@ uint16_t Message::generateQueryId(const Query &query)
 {
     srand((unsigned)time(NULL));
 
-    int id = rand();
+    int range = 16;
+    // random number from 0 to 16
+    int id = (rand() % range);
     std::string addr = query.getAddress();
-    return (uint16_t)(id << addr.size());
+    return (uint16_t)(addr.size() << id);
 }
 
 QueryOpcode Message::getQueryOpcode(const Query &query)
