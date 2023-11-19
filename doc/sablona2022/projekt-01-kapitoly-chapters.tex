@@ -31,28 +31,23 @@ na internete a administratívnych organizáciach. \cite{rfc1035}
 Základnou úlohou služby DNS je mapovanie doménových adries (tzv. doménových mien) na IP adresy. 
 Systém DNS sa skladá z troch hlavných častí - priestoru doménových mien, DNS serverov a resolveru. Priestor doménových mien je databáza, kde sú dané doménové mená uložené. 
 Táto databáza je hierarchicky usporiadaná do stromovej štruktúry (pre rýchle vyhladávanie konkrétnych domén). \cite{Matoušek}
-Z tohoto dôvodu majú doménové mená hierarchiu. Prekladajú sa od koreňa a tzv. top level domains (skratka TLD - napríklad en., sk., cz., com.)
-
-
 
 \section{DNS resolver}
 \label{DNS resolver}
-
-
-
-
-
-
-\section{Formát správy}
-\label{Formát správy}
-
-% \subsection{QCLASS}
+Je to klientský program, ktorý získavá informácie zo systému DNS prostredníctvom dotazovania sa na DNS servery. Tento proces sa nazýva DNS rezolúcia.
+V tejto práci sa budeme zaoberať nárvhom a realizáciou takéhoto typu programu.
 
 \section{Dotazovanie}
 \label{Dotazovanie}
 
+\subsection{Formát správy}
+\label{Formát správy}
 
-\section{Formát odpovede}
+% \subsection{QCLASS}
+
+
+
+\subsection{Formát odpovede}
 
 \section{IPv6}
 
