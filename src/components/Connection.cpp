@@ -12,11 +12,9 @@
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
-#include <fcntl.h>
 #include <arpa/inet.h>
 #include <netinet/in.h>
 #include <sys/socket.h>
-#include <sys/select.h>
 #include <netdb.h>
 #include "constants.h"
 #include "Connection.h"
@@ -78,10 +76,6 @@ bool Connection::connectionSetup(const Query &query)
         return false;
     }
 
-    // set the socket to be non-blocking - needed for timeout implementation
-    int flags = fcntl(this->sockfd, F_GETFL, 0);
-    fcntl(this->sockfd, F_SETFL, flags | O_NONBLOCK);
-
     // setup server address
     memset(&this->server, 0, sizeof(sockaddr_in));
 
@@ -121,42 +115,23 @@ void Connection::sendAndDisplayAnswer(const Query &query)
     // recieve message
     char recvBuffer[UDP_DATAGRAM_LIMIT] = {0};
 
-    // timeout #DOC
-    fd_set readSet;
-    FD_ZERO(&readSet);              /* clear the set */
-    FD_SET(this->sockfd, &readSet); /* add our file descriptor to the set */
-
     struct timeval timeout;
     timeout.tv_sec = 2;
     timeout.tv_usec = 0;
+    setsockopt(this->sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char *)&timeout, sizeof(timeout));
 
-    int rv = select(this->sockfd + 1, &readSet, NULL, NULL, &timeout);
-
-    if (rv < 0)
+    int bytesRx = recv(this->sockfd, (char *)recvBuffer, UDP_DATAGRAM_LIMIT, 0);
+    if (bytesRx < 0)
     {
-        Error::printError(CONNECTION_FAILED, "SOCKET_ERROR\n");
+        Error::printError(CONNECTION_FAILED, "recv() failed\n");
         return;
     }
-    else if (rv == 0)
-    {
-        Error::printError(CONNECTION_FAILED, "Timeout: server is unrachable.\n");
-        return;
-    }
-    else
-    {
-        int bytesRx = recv(this->sockfd, (char *)recvBuffer, UDP_DATAGRAM_LIMIT, 0);
-        if (bytesRx < 0)
-        {
-            Error::printError(CONNECTION_FAILED, "recv() failed\n");
-            return;
-        }
 
-        // parse connection to buffer
-        msg.parseResponseToBuffer(recvBuffer, bytesRx);
-        if (Error::getErrorCode() == SUCCESS)
-        {
-            msg.printResponse();
-        }
+    // parse connection to buffer
+    msg.parseResponseToBuffer(recvBuffer, bytesRx);
+    if (Error::getErrorCode() == SUCCESS)
+    {
+        msg.printResponse();
     }
 }
 
