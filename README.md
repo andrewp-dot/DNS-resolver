@@ -23,6 +23,9 @@ Klient podporuje dotazovanie sa na záznamy typu A, AAAA a PTR. V odpovedi zobra
 
 V prípade dotazovania sa na server, ktorý neexistuje alebo nepošle odpoveď, je v programe implementovaný timeout. Po skončení timeoutu program na štandartný výstup vypíše chybové hlásenie.
 
+## Návratová hodnota
+V prípade úspechu program vráti kód s hodnotou 0, inak vráti kód chyby.
+
 # Spustenie
 <code>./dns [-r] [-x] [-6] -s server [-p port] address</code>
 
@@ -34,8 +37,11 @@ Popis:
 - -p nepovinný prepínač; za ním nasleduje adresa portu serveru, na ktorý sa bude posielať dotaz (v prípade nezadaného portu alebo zadania portu v zlom formáte bude štandartne použitý port 53)
 - address je adresa požadovaného servera
 
-*Poznámka:* <br>
-v prípade nezadania ani jedného z prepínačou sa vypíše požie programu.
+*Poznámka 1:* <br>
+V prípade nezadania ani jedného z prepínačov sa vypíše použitie programu.
+
+*Poznámka 2:* <br>
+V prípade zadania viackrát prepínača -s, program použie poslednú zadanú neprázdnu hodnotu za prepínačom. V prípade zadania viacerých adries program použije poslednú zadanú v programe.
 
 ## Príklad spustenia
 <code>./dns -s kazi.fit.vutbr.cz 147.229.8.12 -r -x</code>
