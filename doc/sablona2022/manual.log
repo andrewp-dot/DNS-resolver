@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  19 NOV 2023 17:59
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  19 NOV 2023 21:08
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -574,7 +574,7 @@ File: t1qhv.fd 2009/09/25 v1.2 font definition file for T1/qhv
 \@sirkartext=\skip85
 \@vyskaobr=\skip86
 \@sirkaobr=\skip87
-<template-fig/VUT_symbol_barevne_CMYK_CZ.pdf, id=41, 167.13641pt x 165.87971pt>
+<template-fig/VUT_symbol_barevne_CMYK_CZ.pdf, id=53, 167.13641pt x 165.87971pt>
 File: template-fig/VUT_symbol_barevne_CMYK_CZ.pdf Graphic file (type pdf)
 <use template-fig/VUT_symbol_barevne_CMYK_CZ.pdf>
 Package pdftex.def Info: template-fig/VUT_symbol_barevne_CMYK_CZ.pdf  used on input line 209.
@@ -617,7 +617,7 @@ File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.16 \addNewChapter{Úvod}
+l.14 \addNewChapter{Úvod}
                            [1
 
 
@@ -625,42 +625,46 @@ l.16 \addNewChapter{Úvod}
 Kapitola 1.
 [2
 
-]
+] [3]
 Kapitola 2.
-[3
-
-]
-Kapitola 3.
 [4
 
 ]
-Kapitola 4.
-) (./manual.bbl [5
+Kapitola 3.
+[5
 
-])
+]
+Kapitola 4.
+) (./manual.bbl [6
+
+]
+LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 9.
+ (/usr/local/texlive/2023/texmf-dist/tex/latex/lm/t1lmtt.fd
+File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
+))
 \c@ttl@toc@chapters=\count348
 \tf@ptc=\write5
 \openout5 = `manual.ptc'.
 
- [6
+ [7
 
 ] (./manual.aux)
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 9A5403FD3D916AA470FF8887459BB9A3;978.
+(rerunfilecheck)             Checksum: 7B27C281BB79F0EC496826029F1C9CD4;1347.
  ) 
 Here is how much of TeX's memory you used:
- 15965 strings out of 476025
- 255276 string characters out of 5790017
- 1854388 words of memory out of 5000000
- 36043 multiletter control sequences out of 15000+600000
- 568619 words of font info for 78 fonts, out of 8000000 for 9000
+ 16049 strings out of 476025
+ 256510 string characters out of 5790017
+ 1857388 words of memory out of 5000000
+ 36100 multiletter control sequences out of 15000+600000
+ 573627 words of font info for 88 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,5n,77p,472b,562s stack positions out of 10000i,1000n,20000p,200000b,200000s
-</usr/local/texlive/2023/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Bold.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb>
-Output written on manual.pdf (7 pages, 407004 bytes).
+ 75i,5n,77p,472b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
+</usr/local/texlive/2023/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Bold.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
+Output written on manual.pdf (8 pages, 449957 bytes).
 PDF statistics:
- 147 PDF objects out of 1000 (max. 8388607)
- 108 compressed objects within 2 object streams
- 18 named destinations out of 1000 (max. 500000)
- 104 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 182 PDF objects out of 1000 (max. 8388607)
+ 140 compressed objects within 2 object streams
+ 24 named destinations out of 1000 (max. 500000)
+ 128 words of extra memory for PDF output out of 10000 (max. 10000000)
 

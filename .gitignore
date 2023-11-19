@@ -43,3 +43,13 @@
 dns
 test
 tests/__pycache__/*
+
+*.aux
+*.bbl
+*.blg
+*.fdb_latexmk
+*.fls 
+*.log
+*.ptc
+*.syntex.gz
+*.toc

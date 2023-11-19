@@ -11,24 +11,34 @@
 \newcommand*{\addNewChapter}[2][1]{\addtocounter{chapterCounter}{#1}\chapter{#2}\label{#2}}
 
 
-% \chapter{Úvod}
-% \label{Úvod}
 \addNewChapter{Úvod}
+Komunikácia je neodmysliteľnou súčasťou pre zdielanie a prenos informácii. V dnešnej dobe sa na tento účel využíva hlavne výpočtová technológia.
 
+Základ počítačovej komunikácie tvoria dve hlavné zložky: adresovanie a smerovanie. Adresovanie je spôsob vytvárania a priraďovania adries počítačom. 
+Adresa je jednoznačný údaj, ktorý presne identifikuje práve jeden adresovateľný prvok. Smerovanie je proces výberu cesty pre prevádzku v sieti medzi viacerými sieťami. \cite{Smerovanie}
+
+Adresa zariadení na úrovni TCP/IP je vo formáte IP adresy (napríklad 95.82.140.207). 
+Pre človeka je adresovanie na úrovni počítačov komplikované. Adresovanie počítačov pomocou IP adries nie je pre ľudí dobré riešenie, pretože sú náročné na zapamätanie.
+Z toho dôvodu bol vyvinutý systém, ktorý umožňuje adresovať zariadenia pomocou doménových adries.
 
 \section{Domain name system}
 \label{Domain name system}
 DNS (angl. domain name system) je systém, ktorého cieľom je poskytnúť mechanizmus na pomenovávanie
 zdrojov (zariadení) takým spôsobom, aby tieto mená boli použiteľné v rôznych zariadeniach, sieťach, protokolových rodinách, 
-na internete a administratívnych organizáciach. [RFC1035]
+na internete a administratívnych organizáciach. \cite{rfc1035} 
 
-Princíp DNS:
+\section{Architektúra DNS}
+Základnou úlohou služby DNS je mapovanie doménových adries (tzv. doménových mien) na IP adresy. 
+Systém DNS sa skladá z troch hlavných častí - priestoru doménových mien, DNS serverov a resolveru. Priestor doménových mien je databáza, kde sú dané doménové mená uložené. 
+Táto databáza je hierarchicky usporiadaná do stromovej štruktúry (pre rýchle vyhladávanie konkrétnych domén). \cite{Matoušek}
+Z tohoto dôvodu majú doménové mená hierarchiu. Prekladajú sa od koreňa a tzv. top level domains (skratka TLD - napríklad en., sk., cz., com.)
 
-/*
- * popis problému
- * spôsob fungovania DNS
- * DNS resolver
- */
+
+
+\section{DNS resolver}
+\label{DNS resolver}
+
+
 
 
 
@@ -37,6 +47,10 @@ Princíp DNS:
 \label{Formát správy}
 
 % \subsection{QCLASS}
+
+\section{Dotazovanie}
+\label{Dotazovanie}
+
 
 \section{Formát odpovede}
 
@@ -75,5 +89,4 @@ Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nás
                     - dig 
  */
 
-\cite[Hello]{Pravidla}
 

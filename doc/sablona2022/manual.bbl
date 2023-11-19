@@ -2,11 +2,25 @@
 \makeatother
 \begin{thebibliography}{1}
 
-\bibitem{Pravidla}
-{\sc\bgroup}Hlavsa{\egroup}, Z. et~al.
-\newblock {\em Pravidla českého pravopisu}.
-\newblock 2. vyd.
-\newblock Academia, 2009.
-\newblock ISBN 80-200-1327-X.
+\bibitem{Smerovanie}
+{\em Smerovanie}.
+\newblock 2023.
+\newblock {\small [Online; zmenené 19. január 2023]}.
+\newblock Dostupn{\'{e}} z: ~{\small\url{https://sk.wikipedia.org/wiki/Smerovanie}}.
+
+\bibitem{Matoušek}
+{\sc\bgroup}Matou\v{s}ek{\egroup}, P.
+\newblock {\em S\'{i}\v{t}ov\'{e} slu\v{z}by a jejich architektura}.
+\newblock Publishing house of Brno University of Technology VUTIUM, 2014.
+\newblock 396~s.
+\newblock ISBN 978-80-214-3766-1.
+\newblock Dostupn{\'{e}} z: ~{\small\url{https://www.fit.vut.cz/research/publication/10567}}.
+
+\bibitem{rfc1035}
+{\sc\bgroup}Mockapetris{\egroup}, P.
+\newblock {\em {Domain names - implementation and specification}} [RFC 1035].
+\newblock RFC Editor, november 1987.
+\newblock DOI: 10.17487/RFC1035.
+\newblock Dostupn{\'{e}} z: ~{\small\url{https://www.rfc-editor.org/info/rfc1035}}.
 
 \end{thebibliography}
