@@ -53,15 +53,10 @@ Prijatú odpoveď resolver spracuje a získané informácie poskytne aplikácii 
 Dotazovanie na server prebieha zasielaním správ. Užívateľ alebo aplikácia poskytne údaje resolveru (ako sú dotazovaná adresa, typ dotazu).
 Resolver dané údaje vloží do správy, ktorú odošle na DNS server. Komunikácia prebieha štandartne cez protokol UDP. Jeden dotaz zodpovedá jednému UDP datagramu.
 
-\section{Objektový nárvh}
-\label{Objektový návrh}
-
-TODO: popis
-
 \subsection{Formát správy}
 \label{Formát správy}
 
-Správa sa skladá z 5 hlavných častí: hlavičky, otázky, odpovede, autoritatívnej sekcie a dodatočnej sekcie. 
+Správa sa skladá z 5 hlavných častí: hlavičky, otázky, odpovednej sekcie, autoritatívnej sekcie a dodatočnej sekcie. 
 V hlavičke sú uložené údaje o dotaze, ako ID, typ dotazu, príznaky (dodatočné informácie o správe), kód chyby a čítače záznamov pre jednotlivé sekcie.
 Časť otázky sa skladá z dotazovanej adresy rozloženej na časti (tzv. labels), typu dotazu a triedy dotazu (typicky IN pre internet). 
 
@@ -79,20 +74,17 @@ V hlavičke sú uložené údaje o dotaze, ako ID, typ dotazu, príznaky (dodato
     \item RCODE - kód odpovede
 \end{itemize}
 
+Príznaky predstavujú základné informácie o obsahu správy.
 Pri zasielaní dotazu sa nastavujú parametre v hlavičke a otázkovej sekcii. Zvyšné sekcie sú určené pre zaznamenanie odpovede. Hodnoty flagov
 QR, AA, TC, RA, Z, RCODE musia byť pri zaslaní dotazu nulové.
 
+\section{Objektový nárvh}
+\label{Objektový návrh}
 
-\subsection{Formát odpovede}
-
-
-
-\section{Použité technológie}
-Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nástroj GNU Make 3.81. Program je vyvíjaný podľa štandardu c++17.
+TODO: popis
 
 
-% Pro kompilaci po částech (viz projekt.tex) nutno odkomentovat
-%\end{document}
+
 
 
 \addNewChapter{Popis programu}
@@ -106,6 +98,10 @@ Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nás
  */
 
 
+% \section{Použité technológie}
+% Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nástroj GNU Make 3.81. Program je vyvíjaný podľa štandardu c++17. Program je navrhnutý 
+% primárne pre systémy typu UNIX.
+
 \addNewChapter{Testovanie}
 /*
  * testovacie prostredie
@@ -114,4 +110,5 @@ Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nás
                     - dig 
  */
 
+ 
 
