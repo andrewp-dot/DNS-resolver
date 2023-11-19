@@ -611,7 +611,7 @@ void Message::printResponse()
 {
     // header section
     std::cout << "Authoritative: " << convertBoolToString(this->header.aa) << ", ";
-    std::cout << "Recursive: " << convertBoolToString(this->header.rd) << ", ";
+    std::cout << "Recursive: " << convertBoolToString(this->header.rd && this->header.ra) << ", ";
     std::cout << "Truncated: " << convertBoolToString(this->header.tc) << std::endl;
 
     // question section

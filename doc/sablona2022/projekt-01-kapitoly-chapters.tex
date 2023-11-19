@@ -35,10 +35,24 @@ Táto databáza je hierarchicky usporiadaná do stromovej štruktúry (pre rých
 \section{DNS resolver}
 \label{DNS resolver}
 Je to klientský program, ktorý získavá informácie zo systému DNS prostredníctvom dotazovania sa na DNS servery. Tento proces sa nazýva DNS rezolúcia.
-V tejto práci sa budeme zaoberať nárvhom a realizáciou takéhoto typu programu.
+Resolver môže mať viac typov konfigurácii. 
+V tejto práci sa budeme zaoberať nárvhom a implementáciou tzv. stub resolvera.
+
+
+\addNewChapter{Návrh programu}
+
+\section{Stub resolver}
+\label{Stub resolver}
+Stub resolver je typ resolvera, ktorý interaguje s aplikáciou alebo užívateľom a rekurzívnym DNS serverom. Samotný resolver rezolúciu nevykonáva.
+V tomto prípade sa rezolúcia realizuje zaslaním dotazu resolvera na rekurzívny DNS server, ktorý odošle odpoveď na dotaz.
+Prijatú odpoveď resolver spracuje a získané informácie poskytne aplikácii alebo zobrazí užívateľovi.
+
 
 \section{Dotazovanie}
 \label{Dotazovanie}
+
+Dotazovanie na server prebieha zasielaním správ. Užívateľ alebo aplikácia poskytne údaje resolveru (ako sú dotazovaná adresa, typ dotazu).
+Resolver dané údaje vloží do správy, ktorú odošle na DNS server.
 
 \subsection{Formát správy}
 \label{Formát správy}
@@ -49,14 +63,15 @@ V tejto práci sa budeme zaoberať nárvhom a realizáciou takéhoto typu progra
 
 \subsection{Formát odpovede}
 
-\section{IPv6}
+
+\section{Použité technológie}
+Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nástroj GNU Make 3.81. Program je vyvíjaný podľa štandardu c++17.
 
 
 % Pro kompilaci po částech (viz projekt.tex) nutno odkomentovat
 %\end{document}
 
-\addNewChapter{Návrh programu}
-Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nástroj GNU Make 3.81. Program je vyvíjaný podľa štandardu c++17.
+
 
 /*
  * stub resolver
