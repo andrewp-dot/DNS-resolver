@@ -198,6 +198,7 @@
 % Nechcete-li, aby se u oboustranného tisku roztahovaly mezery pro zaplnění stránky, odkomentujte následující řádek / If you do not want enlarged spacing for filling of the pages in case of duplex printing, uncomment the following line
 % \raggedbottom
 
+\newcounter{chapterCounter}
 \begin{document}
   % Vysazeni titulnich stran / Typesetting of the title pages
   % ----------------------------------------------
@@ -260,8 +261,6 @@
   \else
     \input{projekt-01-kapitoly-chapters}
   \fi
-  
-
 
   
   % Kompilace po částech (viz výše, nutno odkomentovat a zakomentovat input výše)
@@ -272,9 +271,10 @@
 
   % Pouzita literatura / Bibliography
   % ----------------------------------------------
+\addtocounter{chapterCounter}{1}
 \ifslovak
   \makeatletter
-  \def\@openbib@code{\addcontentsline{toc}{chapter}{Literatúra}}
+  \def\@openbib@code{\addcontentsline{toc}{chapter}{\protect\numberline{\arabic{chapterCounter}}Literatúra}}
   \makeatother
   \bibliographystyle{bib-styles/Pysny/skplain}
 \else
