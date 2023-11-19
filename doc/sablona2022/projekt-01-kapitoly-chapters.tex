@@ -47,21 +47,44 @@ Stub resolver je typ resolvera, ktorý interaguje s aplikáciou alebo užívate�
 V tomto prípade sa rezolúcia realizuje zaslaním dotazu resolvera na rekurzívny DNS server, ktorý odošle odpoveď na dotaz.
 Prijatú odpoveď resolver spracuje a získané informácie poskytne aplikácii alebo zobrazí užívateľovi.
 
-
 \section{Dotazovanie}
 \label{Dotazovanie}
 
 Dotazovanie na server prebieha zasielaním správ. Užívateľ alebo aplikácia poskytne údaje resolveru (ako sú dotazovaná adresa, typ dotazu).
-Resolver dané údaje vloží do správy, ktorú odošle na DNS server.
+Resolver dané údaje vloží do správy, ktorú odošle na DNS server. Komunikácia prebieha štandartne cez protokol UDP. Jeden dotaz zodpovedá jednému UDP datagramu.
+
+\section{Objektový nárvh}
+\label{Objektový návrh}
+
+TODO: popis
 
 \subsection{Formát správy}
 \label{Formát správy}
 
-% \subsection{QCLASS}
+Správa sa skladá z 5 hlavných častí: hlavičky, otázky, odpovede, autoritatívnej sekcie a dodatočnej sekcie. 
+V hlavičke sú uložené údaje o dotaze, ako ID, typ dotazu, príznaky (dodatočné informácie o správe), kód chyby a čítače záznamov pre jednotlivé sekcie.
+Časť otázky sa skladá z dotazovanej adresy rozloženej na časti (tzv. labels), typu dotazu a triedy dotazu (typicky IN pre internet). 
 
+\newpage
+
+\subsubsection{Príznaky}
+\begin{itemize}
+    \item QR - tento príznak odlišuje dotaz (0) a odpoveď (1)
+    \item OPCODE - typ dotazu
+    \item AA - ak je nastavený na hodnotu 1, tak odpoveď je autoritatívna (dotazovaný server je autorita pre dotazovanú doménu)
+    \item TC - ak je nastavený na hodnotu 1, tak odpoveď je skrátená
+    \item RD - ak je nastavený na hodnotu 1, tak je požadovaná rekurzívna rezolúcia
+    \item RA - určuje, či je rekurzívna rezolúcia implementovaná v odpovedi
+    \item Z - príznak rezervovaný pre budúce použitie (musí byť nulový)
+    \item RCODE - kód odpovede
+\end{itemize}
+
+Pri zasielaní dotazu sa nastavujú parametre v hlavičke a otázkovej sekcii. Zvyšné sekcie sú určené pre zaznamenanie odpovede. Hodnoty flagov
+QR, AA, TC, RA, Z, RCODE musia byť pri zaslaní dotazu nulové.
 
 
 \subsection{Formát odpovede}
+
 
 
 \section{Použité technológie}
@@ -72,22 +95,14 @@ Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nás
 %\end{document}
 
 
-
+\addNewChapter{Popis programu}
 /*
- * stub resolver
- * objektový nárvh / diagram
+ * chovanie programu v prípade nedostania
+ * kompatibilita
+ * popis Častí kódu 
  * spustenie
  * výstup   - standard
             - chybové stavy
- */
-
-
-
-\addNewChapter{Popis programu}
-/*
- * kompatibilita
- * popis Častí kódu 
- * odosielanie, prijatie 
  */
 
 
