@@ -85,8 +85,8 @@ void InputParser::setOptions(Query &query)
             if (strlen(argv[i]) != FLAG_LENGTH)
             {
                 std::cerr << "Unknown flag: " << argv[i] << std::endl;
-                // query.setIsOk(false);
-                continue;
+                Error::printError(WRONG_ARGUMENTS, USAGE);
+                return;
             }
             switch (argv[i][1])
             {
@@ -142,6 +142,7 @@ void InputParser::setOptions(Query &query)
 
             default:
                 Error::printError(WRONG_ARGUMENTS, "Undefined option: %s\n", argv[i]);
+                Error::printError(WRONG_ARGUMENTS, USAGE);
                 return;
             }
         }

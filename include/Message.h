@@ -147,7 +147,7 @@ private:
      * @param buffer
      * @param question
      */
-    void a(char *buffer, DNSQuestion &question);
+    void convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question);
 
     /**
      * @brief Get the Response Header object

@@ -10,6 +10,17 @@
 \contentsline {subsubsection}{Príznaky}{4}{section*.2}%
 \contentsline {section}{\numberline {2.3}Objektový nárvh}{5}{section.2.3}%
 \contentsline {chapter}{\numberline {3}Popis programu}{6}{chapter.3}%
-\contentsline {chapter}{\numberline {4}Testovanie}{7}{chapter.4}%
-\contentsline {chapter}{\numberline {5}Literatúra}{8}{chapter*.3}%
+\contentsline {section}{\numberline {3.1}Vstup}{6}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Príklad spustenia}{6}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Výstup}{6}{subsection.3.2.1}%
+\contentsline {section}{\numberline {3.3}Zaujímavé časti kódu}{6}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Vytváranie spojenia}{6}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}}{6}{subsection.3.3.2}%
+\contentsline {section}{\numberline {3.4}Kompatibilita}{6}{section.3.4}%
+\contentsline {section}{\numberline {3.5}Požité technológie}{7}{section.3.5}%
+\contentsline {chapter}{\numberline {4}Testovanie}{8}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Spôsoby testovania}{8}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Použité nástroje}{8}{section.4.2}%
+\contentsline {section}{\numberline {4.3}Testovacie prostredie}{8}{section.4.3}%
+\contentsline {chapter}{\numberline {5}Literatúra}{9}{chapter*.3}%
 \contentsfinish 

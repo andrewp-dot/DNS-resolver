@@ -34,7 +34,7 @@ Popis:
 - -x nastaví príznak pre reverzný dotaz (program očakáva dotazovanú adresu vo formáte IPv4)
 - -6 nastaví príznak pre dotazovanie sa na adresy IPv6 (v kombinácii s prepínačom -x program očakáva dotazovanú adresu vo formáte IPv6)
 - -s povinný prepínač; za ním nasleduje adresa serveru
-- -p nepovinný prepínač; za ním nasleduje adresa portu serveru, na ktorý sa bude posielať dotaz (v prípade nezadaného portu alebo zadania portu v zlom formáte bude štandartne použitý port 53)
+- -p nepovinný prepínač; za ním nasleduje port serveru, na ktorý sa bude posielať dotaz (v prípade nezadaného portu alebo zadania portu v zlom formáte bude štandartne použitý port 53)
 - address je adresa požadovaného servera
 
 *Poznámka 1:* <br>

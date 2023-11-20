@@ -96,8 +96,51 @@ formátom, ktorý sa odosiela po sieti a formátom, ktorý spracováva aplikáci
 
 
 \addNewChapter{Popis programu}
+
+\section{Vstup}
+\label{Vstup}
+
+Program príjma vstupy z príkazovej riadky pri spustení. 
+\begin{verbatim}
+    ./dns [-r] [-x] [-6] -s server [-p port] address
+\end{verbatim}
+    
+Popis prepínačov:
+\begin{itemize}
+    \item -r nastaví príznak pre rekurzívny dotaz
+    \item -x nastaví príznak pre reverzný dotaz 
+    \item -6 nastaví príznak pre dotazovanie sa na adresy IPv6 
+    \item -s povinný prepínač; za ním nasleduje adresa serveru
+    \item server je adresa serveru, na ktorý budeme posielať dotaz
+    \item -p nepovinný prepínač; nastaví číslo portu
+    \item address je adresa, na ktorú sa budeme dotazovať
+\end{itemize} 
+
+\section{Príklad spustenia}
+\label{Príklad spustenia}
+
+\subsection{Výstup}
+\label{Výstup}
+
+\section{Zaujímavé časti kódu}
+\label{Zaujímavé časti kódu}
+
+\subsection{Vytváranie spojenia}
+\label{Vytváranie spojenia}
+(UDP, kopy pasta kod, timeout)
+
+
+
+\subsection{}
+\label
+viz readme
+
+
+
+\section{Kompatibilita}
+\label{Kompatibilita}
 /*
- * chovanie programu v prípade nedostania
+ * chovanie programu v prípade nedostania odpovede
  * kompatibilita
  * popis Častí kódu 
  * spustenie
@@ -105,12 +148,25 @@ formátom, ktorý sa odosiela po sieti a formátom, ktorý spracováva aplikáci
             - chybové stavy
  */
 
+\section{Požité technológie}
+\label{Použité technológie}
+
 
 % \section{Použité technológie}
 % Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nástroj GNU Make 3.81. Program je vyvíjaný podľa štandardu c++17. Program je navrhnutý 
 % primárne pre systémy typu UNIX.
 
 \addNewChapter{Testovanie}
+
+\section{Spôsoby testovania}
+\label{Spôsoby testovania}
+
+\section{Použité nástroje}
+\label{Použité nástroje}
+
+\section{Testovacie prostredie}
+\label{Testovacaie prostrede}
+
 /*
  * testovacie prostredie
  * spôsoby testovania
