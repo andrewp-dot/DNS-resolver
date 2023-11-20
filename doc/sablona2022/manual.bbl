@@ -2,6 +2,12 @@
 \makeatother
 \begin{thebibliography}{1}
 
+\bibitem{timeout}
+{\em Linux: is there a read or recv from socket with timeout?}
+\newblock 2021.
+\newblock {\small [Online; zmenené 1. január 2021 ]}.
+\newblock Dostupn{\'{e}} z: ~{\small\url{https://stackoverflow.com/questions/2876024/linux-is-there-a-read-or-recv-from-socket-with-timeout}}.
+
 \bibitem{Smerovanie}
 {\em Smerovanie}.
 \newblock 2023.

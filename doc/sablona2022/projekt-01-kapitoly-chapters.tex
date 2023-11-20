@@ -300,6 +300,7 @@ Po získaní adresy môžeme prejsť k zahájeniu sponia. Samotné spojenie je r
 \subsubsection{Príjmanie odpovede}
 
 \begin{verbatim}
+    char recvBuffer[UDP_DATAGRAM_LIMIT] = {0};
     int bytesRx = recv(this->sockfd, (char *)recvBuffer, 
     UDP_DATAGRAM_LIMIT, 0);
     if (bytesRx < 0)
@@ -309,29 +310,23 @@ Po získaní adresy môžeme prejsť k zahájeniu sponia. Samotné spojenie je r
     }
 \end{verbatim}
 
-Príprava spojenia je vytvorená pomocou zdroja \cite{UDPSockets}
+Zdroj: \cite{UDPSockets}
 
 \subsubsection{Timeout}
+Pre prípad, že server nepošle odppoveď, alebo služba na danom serveri nebeží, je v tomto resolveri implementovaný timeout.\cite{timeout}
 
+\begin{verbatim}
+    struct timeval timeout;
+    timeout.tv_sec = 2;
+    timeout.tv_usec = 0;
+    setsockopt(this->sockfd, SOL_SOCKET, SO_RCVTIMEO, 
+    (const char *)&timeout, sizeof(timeout));
+\end{verbatim}
 
 \section{Kompatibilita}
 \label{Kompatibilita}
-/*
- * chovanie programu v prípade nedostania odpovede
- * kompatibilita
- * popis Častí kódu 
- * spustenie
- * výstup   - standard
-            - chybové stavy
- */
-
-\section{Požité technológie}
-\label{Použité technológie}
-
-
-% \section{Použité technológie}
-% Pre realizáciu programu bol použitý jazyk C++. Pre preklad bol použitý nástroj GNU Make 3.81. Program je vyvíjaný podľa štandardu c++17. Program je navrhnutý 
-% primárne pre systémy typu UNIX.
+Program bol vyvíjaný pomocou jazyka C++. Pre preklad bol použitý nástroj GNU Make 3.81. Preklad bol prekladaný pomocou štandardu c++17.
+Program Kompatibilný s operačnými systémami typu UNIX. 
 
 \addNewChapter{Testovanie}
 
