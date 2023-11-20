@@ -203,7 +203,7 @@ Authoritative: No, Recursive: No, Truncated: No
 \subsection{Vytváranie spojenia}
 \label{Vytváranie spojenia}
 Pre vytovernie spojenia je treba získať najprv adresu zo serveru. Získavanie adresy serveru je realizovná prostredníctvom vstavanej funkcie 
-\textbf{gethostbyname()}.
+\verb|gethostbyname()|.
 
 
 \subsubsection{Použitie funckie gethostbyname():}
@@ -332,19 +332,20 @@ Program Kompatibilný s operačnými systémami typu UNIX.
 
 \section{Spôsoby testovania}
 \label{Spôsoby testovania}
+Program bol testovaný dvomi spôsobmi: neformálnym testovaním programátorom a formálnym testovaním pomocou automatizovaných testov.
+Neformálne boli testované hlavne nevalidné vstupy a formát výstupu. 
+Pomocou automatických testov boli testované prípady a hodnoty výstupov. Spustenie automatických testov sa realizuje pomocou priloženého Makefile súboru príkazom \verb|make test|.
 
 \section{Použité nástroje}
 \label{Použité nástroje}
+Ako nástroje na automatické testy boli použité python3 verzia Python 3.10.0. Testovanie bolo vykonávané na princípe 
+porovnávania výstupov s programom DiG verzie 9.10.6.
 
 \section{Testovacie prostredie}
 \label{Testovacaie prostrede}
+Program bol vyvíjanú v prostredí macos Ventura 13.6 s ARM procesorom. Testovanie prebiehalo lokálne, ale aj 
+na serveri merlin (\url{https://merlin.fit.vutbr.cz/}) a na serveri eva (\url{https://eva.fit.vutbr.cz/}).
 
-/*
- * testovacie prostredie
- * spôsoby testovania
- * použité nástroje - python3
-                    - dig 
- */
 
 
 
