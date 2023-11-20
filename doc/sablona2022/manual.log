@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  20 NOV 2023 08:55
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  20 NOV 2023 10:26
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -634,12 +634,18 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 67
  (/usr/local/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [4{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
+<./template-fig/DNS_resolver.jpg, id=126, 1156.32pt x 884.30376pt>
+File: ./template-fig/DNS_resolver.jpg Graphic file (type jpg)
+<use ./template-fig/DNS_resolver.jpg>
+Package pdftex.def Info: ./template-fig/DNS_resolver.jpg  used on input line 86.
+(pdftex.def)             Requested size: 432.4818pt x 330.73602pt.
+ [5 <./template-fig/DNS_resolver.jpg>]
 Kapitola 3.
-[5
+[6
 
 ]
 Kapitola 4.
-) (./manual.bbl [6
+) (./manual.bbl [7
 
 ]
 LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 9.
@@ -650,25 +656,25 @@ File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 \tf@ptc=\write5
 \openout5 = `manual.ptc'.
 
- [7
+ [8
 
 ] (./manual.aux)
 Package rerunfilecheck Info: File `manual.out' has not changed.
 (rerunfilecheck)             Checksum: EDEB26CC35127B817280EA64CA352FCE;1405.
  ) 
 Here is how much of TeX's memory you used:
- 16096 strings out of 476025
- 257576 string characters out of 5790017
+ 16109 strings out of 476025
+ 257869 string characters out of 5790017
  1857388 words of memory out of 5000000
- 36138 multiletter control sequences out of 15000+600000
+ 36146 multiletter control sequences out of 15000+600000
  579989 words of font info for 91 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,5n,77p,472b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,77p,472b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Bold.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on manual.pdf (8 pages, 453121 bytes).
+Output written on manual.pdf (9 pages, 534923 bytes).
 PDF statistics:
- 188 PDF objects out of 1000 (max. 8388607)
- 145 compressed objects within 2 object streams
- 25 named destinations out of 1000 (max. 500000)
- 128 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 194 PDF objects out of 1000 (max. 8388607)
+ 149 compressed objects within 2 object streams
+ 27 named destinations out of 1000 (max. 500000)
+ 133 words of extra memory for PDF output out of 10000 (max. 10000000)
 
