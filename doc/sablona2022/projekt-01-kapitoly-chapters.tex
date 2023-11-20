@@ -197,16 +197,121 @@ Authoritative: No, Recursive: No, Truncated: No
       a.ns.nic.cz., AAAA, IN, 172800, 2001:678:f:0:0:0:0:1
 \end{verbatim}
 
-
 \section{Zaujímavé časti kódu}
 \label{Zaujímavé časti kódu}
 
 \subsection{Vytváranie spojenia}
 \label{Vytváranie spojenia}
-(UDP, kopy pasta kod, timeout)
+Pre vytovernie spojenia je treba získať najprv adresu zo serveru. Získavanie adresy serveru je realizovná prostredníctvom vstavanej funkcie 
+\textbf{gethostbyname()}.
 
 
+\subsubsection{Použitie funckie gethostbyname():}
+\begin{verbatim}
+// check if host was found
+hostInfo = gethostbyname(server);
+if (hostInfo == NULL)
+{
+    Error::printError(CONNECTION_FAILED, "Host IP address not found.\n");
+    return false;
+}
 
+// get ip address
+struct in_addr **addressList = (struct in_addr **)hostInfo->h_addr_list;
+if (addressList == NULL)
+{
+    Error::printError(CONNECTION_FAILED, "Host IP address not found.\n");
+    return false;
+}
+\end{verbatim}
+
+\newpage
+\noindent Získanie adresy z vráteného listu adries:
+\begin{verbatim}
+for (size_t i = 0; addressList[i] != NULL; i++)
+{
+    char *ipAddr = inet_ntoa(*addressList[i]);
+    if (inet_pton(AF_INET, ipAddr, &dst->s_addr) < 1)
+    {
+        // if there is no more ip address in list, get error
+        if (addressList[i + 1] == NULL)
+        {
+            Error::printError(CONNECTION_FAILED, "Host IP address 
+            not found.\n");
+            return false;
+        }
+    }
+    // found
+    else
+    {
+        break;
+    }
+}
+\end{verbatim}
+
+\noindent Obe časti kódu su prevzaté zo stránky GeeksForGeeks \cite{gethostbyname}.
+
+Po získaní adresy môžeme prejsť k zahájeniu sponia. Samotné spojenie je realizované pomocou UDP schránok:
+
+\subsubsection{Príprava spojenia}
+\begin{verbatim}
+    this->sockfd = socket(AF_INET, SOCK_DGRAM, 0);
+    if (sockfd < 0)
+    {
+        Error::printError(CONNECTION_FAILED, "socket() failed\n");
+        return false;
+    }
+
+    // setup server address
+    memset(&this->server, 0, sizeof(sockaddr_in));
+
+    struct in_addr serverAddr;
+    if (!getHostIPaddress(query.getServer().c_str(), &serverAddr))
+    {
+        return false;
+    }
+
+    this->server.sin_addr = serverAddr;
+    this->server.sin_port = htons(query.getPort());
+    this->server.sin_family = AF_INET;
+\end{verbatim}
+
+\subsubsection{Odoslanie query}
+\begin{verbatim}
+    if (connect(this->sockfd, (struct sockaddr *)(&this->server), 
+    sizeof(this->server)) < 0)
+    {
+        Error::printError(CONNECTION_FAILED, "connect() failed\n");
+        return;
+    }
+    
+    ...
+
+    int bytesTx = send(this->sockfd, (const char *)buffer, 
+    bufferLength, 0);
+    if (bytesTx < 0)
+    {
+        Error::printError(CONNECTION_FAILED, "send() failed\n");
+        return;
+    }
+\end{verbatim}
+
+
+\subsubsection{Príjmanie odpovede}
+
+\begin{verbatim}
+    int bytesRx = recv(this->sockfd, (char *)recvBuffer, 
+    UDP_DATAGRAM_LIMIT, 0);
+    if (bytesRx < 0)
+    {
+        Error::printError(CONNECTION_FAILED, "recv() failed\n");
+        return;
+    }
+\end{verbatim}
+
+Príprava spojenia je vytvorená pomocou zdroja \cite{UDPSockets}
+
+\subsubsection{Timeout}
 
 
 \section{Kompatibilita}

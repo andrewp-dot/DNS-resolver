@@ -14,45 +14,45 @@ Warning--to sort, need author or key in Smerovanie
 Warning--empty edition in Matoušek
 Warning--"{" isn't a brace-balanced string for entry rfc1035
 while executing--line 3241 of file bib-styles/Pysny/skplain.bst
-You've used 3 entries,
+You've used 5 entries,
             3945 wiz_defined-function locations,
-            845 strings with 5797 characters,
-and the built_in function-call counts, 1138 in all, are:
-= -- 84
-> -- 20
-< -- 5
-+ -- 7
-- -- 4
-* -- 61
-:= -- 138
-add.period$ -- 13
-call.type$ -- 3
-change.case$ -- 16
+            854 strings with 6152 characters,
+and the built_in function-call counts, 1884 in all, are:
+= -- 138
+> -- 38
+< -- 7
++ -- 13
+- -- 8
+* -- 90
+:= -- 222
+add.period$ -- 20
+call.type$ -- 5
+change.case$ -- 27
 chr.to.int$ -- 2
-cite$ -- 5
-duplicate$ -- 82
-empty$ -- 170
-format.name$ -- 4
-if$ -- 282
+cite$ -- 7
+duplicate$ -- 139
+empty$ -- 284
+format.name$ -- 8
+if$ -- 470
 int.to.chr$ -- 0
-int.to.str$ -- 3
+int.to.str$ -- 5
 missing$ -- 0
-newline$ -- 26
-num.names$ -- 4
-pop$ -- 45
+newline$ -- 39
+num.names$ -- 8
+pop$ -- 82
 preamble$ -- 1
-purify$ -- 8
+purify$ -- 14
 quote$ -- 0
-skip$ -- 48
+skip$ -- 84
 stack$ -- 0
-substring$ -- 30
-swap$ -- 12
-text.length$ -- 4
+substring$ -- 52
+swap$ -- 20
+text.length$ -- 6
 text.prefix$ -- 0
 top$ -- 0
-type$ -- 6
+type$ -- 10
 warning$ -- 2
-while$ -- 5
-width$ -- 4
-write$ -- 44
+while$ -- 9
+width$ -- 6
+write$ -- 68
 (There were 3 warnings)

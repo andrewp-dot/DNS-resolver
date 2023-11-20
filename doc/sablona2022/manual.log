@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  20 NOV 2023 12:08
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  20 NOV 2023 13:43
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -646,34 +646,34 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 10
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [6
 
-] [7] [8]
+] [7] [8] [9] [10]
 Kapitola 4.
-) (./manual.bbl [9
+) (./manual.bbl [11
 
 ])
 \c@ttl@toc@chapters=\count348
 \tf@ptc=\write5
 \openout5 = `manual.ptc'.
 
- [10
+ [12
 
 ] (./manual.aux)
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: B79EF8681DC6A00C024D62A9A0B2A13B;2793.
+(rerunfilecheck)             Checksum: 47AB6A192DF7CF514B0E674F858C087E;2793.
  ) 
 Here is how much of TeX's memory you used:
- 16143 strings out of 476025
- 258376 string characters out of 5790017
- 1860388 words of memory out of 5000000
- 36167 multiletter control sequences out of 15000+600000
- 580308 words of font info for 92 fonts, out of 8000000 for 9000
+ 16159 strings out of 476025
+ 258566 string characters out of 5790017
+ 1861388 words of memory out of 5000000
+ 36171 multiletter control sequences out of 15000+600000
+ 580950 words of font info for 94 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  75i,6n,77p,472b,616s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Bold.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on manual.pdf (11 pages, 546410 bytes).
+Output written on manual.pdf (13 pages, 557460 bytes).
 PDF statistics:
- 257 PDF objects out of 1000 (max. 8388607)
- 209 compressed objects within 3 object streams
- 39 named destinations out of 1000 (max. 500000)
+ 279 PDF objects out of 1000 (max. 8388607)
+ 229 compressed objects within 3 object streams
+ 48 named destinations out of 1000 (max. 500000)
  213 words of extra memory for PDF output out of 10000 (max. 10000000)
 

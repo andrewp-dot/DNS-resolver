@@ -8,6 +8,12 @@
 \newblock {\small [Online; zmenené 19. január 2023]}.
 \newblock Dostupn{\'{e}} z: ~{\small\url{https://sk.wikipedia.org/wiki/Smerovanie}}.
 
+\bibitem{UDPSockets}
+{\sc\bgroup}Matou\v{s}ek{\egroup}, P.
+\newblock {\em Pokro\v{c}il\'{e} programov\'{a}n\'{i} s\'{i}\v{t}ovych aplikac\'{i} TCP/IP}.
+\newblock 2014.
+\newblock Dostupn{\'{e}} z: ~{\small\url{https://moodle.vut.cz/pluginfile.php/707796/mod_resource/content/4/isa-sockets.pdf}}.
+
 \bibitem{Matoušek}
 {\sc\bgroup}Matou\v{s}ek{\egroup}, P.
 \newblock {\em S\'{i}\v{t}ov\'{e} slu\v{z}by a jejich architektura}.
@@ -22,5 +28,12 @@
 \newblock RFC Editor, november 1987.
 \newblock DOI: 10.17487/RFC1035.
 \newblock Dostupn{\'{e}} z: ~{\small\url{https://www.rfc-editor.org/info/rfc1035}}.
+
+\bibitem{gethostbyname}
+{\sc\bgroup}Semwal{\egroup}, S.~D.
+\newblock {\em C Program to display hostname and IP address}.
+\newblock 2023.
+\newblock {\small [Online; zmenené 18 apríl 2023]}.
+\newblock Dostupn{\'{e}} z: ~{\small\url{https://www.geeksforgeeks.org/c-program-display-hostname-ip-address/}}.
 
 \end{thebibliography}
