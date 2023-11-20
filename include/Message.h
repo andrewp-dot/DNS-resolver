@@ -147,7 +147,7 @@ private:
      * @param buffer
      * @param question
      */
-    void convertSingleQuestionToBuffer(char *buffer, DNSQuestion &question);
+    void a(char *buffer, DNSQuestion &question);
 
     /**
      * @brief Get the Response Header object
@@ -178,6 +178,13 @@ private:
      */
     std::vector<uint8_t> getAddressFromResponse(char *buffer, uint16_t len, size_t *offset, uint16_t type);
 
+    /**
+     * @brief Get the soa type record from resoponse
+     *
+     * @param buffer
+     * @param offset
+     * @return std::vector<uint8_t>
+     */
     std::vector<uint8_t> getSoaFromResponse(char *buffer, size_t *offset);
 
     /**
@@ -187,8 +194,7 @@ private:
      * @param buffer
      * @param offset
      */
-    std::vector<uint8_t>
-    getNameFromResponse(char *buffer, size_t *offset);
+    std::vector<uint8_t> getNameFromResponse(char *buffer, size_t *offset);
 
     /**
      * @brief Get the Response object
