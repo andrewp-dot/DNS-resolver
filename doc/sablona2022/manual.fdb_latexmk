@@ -1,13 +1,13 @@
 # Fdb version 4
-["bibtex manual"] 1700476177 "manual.aux" "manual.bbl" "manual" 1700476179 0
+["bibtex manual"] 1700478193 "manual.aux" "manual.bbl" "manual" 1700478194 0
   "./bib-styles/Pysny/skplain.bst" 1676017595 72315 b7f150f514ec7858f0fa80c0cb118a9b ""
   "./projekt-20-literatura-bibliography.bib" 1700422407 2455 6b2f4a442cd56e9fc5a8cd7344cee338 ""
-  "manual.aux" 1700476178 5613 3f6ab8f0b2f6d32c29428f8ebdf9439a "pdflatex"
+  "manual.aux" 1700478193 5439 257c00a8790debfdec4d0a305d74c005 "pdflatex"
   (generated)
   "manual.bbl"
   "manual.blg"
   (rewritten before read)
-["pdflatex"] 1700476178 "/Users/andrew/Andrew/School/3BIT/sem1/ISA/project/doc/sablona2022/manual.tex" "manual.pdf" "manual" 1700476179 0
+["pdflatex"] 1700478193 "/Users/andrew/Andrew/School/3BIT/sem1/ISA/project/doc/sablona2022/manual.tex" "manual.pdf" "manual" 1700478194 0
   "/Users/andrew/Andrew/School/3BIT/sem1/ISA/project/doc/sablona2022/manual.tex" 1700391286 18566 53167e15838eb90028add45e025c3951 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ec.enc" 1254269338 2375 baa924870cfb487815765f9094cf3728 ""
   "/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc" 1254269338 3031 6c4d3515bf7115d8518af1c9ab97ca44 ""
@@ -167,12 +167,12 @@
   "/usr/local/texlive/2023/texmf-var/web2c/pdftex/pdflatex.fmt" 1693069905 7883452 67fb7f31a9ca4ef29487ea052f83b248 ""
   "/usr/local/texlive/2023/texmf.cnf" 1678822455 577 1b2b1af17af2508fb20dd85783af4050 ""
   "fitthesis.cls" 1700346909 45308 b7c5c02fec9dca5e3c469673f9f0e9e0 ""
-  "manual.aux" 1700476178 5613 3f6ab8f0b2f6d32c29428f8ebdf9439a "pdflatex"
-  "manual.bbl" 1700476178 909 d724568e8742783988e9ff652cd5aa06 "bibtex manual"
-  "manual.out" 1700476178 2854 6dbe2138e9622a4eb0f27e2cec734f56 "pdflatex"
+  "manual.aux" 1700478193 5439 257c00a8790debfdec4d0a305d74c005 "pdflatex"
+  "manual.bbl" 1700478193 909 d724568e8742783988e9ff652cd5aa06 "bibtex manual"
+  "manual.out" 1700478193 2793 b79ef8681dc6a00c024d62a9a0b2a13b "pdflatex"
   "manual.tex" 1700391286 18566 53167e15838eb90028add45e025c3951 ""
-  "manual.toc" 1700476178 1829 d3330523f82e3d42cf2fed0d64675b96 "pdflatex"
-  "projekt-01-kapitoly-chapters.tex" 1700476176 7564 44564f2c38ac7f713b57f14107bd2e12 ""
+  "manual.toc" 1700478193 1750 fab64a1af366d1356be6b3b016de8880 "pdflatex"
+  "projekt-01-kapitoly-chapters.tex" 1700478191 10130 959f5a5382c9a806e23902674ffe3437 ""
   "template-fig/DNS_resolver.jpg" 1700469113 80740 ace4a8daccf6ed6abde41158704b1a3a ""
   "template-fig/VUT_symbol_barevne_CMYK_CZ.pdf" 1668438768 309809 cf559eee790357af64f350838d9706c8 ""
   (generated)

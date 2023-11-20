@@ -116,11 +116,87 @@ Popis prepínačov:
     \item address je adresa, na ktorú sa budeme dotazovať
 \end{itemize} 
 
+V prípade použitia nedefinovaného prepínača program vypíše chybové hlásenie a program skončí. 
+V prípade viacerých zadaných prepínačov -s program použije poslednú zadanú adresu serveru. To isté platí pre zadávanie adries.
+Ak je pri zadávaní portu zadaný port v neplatnom formáte, program použije štandartný port pre DNS (port číslo 53).
+
+\section{Výstup}
+\label{Výstup}
+Výstup z programu je vo formáte
+\begin{verbatim}
+Authoritative: No, Recursive: Yes, Truncated: No
+Question section (1)
+  www.fit.vut.cz., A, IN
+Answer section (1)
+  www.fit.vut.cz., A, IN, 14400, 147.229.9.26
+Authority section (0)
+Additional section (0)
+\end{verbatim}
+
+Kde \textsc{Authoritative: No} značí, že dotazovaný server nie je autorita pre danú doménu, \textsc{Recursive: Yes} značí, či bol odpoveď nájdená rekurzívne,
+a \textsc{Truncated: No} značí, že odpoveď nebola skrátená. V prípade skrátenej odpovede vypíše program na výstup túto informáciu sekciu otázky. Zvyšné sekcie program nevypíše.
+
+\noindent Štandartný formát odpovede: <dotazovaná doména>, <typ záznamu>, <trieda dotazu>, <ttl>, <dáta odpovede>. 
+
+Návratové hodnoty:
+\begin{itemize}
+    \item 0 : úspech
+    \item 1 - 5 : kód chyby získanej od serveru
+    \item 6 : zlyhanie spojenia
+    \item 7 : zlé vstupné parametre
+    \item 99 : interná chyba programu
+\end{itemize}
+
+
 \section{Príklad spustenia}
 \label{Príklad spustenia}
 
-\subsection{Výstup}
-\label{Výstup}
+Príklad rekurzívneho spustenia:
+
+\begin{verbatim}
+    ./dns -r -s dns.google.com www.fit.vut.cz  
+\end{verbatim}
+
+\noindent Výstup:
+
+\begin{verbatim}
+Authoritative: No, Recursive: Yes, Truncated: No
+Question section (1)
+  www.fit.vut.cz., A, IN
+Answer section (1)
+  www.fit.vut.cz., A, IN, 12283, 147.229.9.26
+Authority section (0)
+Additional section (0)
+\end{verbatim}
+
+Príklad nerekurzívneho spustenia
+
+\begin{verbatim}
+    ./dns -s kazi.fit.vutbr.cz www.vut.fit.cz
+\end{verbatim}
+
+\noindent Výstup:
+\begin{verbatim}
+    Authoritative: No, Recursive: No, Truncated: No
+Question section (1)
+  www.vut.fit.cz., A, IN
+Answer section (0)
+Authority section (4)
+  cz., NS, IN, 172800, b.ns.nic.cz.
+  cz., NS, IN, 172800, c.ns.nic.cz.
+  cz., NS, IN, 172800, d.ns.nic.cz.
+  cz., NS, IN, 172800, a.ns.nic.cz.
+Additional section (8)
+  d.ns.nic.cz., A, IN, 172800, 193.29.206.1
+  c.ns.nic.cz., A, IN, 172800, 194..14.1
+  b.ns.nic.cz., A, IN, 172800, 194..13.1
+  a.ns.nic.cz., A, IN, 172800, 194..12.1
+  d.ns.nic.cz., AAAA, IN, 172800, 2001:678:1:0:0:0:0:1
+  c.ns.nic.cz., AAAA, IN, 172800, 2001:678:11:0:0:0:0:1
+  b.ns.nic.cz., AAAA, IN, 172800, 2001:678:10:0:0:0:0:1
+  a.ns.nic.cz., AAAA, IN, 172800, 2001:678:f:0:0:0:0:1
+\end{verbatim}
+
 
 \section{Zaujímavé časti kódu}
 \label{Zaujímavé časti kódu}
@@ -130,10 +206,6 @@ Popis prepínačov:
 (UDP, kopy pasta kod, timeout)
 
 
-
-\subsection{}
-\label
-viz readme
 
 
 

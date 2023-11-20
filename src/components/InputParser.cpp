@@ -96,11 +96,9 @@ void InputParser::setOptions(Query &query)
             case 'x':
                 // maybe reversed is useless af
                 query.setReversed(true);
-                // query.setType(PTR);
                 break;
             case '6':
                 query.setIPv6(true);
-                // query.setType(AAAA);
                 break;
             case 's':
                 i += 1;

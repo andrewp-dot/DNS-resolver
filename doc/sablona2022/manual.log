@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  20 NOV 2023 11:29
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.8.26)  20 NOV 2023 12:03
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -574,7 +574,7 @@ File: t1qhv.fd 2009/09/25 v1.2 font definition file for T1/qhv
 \@sirkartext=\skip85
 \@vyskaobr=\skip86
 \@sirkaobr=\skip87
-<template-fig/VUT_symbol_barevne_CMYK_CZ.pdf, id=97, 167.13641pt x 165.87971pt>
+<template-fig/VUT_symbol_barevne_CMYK_CZ.pdf, id=93, 167.13641pt x 165.87971pt>
 File: template-fig/VUT_symbol_barevne_CMYK_CZ.pdf Graphic file (type pdf)
 <use template-fig/VUT_symbol_barevne_CMYK_CZ.pdf>
 Package pdftex.def Info: template-fig/VUT_symbol_barevne_CMYK_CZ.pdf  used on input line 209.
@@ -634,7 +634,7 @@ LaTeX Font Info:    Trying to load font information for TS1+lmr on input line 67
  (/usr/local/texlive/2023/texmf-dist/tex/latex/lm/ts1lmr.fd
 File: ts1lmr.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [4{/usr/local/texlive/2023/texmf-dist/fonts/enc/dvips/lm/lm-ts1.enc}]
-<./template-fig/DNS_resolver.jpg, id=182, 1156.32pt x 884.30376pt>
+<./template-fig/DNS_resolver.jpg, id=177, 1156.32pt x 884.30376pt>
 File: ./template-fig/DNS_resolver.jpg Graphic file (type jpg)
 <use ./template-fig/DNS_resolver.jpg>
 Package pdftex.def Info: ./template-fig/DNS_resolver.jpg  used on input line 86.
@@ -646,34 +646,34 @@ LaTeX Font Info:    Trying to load font information for T1+lmtt on input line 10
 File: t1lmtt.fd 2015/05/01 v1.6.1 Font defs for Latin Modern
 ) [6
 
-] [7]
+] [7] [8]
 Kapitola 4.
-) (./manual.bbl [8
+) (./manual.bbl [9
 
 ])
 \c@ttl@toc@chapters=\count348
 \tf@ptc=\write5
 \openout5 = `manual.ptc'.
 
- [9
+ [10
 
 ] (./manual.aux)
 Package rerunfilecheck Info: File `manual.out' has not changed.
-(rerunfilecheck)             Checksum: 6DBE2138E9622A4EB0F27E2CEC734F56;2854.
+(rerunfilecheck)             Checksum: B79EF8681DC6A00C024D62A9A0B2A13B;2793.
  ) 
 Here is how much of TeX's memory you used:
- 16145 strings out of 476025
- 258416 string characters out of 5790017
+ 16143 strings out of 476025
+ 258376 string characters out of 5790017
  1859388 words of memory out of 5000000
- 36169 multiletter control sequences out of 15000+600000
+ 36167 multiletter control sequences out of 15000+600000
  580308 words of font info for 92 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
- 75i,6n,77p,472b,564s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 75i,6n,77p,472b,616s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/local/texlive/2023/texmf-dist/fonts/type1/ascender/opensans/OpenSans-Bold.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmbx12.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmcsc10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmr10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmri10.pfb></usr/local/texlive/2023/texmf-dist/fonts/type1/public/lm/lmtt10.pfb>
-Output written on manual.pdf (10 pages, 539653 bytes).
+Output written on manual.pdf (11 pages, 546416 bytes).
 PDF statistics:
- 258 PDF objects out of 1000 (max. 8388607)
- 211 compressed objects within 3 object streams
+ 257 PDF objects out of 1000 (max. 8388607)
+ 209 compressed objects within 3 object streams
  39 named destinations out of 1000 (max. 500000)
- 221 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 213 words of extra memory for PDF output out of 10000 (max. 10000000)
 
