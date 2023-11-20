@@ -128,7 +128,7 @@ void Connection::sendAndDisplayAnswer(const Query &query)
     }
 
     // parse connection to buffer
-    msg.parseResponseToBuffer(recvBuffer, bytesRx);
+    msg.parseResponseFromBuffer(recvBuffer, bytesRx);
     if (Error::getErrorCode() == SUCCESS)
     {
         msg.printResponse();

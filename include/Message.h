@@ -270,7 +270,7 @@ public:
      * @param buffer
      * @param bufferSize
      */
-    void parseResponseToBuffer(char *buffer, int bufferSize);
+    void parseResponseFromBuffer(char *buffer, int bufferSize);
 
     /**
      * @brief Prints answered resources in correct format

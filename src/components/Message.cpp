@@ -534,7 +534,7 @@ size_t Message::convertMsgToBuffer(char *buffer)
     return sizeof(struct DNSHeader) + this->getQuestionSize();
 }
 
-void Message::parseResponseToBuffer(char *buffer, int bufferSize)
+void Message::parseResponseFromBuffer(char *buffer, int bufferSize)
 {
     (void)bufferSize;
     // get header and question
