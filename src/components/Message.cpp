@@ -24,6 +24,11 @@
 static void convertBinaryToPrintable(std::vector<uint8_t> &printable, uint8_t binary)
 {
     std::vector<uint8_t> reversedPrintable;
+    if (binary == 0)
+    {
+        printable.push_back('0');
+        return;
+    }
     while (binary != 0)
     {
         // own function
